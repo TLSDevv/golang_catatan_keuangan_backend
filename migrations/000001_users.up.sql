@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT PRIMARY KEY,
+    username VARCHAR (100) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    gender CHAR(2) NOT NULL,
+    age INT NOT NULL,
+    job VARCHAR(100)
+)
