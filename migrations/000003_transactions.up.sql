@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS transactions (
-    id BIGINT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     user_id BIGINT,
     name_transaction VARCHAR(50),
     type_transaction CHAR(10),
     category_id BIGINT,
-    nominal INTEGER,
+    amount INTEGER,
     description VARCHAR(255),
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,

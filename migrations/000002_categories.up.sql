@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS categories (
-    id BIGINT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
     name_category VARCHAR(50) NOT NULL,
     description VARCHAR(100),
