@@ -17,7 +17,7 @@ var structureUserStore string = `username,name,gender,age,job,created_at,updated
 var structureUserUpdate string = `username,name,gender,age,job,updated_at`
 var structureUser string = `id,username,name,gender,age,job`
 
-func newUserRepository(db *sql.DB) UserRepository {
+func NewUserRepository() UserRepository {
 	return &userRepo{}
 }
 

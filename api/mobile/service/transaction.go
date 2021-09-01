@@ -14,7 +14,7 @@ type TransactionService struct {
 	DB              *sql.DB
 }
 
-func NewService(transactionRepository repository.TransactionRepository, db *sql.DB) TransactionServiceInterface {
+func NewTransactioService(transactionRepository repository.TransactionRepository, db *sql.DB) TransactionServiceInterface {
 	return &TransactionService{
 		TransactionRepo: transactionRepository,
 		DB:              db,
