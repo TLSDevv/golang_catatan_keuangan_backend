@@ -1,10 +1,10 @@
 package web
 
 type TransactionCreateRequest struct {
-	UserId          uint8  `json:"user_id"`
-	NameTransaction string `json:"name_transaction"`
-	TypeTransaction string `json:"type_transaction"`
-	CategoryId      uint8  `json:"category_id"`
-	Amount          int64  `json:"nominal"`
-	Description     string `json:"description"`
+	UserId          uint8   `validate:"required" json:"user_id"`
+	NameTransaction string `validate:"required,max=50,min=1" json:"name_transaction"`
+	TypeTransaction string `validate:"required,max=10,min=1" json:"type_transaction"`
+	CategoryId      uint8   `validate:"required" json:"category_id"`
+	Amount          int64  `validate:"required" json:"nominal"`
+	Description     string `validate:"required,max=250,min=1" json:"description"`
 }
