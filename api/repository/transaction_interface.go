@@ -8,9 +8,9 @@ import (
 )
 
 type TransactionRepository interface {
-	List(ctx context.Context, tx *sql.Tx, limit int, page int) ([]domain.Transaction, error)
-	GetByID(ctx context.Context, tx *sql.Tx, id int) (domain.Transaction, error)
+	ListByUser(ctx context.Context, tx *sql.Tx, limit int, page int, userId int) ([]domain.Transaction, error)
+	GetByID(ctx context.Context, tx *sql.Tx, transactionId int) (domain.Transaction, error)
 	Store(ctx context.Context, tx *sql.Tx, transaction domain.Transaction) error
-	Update(ctx context.Context, tx *sql.Tx, id int, transaction domain.Transaction) error
-	Delete(ctx context.Context, tx *sql.Tx, id int) error
+	Update(ctx context.Context, tx *sql.Tx, transactionId int, transaction domain.Transaction) error
+	Delete(ctx context.Context, tx *sql.Tx, transactionId int) error
 }

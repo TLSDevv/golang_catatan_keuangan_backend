@@ -22,6 +22,8 @@ var structureCategoryStore string = `user_id,name_category,description, icon_nam
 var structureCategoryUpdate string = `user_id,name_category,description, icon_name, icon_color,updated_at`           //6
 
 func (c *categoryRepo) Store(ctx context.Context, tx *sql.Tx, category domain.Category) error {
+	category.CreatedAt = time.Now().Local()
+	category.UpdatedAt = category.CreatedAt
 	sql := `INSERT INTO categories(
 		` + structureCategoryStore + `)
 		VALUES ($1,$2,$3,$4,$5,$6,$7)`
@@ -64,6 +66,7 @@ func (c *categoryRepo) GetByID(ctx context.Context, tx *sql.Tx, id int) (domain.
 }
 
 func (c *categoryRepo) Update(ctx context.Context, tx *sql.Tx, id int, category domain.Category) error {
+	category.UpdatedAt = time.Now().Local()
 	sql := `UPDATE INTO categories(
 		` + structureCategoryUpdate + `)
 		VALUES ($1,$2,$3,$4,$5,$6) WHERE id=$7`
@@ -83,7 +86,8 @@ func (c *categoryRepo) Update(ctx context.Context, tx *sql.Tx, id int, category 
 	return nil
 }
 
-func (c *categoryRepo) Delete(ctx context.Context, tx *sql.Tx, id int, deleteAt time.Time) error {
+func (c *categoryRepo) Delete(ctx context.Context, tx *sql.Tx, id int) error {
+	deleteAt := time.Now().Local()
 	sql := `UPDATE INTO categories (deleted_at)
 		values ($1) WHERE id=$2`
 

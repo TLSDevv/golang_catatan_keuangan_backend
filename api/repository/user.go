@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/helper"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/domain"
@@ -21,6 +22,8 @@ func newUserRepository(db *sql.DB) UserRepository {
 }
 
 func (u *userRepo) Store(ctx context.Context, tx *sql.Tx, user domain.User) error {
+	user.CreatedAt = time.Now().Local()
+	user.UpdatedAt = user.CreatedAt
 	sql := `INSERT INTO USERS (
 		` + structureUserStore + `)
 	values ($1,$2,$3,$4,$5,$6,$7)`
@@ -41,6 +44,7 @@ func (u *userRepo) Store(ctx context.Context, tx *sql.Tx, user domain.User) erro
 }
 
 func (u *userRepo) Update(ctx context.Context, tx *sql.Tx, id int, user domain.User) error {
+	user.UpdatedAt = time.Now().Local()
 	sql := `UPDATE INTO USERS (
 		` + structureUserUpdate + `)
 	values ($1,$2,$3,$4,$5,$6) WHERE id=$7`
