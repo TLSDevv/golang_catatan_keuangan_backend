@@ -21,7 +21,7 @@ func NewService(transactionRepository repository.TransactionRepository, db *sql.
 	}
 }
 
-func (t *TransactionService) ListTransaction(ctx context.Context, limit int, page int) []web.TransactionResponse {
+func (t *TransactionService) ListTransaction(ctx context.Context, limit int, page int, userId int) []web.TransactionResponse {
 	tx, err := t.DB.Begin()
 	helper.PanicIfError(err)
 
@@ -29,7 +29,7 @@ func (t *TransactionService) ListTransaction(ctx context.Context, limit int, pag
 		helper.CommitOrRollback(tx)
 	}()
 
-	transactions, err := t.TransactionRepo.List(ctx, tx, limit, page)
+	transactions, err := t.TransactionRepo.ListByUser(ctx, tx, limit, page, userId)
 	helper.PanicIfError(err)
 
 	return helper.ToTransactionResponses(transactions)
