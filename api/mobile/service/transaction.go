@@ -57,7 +57,7 @@ func (t *TransactionService) CreateTransaction(ctx context.Context, transactionR
 		helper.CommitOrRollback(tx)
 	}()
 
-	transaction := helper.TransactionRequestToTransaction(transactionRequest)
+	transaction := helper.ToTransaction(transactionRequest)
 
 	err = t.TransactionRepo.Store(ctx, tx, transaction)
 	helper.PanicIfError(err)
@@ -71,7 +71,7 @@ func (t *TransactionService) UpdateTransaction(ctx context.Context, idTransactio
 		helper.CommitOrRollback(tx)
 	}()
 
-	transaction := helper.TransactionRequestToTransaction(transactionRequest)
+	transaction := helper.ToTransaction(transactionRequest)
 
 	err = t.TransactionRepo.Update(ctx, tx, idTransaction, transaction)
 	helper.PanicIfError(err)
