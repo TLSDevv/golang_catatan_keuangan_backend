@@ -133,9 +133,11 @@ func (t *transactionRepo) Update(ctx context.Context, tx *sql.Tx, id int, transa
 	return nil
 }
 
-func (t *transactionRepo) Delete(ctx context.Context, tx *sql.Tx, id int, deleteAt time.Time) error {
+func (t *transactionRepo) Delete(ctx context.Context, tx *sql.Tx, id int) error {
 	sql := `UPDATE INTO transactions (deleted_at)
 		values ($1) WHERE id=$2`
+
+	deleteAt := time.Now().Local()
 
 	_, err := tx.ExecContext(
 		ctx,
