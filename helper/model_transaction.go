@@ -28,9 +28,7 @@ func ToTransactionResponse(transaction domain.Transaction) web.TransactionRespon
 	}
 }
 
-func ToTransactionResponses(transactions []domain.Transaction) (transactionResponse []web.TransactionResponse) {
-	var transactionResponses []web.TransactionResponse
-
+func ToTransactionResponses(transactions []domain.Transaction) (transactionResponses []web.TransactionResponse) {
 	for _, transaction := range transactions {
 		transactionResponses = append(transactionResponses, ToTransactionResponse(transaction))
 	}
