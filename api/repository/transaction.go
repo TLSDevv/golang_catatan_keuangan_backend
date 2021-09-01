@@ -114,7 +114,7 @@ func (t *transactionRepo) Store(ctx context.Context, tx *sql.Tx, transaction dom
 	return nil
 }
 
-func (t *transactionRepo) Update(ctx context.Context, tx *sql.Tx, transactionId int, transaction domain.Transaction) error {
+func (t *transactionRepo) Update(ctx context.Context, tx *sql.Tx, transaction domain.Transaction) error {
 	transaction.UpdatedAt = time.Now().Local()
 	sql := `UPDATE INTO transactions (
 		` + structureTransactionUpdate + `)
@@ -129,7 +129,7 @@ func (t *transactionRepo) Update(ctx context.Context, tx *sql.Tx, transactionId 
 		transaction.Amount,
 		transaction.Description,
 		transaction.UpdatedAt,
-		transactionId)
+		transaction.Id)
 
 	helper.PanicIfError(err)
 

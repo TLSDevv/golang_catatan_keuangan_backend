@@ -65,7 +65,7 @@ func (c *categoryRepo) GetByID(ctx context.Context, tx *sql.Tx, id int) (domain.
 	}
 }
 
-func (c *categoryRepo) Update(ctx context.Context, tx *sql.Tx, id int, category domain.Category) error {
+func (c *categoryRepo) Update(ctx context.Context, tx *sql.Tx, category domain.Category) error {
 	category.UpdatedAt = time.Now().Local()
 	sql := `UPDATE INTO categories(
 		` + structureCategoryUpdate + `)
@@ -77,9 +77,8 @@ func (c *categoryRepo) Update(ctx context.Context, tx *sql.Tx, id int, category 
 		category.Description,
 		category.IconName,
 		category.IconColor,
-		category.CreatedAt,
 		category.UpdatedAt,
-		id,
+		category.Id,
 	)
 	helper.PanicIfError(err)
 

@@ -11,6 +11,6 @@ type CategoryRepository interface {
 	ListByUser(ctx context.Context, tx *sql.Tx, userId int) ([]domain.Category, error)
 	GetByID(ctx context.Context, tx *sql.Tx, id int) (domain.Category, error)
 	Store(ctx context.Context, tx *sql.Tx, category domain.Category) error
-	Update(ctx context.Context, tx *sql.Tx, id int, transaction domain.Category) error
+	Update(ctx context.Context, tx *sql.Tx, transaction domain.Category) error
 	Delete(ctx context.Context, tx *sql.Tx, id int) error
 }

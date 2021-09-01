@@ -43,7 +43,7 @@ func (u *userRepo) Store(ctx context.Context, tx *sql.Tx, user domain.User) erro
 	return nil
 }
 
-func (u *userRepo) Update(ctx context.Context, tx *sql.Tx, id int, user domain.User) error {
+func (u *userRepo) Update(ctx context.Context, tx *sql.Tx, user domain.User) error {
 	user.UpdatedAt = time.Now().Local()
 	sql := `UPDATE INTO USERS (
 		` + structureUserUpdate + `)
@@ -57,7 +57,7 @@ func (u *userRepo) Update(ctx context.Context, tx *sql.Tx, id int, user domain.U
 		user.Age,
 		user.Job,
 		user.UpdatedAt,
-		id,
+		user.Id,
 	)
 	helper.PanicIfError(err)
 
