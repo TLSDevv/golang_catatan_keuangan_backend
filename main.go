@@ -10,6 +10,7 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/api/mobile/controller"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/api/mobile/service"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/api/repository"
+	"github.com/go-playground/validator"
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
 )
@@ -55,16 +56,18 @@ func main() {
 		}
 	}()
 
+	validate := validator.New()
+
 	categoryRepository := repository.NewCategoryRepository()
-	categoryService := service.NewCategoryService(categoryRepository, db)
+	categoryService := service.NewCategoryService(categoryRepository, db, validate)
 	categoryController := controller.NewCategoryController(categoryService)
 
 	userRepository := repository.NewUserRepository()
-	userService := service.NewUserService(userRepository, db)
+	userService := service.NewUserService(userRepository, db, validate)
 	userController := controller.NewUserController(userService)
 
 	transactionRepository := repository.NewTransactionRepository()
-	transactionService := service.NewTransactioService(transactionRepository, db)
+	transactionService := service.NewTransactioService(transactionRepository, db, validate)
 	transactionController := controller.NewTransactionController(transactionService)
 
 	handler := &mobile.Handler{}

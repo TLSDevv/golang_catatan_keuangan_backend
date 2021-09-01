@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/api/mobile/controller"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/exception"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/web"
 	"github.com/go-chi/chi"
 )
@@ -15,6 +16,7 @@ type Handler struct {
 
 func (h *Handler) NewHandler(uc controller.UserControllerInterface, cc controller.CategoryControllerInterface, tc controller.TransactionControllerInterface) {
 	h.Route = chi.NewRouter()
+	h.Route.Use(exception.Recover)
 	h.Route.Route("/api/v1", func(r chi.Router) {
 		r.Route("/", func(r chi.Router) {
 			r.Get("/", Home)
