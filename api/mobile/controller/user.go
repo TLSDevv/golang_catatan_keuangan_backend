@@ -22,11 +22,11 @@ func NewUserController(userService service.UserServiceInterface) UserControllerI
 }
 
 func (u *UserController) CreateUser(writer http.ResponseWriter, request *http.Request) {
-	userCreateRequest := web.UserCreateRequest{}
+	userRequest := web.UserCreateRequest{}
 
-	helper.ReadFromRequestBody(request, userCreateRequest)
+	helper.ReadFromRequestBody(request, userRequest)
 
-	u.UserService.CreateUser(request.Context(), userCreateRequest)
+	u.UserService.CreateUser(request.Context(), userRequest)
 
 	webResponse := web.WebResponse{
 		Code:   http.StatusAccepted,
@@ -65,13 +65,12 @@ func (u *UserController) UpdateUser(writer http.ResponseWriter, request *http.Re
 
 	userId, _ := strconv.Atoi(id)
 
-	user := u.UserService.GetUser(request.Context(), userId)
+	userRequest := web.UserUpdateRequest{}
 
-	userCreateRequest := web.UserCreateRequest{}
+	helper.ReadFromRequestBody(request, userRequest)
+	userRequest.Id = uint8(userId)
 
-	helper.ReadFromRequestBody(request, userCreateRequest)
-
-	u.UserService.UpdateUser(request.Context(), int(user.Id), userCreateRequest)
+	u.UserService.UpdateUser(request.Context(), userRequest)
 
 	webResponse := web.WebResponse{
 		Code:   http.StatusOK,

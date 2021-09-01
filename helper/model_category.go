@@ -5,8 +5,19 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/web"
 )
 
-func ToCategory(category web.CategoryCreateRequest) domain.Category {
+func ToCategoryCreate(category web.CategoryCreateRequest) domain.Category {
 	return domain.Category{
+		UserId:       category.UserId,
+		NameCategory: category.NameCategory,
+		Description:  category.Description,
+		IconName:     category.IconName,
+		IconColor:    category.IconColor,
+	}
+}
+
+func ToCategoryUpdate(category web.CategoryUpdateRequest) domain.Category {
+	return domain.Category{
+		Id:           category.Id,
 		UserId:       category.UserId,
 		NameCategory: category.NameCategory,
 		Description:  category.Description,

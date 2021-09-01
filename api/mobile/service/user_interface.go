@@ -9,5 +9,5 @@ import (
 type UserServiceInterface interface {
 	GetUser(ctx context.Context, userId int) web.UserResponse
 	CreateUser(ctx context.Context, userRequest web.UserCreateRequest)
-	UpdateUser(ctx context.Context, userId int, userRequest web.UserCreateRequest)
+	UpdateUser(ctx context.Context, userRequest web.UserUpdateRequest)
 }

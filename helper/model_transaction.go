@@ -5,8 +5,20 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/web"
 )
 
-func ToTransaction(transaction web.TransactionCreateRequest) domain.Transaction {
+func ToTransactionCreate(transaction web.TransactionCreateRequest) domain.Transaction {
 	return domain.Transaction{
+		UserId:          transaction.UserId,
+		NameTransaction: transaction.NameTransaction,
+		TypeTransaction: transaction.TypeTransaction,
+		CategoryId:      transaction.CategoryId,
+		Amount:          transaction.Amount,
+		Description:     transaction.Description,
+	}
+}
+
+func ToTransactionUpdate(transaction web.TransactionUpdateRequest) domain.Transaction {
+	return domain.Transaction{
+		Id:              transaction.Id,
 		UserId:          transaction.UserId,
 		NameTransaction: transaction.NameTransaction,
 		TypeTransaction: transaction.TypeTransaction,

@@ -64,11 +64,11 @@ func (t *TransactionController) GetTransaction(writer http.ResponseWriter, reque
 	helper.WriterToResponseBody(writer, webResponse)
 }
 func (t *TransactionController) CreateTransaction(writer http.ResponseWriter, request *http.Request) {
-	transactionCreateRequest := web.TransactionCreateRequest{}
+	transactionRequest := web.TransactionCreateRequest{}
 
-	helper.ReadFromRequestBody(request, transactionCreateRequest)
+	helper.ReadFromRequestBody(request, transactionRequest)
 
-	t.TransactionService.CreateTransaction(request.Context(), transactionCreateRequest)
+	t.TransactionService.CreateTransaction(request.Context(), transactionRequest)
 
 	webResponse := web.WebResponse{
 		Code:   http.StatusAccepted,
@@ -78,9 +78,9 @@ func (t *TransactionController) CreateTransaction(writer http.ResponseWriter, re
 	helper.WriterToResponseBody(writer, webResponse)
 }
 func (t *TransactionController) UpdateTransaction(writer http.ResponseWriter, request *http.Request) {
-	transactionCreateRequest := web.TransactionCreateRequest{}
+	transactionRequest := web.TransactionUpdateRequest{}
 
-	helper.ReadFromRequestBody(request, transactionCreateRequest)
+	helper.ReadFromRequestBody(request, transactionRequest)
 
 	id := chi.URLParam(request, "id")
 
@@ -90,10 +90,9 @@ func (t *TransactionController) UpdateTransaction(writer http.ResponseWriter, re
 	}
 
 	transactionId, _ := strconv.Atoi(id)
+	transactionRequest.Id = uint8(transactionId)
 
-	transaction := t.TransactionService.GetTransaction(request.Context(), transactionId)
-
-	t.TransactionService.UpdateTransaction(request.Context(), int(transaction.Id), transactionCreateRequest)
+	t.TransactionService.UpdateTransaction(request.Context(), transactionRequest)
 
 	webResponse := web.WebResponse{
 		Code:   http.StatusOK,

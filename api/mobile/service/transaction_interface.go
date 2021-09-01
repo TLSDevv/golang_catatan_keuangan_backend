@@ -10,6 +10,6 @@ type TransactionServiceInterface interface {
 	ListTransaction(ctx context.Context, int, page int, userId int) []web.TransactionResponse
 	GetTransaction(ctx context.Context, idTransaction int) web.TransactionResponse
 	CreateTransaction(ctx context.Context, t web.TransactionCreateRequest)
-	UpdateTransaction(ctx context.Context, idTransaction int, t web.TransactionCreateRequest)
+	UpdateTransaction(ctx context.Context, t web.TransactionUpdateRequest)
 	DeleteTransaction(ctx context.Context, idTransaction int)
 }
