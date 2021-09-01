@@ -1,28 +1,90 @@
 package service
 
 import (
+	"context"
+	"database/sql"
+
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/api/repository"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/helper"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/web"
 )
 
-type transactionService struct {
-	transactionRepository repository.TransactionRepository
+type TransactionService struct {
+	TransactionRepo repository.TransactionRepository
+	DB              *sql.DB
 }
 
-func NewService(t repository.TransactionRepository) TransactionServiceInterface {
-	return &transactionService{
-		transactionRepository: t,
+func NewService(transactionRepository repository.TransactionRepository, db *sql.DB) TransactionServiceInterface {
+	return &TransactionService{
+		TransactionRepo: transactionRepository,
+		DB:              db,
 	}
 }
 
-func (s *transactionService) ListTransaction(limit int, page int) ([]web.TransactionResponse, error) {
-	return s.transactionRepo.List(limit, page)
+func (t *TransactionService) ListTransaction(ctx context.Context, limit int, page int) []web.TransactionResponse {
+	tx, err := t.DB.Begin()
+	helper.PanicIfError(err)
+
+	defer func() {
+		helper.CommitOrRollback(tx)
+	}()
+
+	transactions, err := t.TransactionRepo.List(ctx, tx, limit, page)
+	helper.PanicIfError(err)
+
+	return helper.ToTransactionResponses(transactions)
 }
 
-func (s *transactionService) GetTransaction(id string) (web.TransactionResponse, error) {
-	return s.transactionRepo.GetByID(id)
+func (t *TransactionService) GetTransaction(ctx context.Context, idTransaction int) web.TransactionResponse {
+	tx, err := t.DB.Begin()
+	helper.PanicIfError(err)
+
+	defer func() {
+		helper.CommitOrRollback(tx)
+	}()
+
+	transaction, err := t.TransactionRepo.GetByID(ctx, tx, idTransaction)
+	helper.PanicIfError(err)
+
+	return helper.ToTransactionResponse(transaction)
 }
 
-func (s *transactionService) CreateTransaction(t web.TransactionResponse) error {
+func (t *TransactionService) CreateTransaction(ctx context.Context, transactionRequest web.TransactionCreateRequest) {
+	tx, err := t.DB.Begin()
+	helper.PanicIfError(err)
 
+	defer func() {
+		helper.CommitOrRollback(tx)
+	}()
+
+	transaction := helper.TransactionRequestToTransaction(transactionRequest)
+
+	err = t.TransactionRepo.Store(ctx, tx, transaction)
+	helper.PanicIfError(err)
+}
+
+func (t *TransactionService) UpdateTransaction(ctx context.Context, idTransaction int, transactionRequest web.TransactionCreateRequest) {
+	tx, err := t.DB.Begin()
+	helper.PanicIfError(err)
+
+	defer func() {
+		helper.CommitOrRollback(tx)
+	}()
+
+	transaction := helper.TransactionRequestToTransaction(transactionRequest)
+
+	err = t.TransactionRepo.Update(ctx, tx, idTransaction, transaction)
+	helper.PanicIfError(err)
+}
+
+func (t *TransactionService) DeleteTransaction(ctx context.Context, idTransaction int) {
+	tx, err := t.DB.Begin()
+	helper.PanicIfError(err)
+
+	defer func() {
+		helper.CommitOrRollback(tx)
+	}()
+
+	err = t.TransactionRepo.Delete(ctx, tx, idTransaction)
+	helper.PanicIfError(err)
 }
