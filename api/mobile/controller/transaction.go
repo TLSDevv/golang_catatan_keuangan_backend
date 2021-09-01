@@ -91,7 +91,9 @@ func (t *TransactionController) UpdateTransaction(writer http.ResponseWriter, re
 
 	transactionId, _ := strconv.Atoi(id)
 
-	t.TransactionService.UpdateTransaction(request.Context(), transactionId, transactionCreateRequest)
+	transaction := t.TransactionService.GetTransaction(request.Context(), transactionId)
+
+	t.TransactionService.UpdateTransaction(request.Context(), int(transaction.Id), transactionCreateRequest)
 
 	webResponse := web.WebResponse{
 		Code:   http.StatusOK,

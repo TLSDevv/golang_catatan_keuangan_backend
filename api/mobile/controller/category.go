@@ -85,11 +85,13 @@ func (c *CategoryController) UpdateCategory(writer http.ResponseWriter, request 
 
 	categoryId, _ := strconv.Atoi(id)
 
+	category := c.CategoryService.GetCategory(request.Context(), categoryId)
+
 	categoryCreateRequest := web.CategoryCreateRequest{}
 
 	helper.ReadFromRequestBody(request, categoryCreateRequest)
 
-	c.CategoryService.UpdateCategory(request.Context(), categoryId, categoryCreateRequest)
+	c.CategoryService.UpdateCategory(request.Context(), int(category.Id), categoryCreateRequest)
 
 	webResponse := web.WebResponse{
 		Code:   http.StatusAccepted,
