@@ -65,7 +65,7 @@ func (u *userRepo) Update(ctx context.Context, tx *sql.Tx, user domain.User) err
 }
 
 func (t *userRepo) GetByID(ctx context.Context, tx *sql.Tx, id int) (domain.User, error) {
-	sql := `SELECT ` + structureUser + ` FROM users WHERE id=$1 AND deleted_at IS NOT NULL`
+	sql := `SELECT ` + structureUser + ` FROM users WHERE id=$1 AND deleted_at IS NULL`
 	rows, err := tx.QueryContext(ctx, sql, id)
 
 	helper.PanicIfError(err)

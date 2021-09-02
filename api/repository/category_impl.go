@@ -102,7 +102,7 @@ func (c *categoryRepo) Delete(ctx context.Context, tx *sql.Tx, id int) error {
 }
 
 func (c *categoryRepo) ListByUser(ctx context.Context, tx *sql.Tx, userId int) ([]domain.Category, error) {
-	sql := `SELECT ` + structureCategory + ` FROM categories WHERE user_id=$1 AND deleted_at IS NOT NULL`
+	sql := `SELECT ` + structureCategory + ` FROM categories WHERE user_id=$1 AND deleted_at IS NULL`
 
 	rows, err := tx.QueryContext(ctx, sql, userId)
 	helper.PanicIfError(err)

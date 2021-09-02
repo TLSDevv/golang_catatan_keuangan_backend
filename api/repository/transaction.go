@@ -64,7 +64,7 @@ func (t *transactionRepo) ListByUser(ctx context.Context, tx *sql.Tx, limit int,
 }
 
 func (t *transactionRepo) GetByID(ctx context.Context, tx *sql.Tx, transactionId int) (domain.Transaction, error) {
-	sql := `SELECT ` + structureTransaction + ` FROM transactions WHERE id=$1 AND deleted_at IS NOT NULL`
+	sql := `SELECT ` + structureTransaction + ` FROM transactions WHERE id=$1 AND deleted_at IS NULL`
 	rows, err := tx.QueryContext(ctx, sql, transactionId)
 
 	helper.PanicIfError(err)
