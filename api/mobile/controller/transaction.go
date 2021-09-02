@@ -66,7 +66,7 @@ func (t *TransactionController) GetTransaction(writer http.ResponseWriter, reque
 func (t *TransactionController) CreateTransaction(writer http.ResponseWriter, request *http.Request) {
 	transactionRequest := web.TransactionCreateRequest{}
 
-	helper.ReadFromRequestBody(request, transactionRequest)
+	helper.ReadFromRequestBody(request, &transactionRequest)
 
 	t.TransactionService.CreateTransaction(request.Context(), transactionRequest)
 
@@ -80,7 +80,7 @@ func (t *TransactionController) CreateTransaction(writer http.ResponseWriter, re
 func (t *TransactionController) UpdateTransaction(writer http.ResponseWriter, request *http.Request) {
 	transactionRequest := web.TransactionUpdateRequest{}
 
-	helper.ReadFromRequestBody(request, transactionRequest)
+	helper.ReadFromRequestBody(request, &transactionRequest)
 
 	id := chi.URLParam(request, "id")
 

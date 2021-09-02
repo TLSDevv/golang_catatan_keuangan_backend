@@ -24,7 +24,7 @@ func NewUserController(userService service.UserServiceInterface) UserControllerI
 func (u *UserController) CreateUser(writer http.ResponseWriter, request *http.Request) {
 	userRequest := web.UserCreateRequest{}
 
-	helper.ReadFromRequestBody(request, userRequest)
+	helper.ReadFromRequestBody(request, &userRequest)
 
 	u.UserService.CreateUser(request.Context(), userRequest)
 
@@ -67,7 +67,7 @@ func (u *UserController) UpdateUser(writer http.ResponseWriter, request *http.Re
 
 	userRequest := web.UserUpdateRequest{}
 
-	helper.ReadFromRequestBody(request, userRequest)
+	helper.ReadFromRequestBody(request, &userRequest)
 	userRequest.Id = uint8(userId)
 
 	u.UserService.UpdateUser(request.Context(), userRequest)

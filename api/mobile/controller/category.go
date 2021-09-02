@@ -24,7 +24,7 @@ func NewCategoryController(categoryService service.CategoryServiceInterface) Cat
 func (c *CategoryController) CreateCategory(writer http.ResponseWriter, request *http.Request) {
 	categoryRequest := web.CategoryCreateRequest{}
 
-	helper.ReadFromRequestBody(request, categoryRequest)
+	helper.ReadFromRequestBody(request, &categoryRequest)
 
 	c.CategoryService.CreateCategory(request.Context(), categoryRequest)
 
@@ -86,7 +86,7 @@ func (c *CategoryController) UpdateCategory(writer http.ResponseWriter, request 
 	categoryId, _ := strconv.Atoi(id)
 
 	categoryRequest := web.CategoryUpdateRequest{}
-	helper.ReadFromRequestBody(request, categoryRequest)
+	helper.ReadFromRequestBody(request, &categoryRequest)
 	categoryRequest.Id = uint8(categoryId)
 
 	c.CategoryService.UpdateCategory(request.Context(), categoryRequest)
