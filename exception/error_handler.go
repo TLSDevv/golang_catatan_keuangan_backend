@@ -1,6 +1,7 @@
 package exception
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/helper"
@@ -12,10 +13,19 @@ func Recover(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			err := recover()
-			ErrorHandler(w, r, err)
+			if err != nil {
+				ErrorHandler(w, r, err)
+			}
 		}()
-
 		next.ServeHTTP(w, r)
+	}
+
+	return http.HandlerFunc(fn)
+}
+
+func NotFound(next http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		panic(NewNotFoundError("WRONG URL"))
 	}
 
 	return http.HandlerFunc(fn)
@@ -28,6 +38,9 @@ func ErrorHandler(writer http.ResponseWriter, request *http.Request, err interfa
 	if validationError(writer, request, err) {
 		return
 	}
+	// if badRequestError(writer, request, err) {
+	// 	return
+	// }
 	internalServerError(writer, request, err)
 }
 
@@ -49,6 +62,25 @@ func validationError(writer http.ResponseWriter, request *http.Request, err inte
 		return false
 	}
 }
+
+// func badRequestError(writer http.ResponseWriter, request *http.Request, err interface{}) bool {
+// 	exception, ok := err.(BadRequestError)
+// 	if ok {
+// 		writer.Header().Set("Content-Type", "application/json")
+// 		writer.WriteHeader(http.StatusBadRequest)
+
+// 		webResponse := web.WebResponse{
+// 			Code:   http.StatusBadRequest,
+// 			Status: http.StatusBadRequest,
+// 			Data:   exception.Error,
+// 		}
+
+// 		helper.WriterToResponseBody(writer, webResponse)
+// 		return true
+// 	} else {
+// 		return false
+// 	}
+// }
 
 func notFoundError(writer http.ResponseWriter, request *http.Request, err interface{}) bool {
 	exception, ok := err.(NotFoundError)
@@ -72,7 +104,7 @@ func notFoundError(writer http.ResponseWriter, request *http.Request, err interf
 func internalServerError(writer http.ResponseWriter, request *http.Request, err interface{}) {
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusInternalServerError)
-
+	fmt.Println(err)
 	webResponse := web.WebResponse{
 		Code:   http.StatusInternalServerError,
 		Status: "INTERNAL SERVER ERROR",
