@@ -17,12 +17,15 @@ type Handler struct {
 func (h *Handler) NewHandler(uc controller.UserControllerInterface, cc controller.CategoryControllerInterface, tc controller.TransactionControllerInterface) {
 	h.Route = chi.NewRouter()
 	h.Route.Use(exception.Recover)
+	h.Route.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		panic(exception.NewNotFoundError("WRONG URL"))
+	})
 	h.Route.Route("/api/v1", func(r chi.Router) {
 		r.Route("/", func(r chi.Router) {
-			r.Get("/", Home)
+			r.Get("/", Home) // testing api
 		})
 		r.Route("/user", func(r chi.Router) {
-			r.Get("/:id", uc.GetUser)
+			r.Get("/{id}", uc.GetUser)
 			r.Post("/", uc.CreateUser)
 			r.Put("/", uc.UpdateUser)
 		})
