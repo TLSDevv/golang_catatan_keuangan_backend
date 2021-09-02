@@ -5,6 +5,7 @@ import (
 	"database/sql"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/api/repository"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/exception"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/helper"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/web"
 	"github.com/go-playground/validator"
@@ -33,7 +34,9 @@ func (u *UserService) GetUser(ctx context.Context, userId int) web.UserResponse 
 	}()
 
 	user, err := u.UserRepository.GetByID(ctx, tx, userId)
-	helper.PanicIfError(err)
+	if err != nil{
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	return helper.ToUserResponse(user)
 }
