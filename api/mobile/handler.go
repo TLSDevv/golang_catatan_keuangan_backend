@@ -29,7 +29,7 @@ func (h *Handler) NewHandler(uc controller.UserControllerInterface, cc controlle
 		r.Route("/users", func(r chi.Router) {
 			r.Get("/{id}", uc.GetUser)
 			r.Post("/", uc.CreateUser)
-			r.Put("/", uc.UpdateUser)
+			r.Put("/{id}", uc.UpdateUser)
 		})
 		r.Route("/categories", func(r chi.Router) {
 			r.Get("/{id}", cc.GetCategory)
