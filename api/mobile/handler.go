@@ -8,6 +8,7 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/exception"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/web"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 type Handler struct {
@@ -16,30 +17,33 @@ type Handler struct {
 
 func (h *Handler) NewHandler(uc controller.UserControllerInterface, cc controller.CategoryControllerInterface, tc controller.TransactionControllerInterface) {
 	h.Route = chi.NewRouter()
+
+	//show log, every hit url
+	h.Route.Use(middleware.Logger)
 	h.Route.Use(exception.Recover)
-	h.Route.Use(exception.NotFound)
+	// h.Route.Use(exception.NotFound)
 	h.Route.Route("/api/v1", func(r chi.Router) {
 		r.Route("/", func(r chi.Router) {
 			r.Get("/", Home) // testing api
 		})
-		r.Route("/user", func(r chi.Router) {
+		r.Route("/users", func(r chi.Router) {
 			r.Get("/{id}", uc.GetUser)
 			r.Post("/", uc.CreateUser)
 			r.Put("/", uc.UpdateUser)
 		})
-		r.Route("/category", func(r chi.Router) {
-			r.Get("/:id", cc.GetCategory)
+		r.Route("/categories", func(r chi.Router) {
+			r.Get("/{id}", cc.GetCategory)
 			r.Get("/", cc.ListCategory)
 			r.Post("/", cc.CreateCategory)
-			r.Put("/:id", cc.UpdateCategory)
-			r.Delete("/:id", cc.DeleteCategory)
+			r.Put("/{id}", cc.UpdateCategory)
+			r.Delete("/{id}", cc.DeleteCategory)
 		})
-		r.Route("/transaction", func(r chi.Router) {
-			r.Get("/:id", tc.GetTransaction)
+		r.Route("/transactions", func(r chi.Router) {
+			r.Get("/{id}", tc.GetTransaction)
 			r.Get("/", tc.ListTransaction)
 			r.Post("/", tc.CreateTransaction)
-			r.Put("/:id", tc.UpdateTransaction)
-			r.Delete("/:id", tc.DeleteTransaction)
+			r.Put("/{id}", tc.UpdateTransaction)
+			r.Delete("/{id}", tc.DeleteTransaction)
 		})
 	})
 }
