@@ -45,9 +45,9 @@ func (u *userRepo) Store(ctx context.Context, tx *sql.Tx, user domain.User) erro
 
 func (u *userRepo) Update(ctx context.Context, tx *sql.Tx, user domain.User) error {
 	user.UpdatedAt = time.Now().Local()
-	sql := `UPDATE INTO USERS (
+	sql := `UPDATE USERS SET (
 		` + structureUserUpdate + `)
-	values ($1,$2,$3,$4,$5,$6) WHERE id=$7`
+	= ($1,$2,$3,$4,$5,$6) WHERE id=$7`
 
 	_, err := tx.ExecContext(
 		ctx, sql,

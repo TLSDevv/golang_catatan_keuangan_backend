@@ -116,9 +116,9 @@ func (t *transactionRepo) Store(ctx context.Context, tx *sql.Tx, transaction dom
 
 func (t *transactionRepo) Update(ctx context.Context, tx *sql.Tx, transaction domain.Transaction) error {
 	transaction.UpdatedAt = time.Now().Local()
-	sql := `UPDATE INTO transactions (
+	sql := `UPDATE transactions SET (
 		` + structureTransactionUpdate + `)
-		values ($1,$2,$3,$4,$5,$6) WHERE id=$8`
+		= ($1,$2,$3,$4,$5,$6) WHERE id=$8`
 
 	_, err := tx.ExecContext(
 		ctx,
@@ -137,8 +137,8 @@ func (t *transactionRepo) Update(ctx context.Context, tx *sql.Tx, transaction do
 }
 
 func (t *transactionRepo) Delete(ctx context.Context, tx *sql.Tx, transactionId int) error {
-	sql := `UPDATE INTO transactions (deleted_at)
-		values ($1) WHERE id=$2`
+	sql := `UPDATE transactions SET (deleted_at)
+		= ($1) WHERE id=$2`
 
 	deleteAt := time.Now().Local()
 

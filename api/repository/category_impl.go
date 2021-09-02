@@ -67,9 +67,9 @@ func (c *categoryRepo) GetByID(ctx context.Context, tx *sql.Tx, id int) (domain.
 
 func (c *categoryRepo) Update(ctx context.Context, tx *sql.Tx, category domain.Category) error {
 	category.UpdatedAt = time.Now().Local()
-	sql := `UPDATE INTO categories(
+	sql := `UPDATE categories SET(
 		` + structureCategoryUpdate + `)
-		VALUES ($1,$2,$3,$4,$5,$6) WHERE id=$7`
+		= ($1,$2,$3,$4,$5,$6) WHERE id=$7`
 
 	_, err := tx.ExecContext(ctx, sql,
 		category.UserId,
@@ -87,8 +87,8 @@ func (c *categoryRepo) Update(ctx context.Context, tx *sql.Tx, category domain.C
 
 func (c *categoryRepo) Delete(ctx context.Context, tx *sql.Tx, id int) error {
 	deleteAt := time.Now().Local()
-	sql := `UPDATE INTO categories (deleted_at)
-		values ($1) WHERE id=$2`
+	sql := `UPDATE categories SET (deleted_at)
+		= ($1) WHERE id=$2`
 
 	_, err := tx.ExecContext(
 		ctx,
