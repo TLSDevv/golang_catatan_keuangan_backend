@@ -33,6 +33,8 @@ func (c *CategoryController) CreateCategory(writer http.ResponseWriter, request 
 		Status: "SUCCESS CREATE CATEGORY",
 	}
 
+	writer.WriteHeader(http.StatusAccepted)
+
 	helper.WriterToResponseBody(writer, webResponse)
 }
 func (c *CategoryController) GetCategory(writer http.ResponseWriter, request *http.Request) {
@@ -52,6 +54,7 @@ func (c *CategoryController) GetCategory(writer http.ResponseWriter, request *ht
 		Status: "SUCCESS GET DATA CATEGORY",
 		Data:   category,
 	}
+	writer.WriteHeader(http.StatusAccepted)
 
 	helper.WriterToResponseBody(writer, webResponse)
 }
@@ -72,6 +75,7 @@ func (c *CategoryController) ListCategory(writer http.ResponseWriter, request *h
 		Status: "SUCCESS UPDATE CATEGORY",
 		Data:   categories,
 	}
+	writer.WriteHeader(http.StatusAccepted)
 
 	helper.WriterToResponseBody(writer, webResponse)
 }
@@ -95,6 +99,7 @@ func (c *CategoryController) UpdateCategory(writer http.ResponseWriter, request 
 		Code:   http.StatusAccepted,
 		Status: "SUCCESS UPDATE CATEGORY",
 	}
+	writer.WriteHeader(http.StatusAccepted)
 
 	helper.WriterToResponseBody(writer, webResponse)
 }
@@ -114,6 +119,7 @@ func (c *CategoryController) DeleteCategory(writer http.ResponseWriter, request 
 		Code:   http.StatusAccepted,
 		Status: "SUCCESS DELETE CATEGORY",
 	}
+	writer.WriteHeader(http.StatusAccepted)
 
 	helper.WriterToResponseBody(writer, webResponse)
 }

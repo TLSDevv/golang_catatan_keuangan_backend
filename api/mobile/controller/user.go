@@ -32,6 +32,7 @@ func (u *UserController) CreateUser(writer http.ResponseWriter, request *http.Re
 		Code:   http.StatusAccepted,
 		Status: "SUCCESS CREATE USER",
 	}
+	writer.WriteHeader(http.StatusAccepted)
 
 	helper.WriterToResponseBody(writer, webResponse)
 }
@@ -52,6 +53,7 @@ func (u *UserController) GetUser(writer http.ResponseWriter, request *http.Reque
 		Status: "SUCCESS GET DATA USER",
 		Data:   user,
 	}
+	writer.WriteHeader(http.StatusOK)
 
 	helper.WriterToResponseBody(writer, webResponse)
 }
@@ -76,6 +78,8 @@ func (u *UserController) UpdateUser(writer http.ResponseWriter, request *http.Re
 		Code:   http.StatusOK,
 		Status: "SUCCESS UPDATE USER DATA",
 	}
+
+	writer.WriteHeader(http.StatusOK)
 
 	helper.WriterToResponseBody(writer, webResponse)
 }

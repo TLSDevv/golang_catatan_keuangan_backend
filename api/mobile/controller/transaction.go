@@ -41,6 +41,8 @@ func (t *TransactionController) ListTransaction(writer http.ResponseWriter, requ
 		Data:   transactions,
 	}
 
+	writer.WriteHeader(http.StatusOK)
+
 	helper.WriterToResponseBody(writer, webResponse)
 }
 func (t *TransactionController) GetTransaction(writer http.ResponseWriter, request *http.Request) {
@@ -61,6 +63,8 @@ func (t *TransactionController) GetTransaction(writer http.ResponseWriter, reque
 		Data:   transaction,
 	}
 
+	writer.WriteHeader(http.StatusOK)
+
 	helper.WriterToResponseBody(writer, webResponse)
 }
 func (t *TransactionController) CreateTransaction(writer http.ResponseWriter, request *http.Request) {
@@ -74,6 +78,8 @@ func (t *TransactionController) CreateTransaction(writer http.ResponseWriter, re
 		Code:   http.StatusAccepted,
 		Status: "SUCCESS CREATE TRANSACTION",
 	}
+
+	writer.WriteHeader(http.StatusAccepted)
 
 	helper.WriterToResponseBody(writer, webResponse)
 }
@@ -98,6 +104,7 @@ func (t *TransactionController) UpdateTransaction(writer http.ResponseWriter, re
 		Code:   http.StatusOK,
 		Status: "SUCCESS UPDATE TRANSACTION",
 	}
+	writer.WriteHeader(http.StatusOK)
 
 	helper.WriterToResponseBody(writer, webResponse)
 }
@@ -117,6 +124,7 @@ func (t *TransactionController) DeleteTransaction(writer http.ResponseWriter, re
 		Code:   http.StatusOK,
 		Status: "SUCCESS DELETE TRANSACTION",
 	}
+	writer.WriteHeader(http.StatusOK)
 
 	helper.WriterToResponseBody(writer, webResponse)
 }
