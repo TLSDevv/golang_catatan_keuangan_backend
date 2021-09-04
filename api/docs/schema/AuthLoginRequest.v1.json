@@ -1,0 +1,22 @@
+{
+    "title": "Login Request",
+    "type": "object",
+    "properties":{
+        "email":{
+            "type": "string",
+            "description": "Unique email address as users identity",
+            "format": "email",
+            "maxLength": 50,
+            
+            "example": "user@example.com"
+        },
+        "password":{
+            "type": "string",
+            "description": "Users secret to validate their identity",
+            "maxLength": 200,
+            "minLength": 6,
+            "example": "123456"
+        },
+    "required": ["email", "password"]
+    }
+}

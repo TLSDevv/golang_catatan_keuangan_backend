@@ -1,0 +1,18 @@
+{
+    "title": "Server Error Message",
+    "type": "object",
+    "description": "Error returned by server",
+    "properties":{
+        "code":{
+            "type": "integer",
+            "description": "Error code",
+            "example": "404"
+        },
+        "message":{
+            "type": "string",
+            "description": "Error message",
+            "example": "NOT FOUND"
+        }
+    },
+    "required": ["message", "code"]
+}

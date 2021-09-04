@@ -1,0 +1,60 @@
+{
+    "title": "Auth Response",
+    "type": "object",
+    "description": "",
+    "properties":{
+        "code":{
+            "type": "integer",
+            "description": "Response code",
+            "example": "200"
+        },
+        "message":{
+            "type": "string",
+            "description": "Response message",
+            "example": "OK"
+        },
+        "data":{
+            "title": "Auth Response Data",
+            "type": "object",
+            "description": "Token result after register",
+            "properties":{
+                "token":{
+                    "type": "object",
+                    "properties": {
+                        "access_token": {
+                            "type": "string",
+                            "example": "safklasjdfasljflk"
+                        },
+                        "refresh_token":{
+                            "example": "akjsdfkaskjh"
+                        },
+                        "expired_at":{
+                            "type": "string"
+                        }
+                    }
+                },
+                "user":{
+                    "type":"object",
+                    "properties":{
+                        "id":{
+                            "type": "integer",
+                            "example": "1"
+                        },
+                        "username":{
+                            "type": "string",
+                            "example": "jony90"
+                        },
+                        "email":{
+                            "type": "string",
+                            "example": "jony90@example.com"
+                        },
+                        "name":{
+                            "type": "string",
+                            "example": "jony ge"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
