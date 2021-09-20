@@ -13,9 +13,9 @@ import (
 type userRepo struct {
 }
 
-var structureUserStore string = `username,name,gender,age,job,created_at,updated_at`
-var structureUserUpdate string = `username,name,gender,age,job,updated_at`
-var structureUser string = `id,username,name,gender,age,job`
+var structureUserStore string = `username,email,password,name,created_at,updated_at`
+var structureUserUpdate string = `username,email,password,name,updated_at`
+var structureUser string = `id,username,email,password,name,gender,age,job`
 
 func NewUserRepository() UserRepository {
 	return &userRepo{}
@@ -26,15 +26,14 @@ func (u *userRepo) Store(ctx context.Context, tx *sql.Tx, user domain.User) erro
 	user.UpdatedAt = user.CreatedAt
 	sql := `INSERT INTO USERS (
 		` + structureUserStore + `)
-	values ($1,$2,$3,$4,$5,$6,$7)`
+	values ($1,$2,$3,$4,$5,$6)`
 
 	_, err := tx.ExecContext(
 		ctx, sql,
 		user.Username,
+		user.Email,
+		user.Password,
 		user.Name,
-		user.Gender,
-		user.Age,
-		user.Job,
 		user.CreatedAt,
 		user.UpdatedAt,
 	)
@@ -47,15 +46,14 @@ func (u *userRepo) Update(ctx context.Context, tx *sql.Tx, user domain.User) err
 	user.UpdatedAt = time.Now().Local()
 	sql := `UPDATE USERS SET (
 		` + structureUserUpdate + `)
-	= ($1,$2,$3,$4,$5,$6) WHERE id=$7`
+	= ($1,$2,$3,$4,$5) WHERE id=$6`
 
 	_, err := tx.ExecContext(
 		ctx, sql,
 		user.Username,
+		user.Email,
+		user.Password,
 		user.Name,
-		user.Gender,
-		user.Age,
-		user.Job,
 		user.UpdatedAt,
 		user.Id,
 	)
@@ -76,10 +74,9 @@ func (t *userRepo) GetByID(ctx context.Context, tx *sql.Tx, id int) (domain.User
 		err := rows.Scan(
 			&user.Id,
 			&user.Username,
+			&user.Email,
+			&user.Password,
 			&user.Name,
-			&user.Gender,
-			&user.Age,
-			&user.Job,
 		)
 		helper.PanicIfError(err)
 
