@@ -1,0 +1,13 @@
+- hosts: localhost
+  name: gateway
+  connection: local
+  vars_files:
+  - "./vars/{{ lookup('env','ENV')|lower }}.yml"
+  tasks:
+    - name: Generate config vars_files
+      template:
+        src: templates/config.j2
+        dest: ../config.yml
+        backup: false
+        mode: "0644"
+  
