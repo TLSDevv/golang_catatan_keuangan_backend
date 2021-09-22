@@ -15,7 +15,7 @@ type userRepo struct {
 
 var structureUserStore string = `username,email,password,name,created_at,updated_at`
 var structureUserUpdate string = `username,email,password,name,updated_at`
-var structureUser string = `id,username,email,password,name,gender,age,job`
+var structureUser string = `id,username,email,password,name`
 
 func NewUserRepository() UserRepository {
 	return &userRepo{}

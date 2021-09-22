@@ -1,10 +1,9 @@
 package web
 
 type UserResponse struct {
-	Id       uint8   `json:"id"`
+	Id       uint8  `json:"id"`
 	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 	Name     string `json:"name"`
-	Gender   string `json:"gender"`
-	Age      int    `json:"age"`
-	Job      string `json:"job"`
 }

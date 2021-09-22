@@ -8,31 +8,29 @@ import (
 func ToUserResponse(user domain.User) web.UserResponse {
 	return web.UserResponse{
 		Id:       user.Id,
-		Username: user.Username,
+		Email:    user.Email,
+		Password: user.Password,
 		Name:     user.Name,
-		Gender:   user.Gender,
-		Age:      user.Age,
-		Job:      user.Job,
 	}
 }
 
 func ToUserCreate(user web.UserCreateRequest) domain.User {
+	password := HashPassword(user.Password)
 	return domain.User{
 		Username: user.Username,
+		Email:    user.Email,
+		Password: password,
 		Name:     user.Name,
-		Gender:   user.Gender,
-		Age:      user.Age,
-		Job:      user.Job,
 	}
 }
 
 func ToUserUpdate(user web.UserUpdateRequest) domain.User {
+	password := HashPassword(user.Password)
 	return domain.User{
 		Id:       user.Id,
 		Username: user.Username,
+		Email:    user.Email,
+		Password: password,
 		Name:     user.Name,
-		Gender:   user.Gender,
-		Age:      user.Age,
-		Job:      user.Job,
 	}
 }

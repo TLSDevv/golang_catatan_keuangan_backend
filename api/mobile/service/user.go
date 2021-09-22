@@ -34,7 +34,7 @@ func (u *UserService) GetUser(ctx context.Context, userId int) web.UserResponse 
 	}()
 
 	user, err := u.UserRepository.GetByID(ctx, tx, userId)
-	if err != nil{
+	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
 	}
 
