@@ -1,0 +1,20 @@
+title:
+description:
+type: object
+properties:
+  id:
+    type: number
+    example: 12334
+  email:
+    type: string
+    format: email
+    example: jonirapang@example.com
+  username:
+    type: string
+    example: joni123
+  password:
+    type: string
+    example: ljsdflkjskadjf
+  name:
+    type: string
+    example: joni rapan

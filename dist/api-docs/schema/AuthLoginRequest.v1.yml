@@ -1,0 +1,18 @@
+title: 'Login Request'
+type: 'object'
+properties:
+  email: 
+    type: 'string'
+    description: 'Unique email address as users identity'
+    format: 'email'
+    maxLength: 50
+    example: "jonirapang@example.com"
+  password:
+    type: 'string'
+    description: 'User secret password to validate their identity'
+    maxLength: 50
+    minLength: 6
+    example: "123445"
+required: 
+  - 'email'
+  - 'password'

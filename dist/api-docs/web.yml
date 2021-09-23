@@ -1,12 +1,683 @@
 openapi: '3.0.2'
 info:
-  title: API Title
+  title: 'KeuanganKu App'
   version: '1.0'
+  description: 'REST API Documentation for KeuanganKu APP by TLSDev'
 servers:
-  - url: https://api.server.test/v1
+  - url: 'http://localhost:8000/api/v1'
+    description: Local
+tags:
+  - name: Authentication
+    description: Related to login, logout, activation from mobile perspective.
+  - name: Users
+    description: Related to user from mobile perspective.
+  - name: Category
+    description: Related to category from mobile perspective.
+  - name: Transaction
+    description: Related to transaction users from mobile perspective.
+
 paths:
-  /test:
-    get:
+  /auth/login:
+    post:
+      summary: 'Login'
+      description: 'For Login App'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ./schema/AuthLoginRequest.v1.yml
+
+      responses: 
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                      $ref: '#/components/schemas/Status200'
+                  message:
+                    type: string
+                    example: Success update transaction
+
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request 
+      tags:
+        - Authentication
+
+  /auth/logout:
+    post:
+      summary: 'Logout'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
       responses:
         '200':
-          description: OK
+          description: Success Logout Info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status200'
+                  message:
+                    type: string
+                    example: Success Logout
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+      tags:
+        - Authentication
+  
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      description: "Get user by id" 
+      responses:
+        '200':
+          description: Return user data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 200
+                  data:
+                      $ref: ./schema/UsersResponse.v1.yml
+                  message:
+                    type: string
+                    example: todo
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status401'
+                  message:
+                    type: string
+                    example: Unauthorized
+  /transaction:
+    get:
+      tags:
+        - Transaction
+      description: Return paginated transactions
+      parameters:
+        - $ref: '#components/parameters/PaginationPage'
+        - $ref: '#components/parameters/PaginationLimit'
+      responses:
+        '200':
+          description: Return paginated transactions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status200'
+                  data:
+                    type: array
+                    description: Get List Transaction
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status401'
+                  message:
+                    type: string
+                    example: Unauthorized
+    post:
+      tags:
+      - Transaction
+      description: Create a new transaction 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestTransaction'
+      responses:
+        '200':
+          description: Success create new transaction
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status200'
+                  message:
+                    type: string
+                    example: Success Create New Transaction
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status401'
+                  message:
+                    type: string
+                    example: Unauthorized
+        
+  /transaction/{id}:
+    get:
+      tags:
+        - Transaction
+      description: Get Transaction
+      responses:
+        '200':
+          description: Return a transaction by id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status200'
+                  data:
+                    $ref: '#/components/schemas/Transaction'
+                  message:
+                    type: string
+                    example: Success Get Transaction
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status401'
+                  message:
+                    type: string
+                    example: Unauthorized
+    put:
+      tags:
+        - Transaction
+      description: Update Transaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestTransaction'
+      responses:
+        '200':
+          description: Return a TODO
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status200'
+                  message:
+                    type: string
+                    example: Success update transaction
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status401'
+                  message:
+                    type: string
+                    example: Unauthorized
+  /category:
+    post:
+      description: Create new category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+
+      responses:
+        '200':
+          description: Success create new category
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status200'
+                  message:
+                    type: string
+                    example: Success Create New Category
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status401'
+                  message:
+                    type: string
+                    example: Unauthorized
+    get:
+      description: Get List Category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Success Get List Category
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status200'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status401'
+                  message:
+                    type: string
+                    example: Unauthorized
+        
+  /category/{id}:
+    get:
+      tags:
+        - Category
+      description: Get Category
+      responses:
+        '200':
+          description: Return a Category by id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status200'
+                  data:
+                    $ref: '#/components/schemas/Category'
+                  message:
+                    type: string
+                    example: Success Get Category
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status401'
+                  message:
+                    type: string
+                    example: Unauthorized
+    put:
+      tags:
+        - Category
+      description: Update Category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCategory'
+      responses:
+        '200':
+          description: Success Update data Category by ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status200'
+                  message:
+                    type: string
+                    example: Success Update Category
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status401'
+                  message:
+                    type: string
+                    example: Unauthorized
+    
+
+components:
+  schemas:
+    RequestCategory:
+      type: object
+      properties:
+        name_category:
+          type: string
+          example: Belanja Mingguan
+        description:
+          type: string
+          example: Belanja Mingguan punya
+        icon_name:
+          type: string
+          example: book
+        icon_color:
+          type: string
+          example: red
+
+    DeleteCategory:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique id from category
+          example: asdjfhjksh
+
+    RequestTransaction:
+      type: object
+      properties:
+        name_transaction:
+          type: string
+          example: Membeli peralatan kantor
+        type_transaction:
+          type: string
+          example: Pengeluaran
+        id_category:
+          type: string
+          example: asdkjfkj
+        amount:
+          type: number
+          example: 20000
+        description:
+          type: string
+          example: Belanja mingguan untuk keperluan kantor
+
+    DeleteTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+          description: unique id from transaction
+          example: asdjfhjksh
+        
+    #common
+    #common code
+    Status200:
+      type: number
+      example: 200
+    Status201:
+      type: number
+      example: 201
+    Status202:
+      type: number
+      example: 202
+    Status203:
+      type: number
+      example: 203
+    Status204:
+      type: number
+      example: 204
+    Status400:
+      type: number
+      example: 400
+    Status401:
+      type: number
+      example: 401
+    
+    Pagination:
+      type: object
+      description: Pagination Info
+      properties:
+        page:
+          type: integer
+          description: Current page number.
+          example: 1
+          default: 1
+        limit:
+          type: integer
+          example: 20
+          description: Item per page.
+          default: 20
+        total:
+          type: integer
+          description: Total data.
+          example: 100
+      required:
+        - page
+        - limit
+        - total
+
+    
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          example: akdjfnksadf
+        name_category:
+          type: string
+          example: Belanja Mingguan
+        description:
+          type: string
+          example: Belanja Mingguan punya
+        icon_name:
+          type: string
+          example: book
+        icon_color:
+          type: string
+          example: red
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          example: asldkkasljd
+        name_transaction:
+          type: string
+          example: Membeli peralatan kantor
+        type_transaction:
+          type: string
+          example: Pengeluaran
+        category:
+          $ref: '#/components/schemas/Category'
+        amount:
+          type: number
+          example: 20000
+        description:
+          type: string
+          example: Belanja mingguan untuk keperluan kantor
+        transaction_at:
+          type: string
+          format: date-time
+          description: tanggal transaksi
+        updated_at:
+          type: string
+          format: date-time
+          description: tanggal di ubah transaksi
+  parameters:
+    PaginationPage:
+      in: query
+      name: page
+      description: Requested page
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PaginationLimit:
+      in: query
+      name: limit
+      description: Requested item per page
+      required: false
+      schema:
+        type: integer
+        maximum: 100
+        default: 20

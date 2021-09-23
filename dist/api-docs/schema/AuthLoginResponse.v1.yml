@@ -1,0 +1,31 @@
+title: 'Auth Response'
+type: 'object'
+description: ''
+properties:
+  code: 
+    type: 'integer'
+    description: 'Response Code'
+    example: '200'
+  message:
+    type: 'string'
+    description: 'Response Message'
+    example: 'OK'
+  data:
+    title: 'Auth Response Data'
+    type: 'object'
+    description: 'Token result after register'
+    properties:
+      token:
+        type: 'object'
+        properties:
+          access_token:
+            type: 'string'
+            example: 'asdhfkhdkfhashf'
+          refresh_token:
+            type: 'string'
+            example: 'akjsfkhsafdhjahsjdf'
+          expired_at:
+            type: string
+required: 
+  - 'email'
+  - 'password'
