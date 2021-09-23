@@ -17,6 +17,40 @@ tags:
     description: Related to transaction users from mobile perspective.
 
 paths:
+  /auth/register:
+    post:
+      tags:
+        - Users
+      description: Create New user
+      responses:
+        '200':
+          description: Return user data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 200
+                  data:
+                      $ref: ./schema/UsersResponse.v1.yml
+                  message:
+                    type: string
+                    example: Success Create User
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+
   /auth/login:
     post:
       summary: 'Login'
@@ -59,6 +93,8 @@ paths:
   /auth/logout:
     post:
       summary: 'Logout'
+      security:
+        - ActivatedToken: []
       requestBody:
         content:
           application/json:
@@ -93,10 +129,64 @@ paths:
         - Authentication
   
   /users/{id}:
+    put:
+      tags:
+        - Users
+      description: Update User
+      security:
+        - ActivatedToken: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+
+      responses:
+        '200':
+          description: Return user data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 200
+                  data:
+                      $ref: ./schema/UsersResponse.v1.yml
+                  message:
+                    type: string
+                    example: Success Update User
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status400'
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    $ref: '#/components/schemas/Status401'
+                  message:
+                    type: string
+                    example: Unauthorized
     get:
       tags:
         - Users
       description: "Get user by id" 
+      security:
+        - ActivatedToken: []
       responses:
         '200':
           description: Return user data
@@ -142,6 +232,8 @@ paths:
       tags:
         - Transaction
       description: Return paginated transactions
+      security:
+        - ActivatedToken: []
       parameters:
         - $ref: '#components/parameters/PaginationPage'
         - $ref: '#components/parameters/PaginationLimit'
@@ -190,6 +282,8 @@ paths:
       tags:
       - Transaction
       description: Create a new transaction 
+      security:
+        - ActivatedToken: []
       requestBody:
         content:
           application/json:
@@ -238,6 +332,8 @@ paths:
       tags:
         - Transaction
       description: Get Transaction
+      security:
+        - ActivatedToken: []
       responses:
         '200':
           description: Return a transaction by id
@@ -281,6 +377,8 @@ paths:
       tags:
         - Transaction
       description: Update Transaction
+      security:
+        - ActivatedToken: []
       requestBody:
         content:
           application/json:
@@ -325,7 +423,11 @@ paths:
                     example: Unauthorized
   /category:
     post:
+      tags:
+        - Category
       description: Create new category
+      security:
+        - ActivatedToken: []
       requestBody:
         content:
           application/json:
@@ -370,7 +472,11 @@ paths:
                     type: string
                     example: Unauthorized
     get:
+      tags:
+        - Category
       description: Get List Category
+      security:
+        - ActivatedToken: []
       requestBody:
         content:
           application/json:
@@ -422,6 +528,8 @@ paths:
       tags:
         - Category
       description: Get Category
+      security:
+        - ActivatedToken: []
       responses:
         '200':
           description: Return a Category by id
@@ -465,6 +573,8 @@ paths:
       tags:
         - Category
       description: Update Category
+      security:
+        - ActivatedToken: []
       requestBody:
         content:
           application/json:
@@ -511,6 +621,23 @@ paths:
 
 components:
   schemas:
+    UpdateUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: jonirapang@example.com
+        username:
+          type: string
+          example: joni123
+        password:
+          type: string
+          example: ljsdflkjskadjf
+        name:
+          type: string
+          example: joni rapan
+    
     RequestCategory:
       type: object
       properties:
@@ -681,3 +808,8 @@ components:
         type: integer
         maximum: 100
         default: 20
+  securitySchemes:
+    ActivatedToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
