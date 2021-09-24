@@ -1,5 +1,6 @@
 .DS_Store
 config.yaml
 config.json
+config.yml
 logs
 .keys
