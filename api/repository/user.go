@@ -21,6 +21,13 @@ func NewUserRepository() UserRepository {
 	return &userRepo{}
 }
 
+type UserRepository interface {
+	GetByID(ctx context.Context, tx *sql.Tx, id int) (domain.User, error)
+	Store(ctx context.Context, tx *sql.Tx, user domain.User) error
+	Update(ctx context.Context, tx *sql.Tx, user domain.User) error
+	GetByUsername(ctx context.Context, tx *sql.Tx, username string) (domain.User, error)
+}
+
 func (u *userRepo) Store(ctx context.Context, tx *sql.Tx, user domain.User) error {
 	user.CreatedAt = time.Now().Local()
 	user.UpdatedAt = user.CreatedAt
@@ -65,6 +72,30 @@ func (u *userRepo) Update(ctx context.Context, tx *sql.Tx, user domain.User) err
 func (t *userRepo) GetByID(ctx context.Context, tx *sql.Tx, id int) (domain.User, error) {
 	sql := `SELECT ` + structureUser + ` FROM users WHERE id=$1 AND deleted_at IS NULL`
 	rows, err := tx.QueryContext(ctx, sql, id)
+
+	helper.PanicIfError(err)
+
+	user := domain.User{}
+
+	if rows.Next() {
+		err := rows.Scan(
+			&user.Id,
+			&user.Username,
+			&user.Email,
+			&user.Password,
+			&user.Name,
+		)
+		helper.PanicIfError(err)
+
+		return user, nil
+	} else {
+		return user, errors.New("User Not Found")
+	}
+}
+
+func (t *userRepo) GetByUsername(ctx context.Context, tx *sql.Tx, username string) (domain.User, error) {
+	sql := `SELECT ` + structureUser + ` FROM users WHERE username=$1 AND deleted_at IS NULL`
+	rows, err := tx.QueryContext(ctx, sql, username)
 
 	helper.PanicIfError(err)
 

@@ -1,8 +1,10 @@
 package config
 
+import "time"
+
 type API struct {
-	Host string
-	Port int
+	Host    string
+	Port    int
 	BaseUrl string
 }
 
@@ -15,6 +17,12 @@ type DB struct {
 }
 
 type Config struct {
-	API API
-	DB  DB
+	API  API
+	DB   DB
+	AUTH Auth
+}
+type Auth struct {
+	JWTPrivateKey string
+	JWTPublicKey  string
+	JWTLifetime   map[string]time.Duration
 }

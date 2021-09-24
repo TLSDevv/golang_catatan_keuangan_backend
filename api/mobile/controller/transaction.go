@@ -20,16 +20,16 @@ func NewTransactionController(transactionSerivice service.TransactionServiceInte
 		TransactionService: transactionSerivice,
 	}
 }
+type TransactionControllerInterface interface {
+	ListTransaction(writer http.ResponseWriter, request *http.Request)
+	GetTransaction(writer http.ResponseWriter, request *http.Request)
+	CreateTransaction(writer http.ResponseWriter, request *http.Request)
+	UpdateTransaction(writer http.ResponseWriter, request *http.Request)
+	DeleteTransaction(writer http.ResponseWriter, request *http.Request)
+}
 
 func (t *TransactionController) ListTransaction(writer http.ResponseWriter, request *http.Request) {
-	id := chi.URLParam(request, "id")
-
-	if id == "" {
-		err := errors.New("Params Is Empty")
-		helper.PanicIfError(err)
-	}
-
-	userId, _ := strconv.Atoi(id)
+	userId, _ := strconv.Atoi(request.Context().Value("userId").(string))
 	limit, _ := strconv.Atoi(request.URL.Query().Get("limit"))
 	page, _ := strconv.Atoi(request.URL.Query().Get("page"))
 
@@ -53,9 +53,9 @@ func (t *TransactionController) GetTransaction(writer http.ResponseWriter, reque
 		helper.PanicIfError(err)
 	}
 
-	userId, _ := strconv.Atoi(id)
+	transactionId, _ := strconv.Atoi(id)
 
-	transaction := t.TransactionService.GetTransaction(request.Context(), userId)
+	transaction := t.TransactionService.GetTransaction(request.Context(), transactionId)
 
 	webResponse := web.WebResponse{
 		Code:   http.StatusOK,
@@ -67,6 +67,7 @@ func (t *TransactionController) GetTransaction(writer http.ResponseWriter, reque
 
 	helper.WriterToResponseBody(writer, webResponse)
 }
+
 func (t *TransactionController) CreateTransaction(writer http.ResponseWriter, request *http.Request) {
 	transactionRequest := web.TransactionCreateRequest{}
 

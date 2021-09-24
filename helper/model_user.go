@@ -5,10 +5,11 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/web"
 )
 
-func ToUserResponse(user domain.User) web.UserResponse {
-	return web.UserResponse{
+func ToUserResponse(user domain.User) *web.UserResponse {
+	return &web.UserResponse{
 		Id:       user.Id,
 		Email:    user.Email,
+		Username: user.Username,
 		Password: user.Password,
 		Name:     user.Name,
 	}

@@ -8,11 +8,12 @@ import (
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/api/mobile/controller"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/api/mobile/service"
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/api/repository"
 	config "github.com/TLSDevv/golang_catatan_keuangan_backend/config"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/exception"
+	pkg "github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 	pkgconstant "github.com/TLSDevv/golang_catatan_keuangan_backend/pkg/constant"
 	pkgdb "github.com/TLSDevv/golang_catatan_keuangan_backend/pkg/db"
+	pkgjwt "github.com/TLSDevv/golang_catatan_keuangan_backend/pkg/jwt"
 	"github.com/go-playground/validator"
 	"github.com/rs/cors"
 
@@ -24,6 +25,9 @@ func main() {
 	config, err := config.New()
 
 	if err != nil {
+		log.Fatal(err)
+	}
+	if err := pkgjwt.Init(config); err != nil {
 		log.Fatal(err)
 	}
 
@@ -58,9 +62,14 @@ func newHandler(config *config.Config) http.Handler {
 	return api.router
 }
 
+type middleware interface {
+	Handler(next http.Handler) http.Handler
+}
+
 type API struct {
-	router   *chi.Mux
-	validate *validator.Validate
+	router        *chi.Mux
+	validate      *validator.Validate
+	authorization middleware
 }
 
 func NewAPI(config *config.Config) *API {
@@ -75,45 +84,50 @@ func NewAPI(config *config.Config) *API {
 	router.Handle("/docs/*", http.StripPrefix("/docs", fs))
 
 	return &API{
-		router:   router,
-		validate: validate,
+		router:        router,
+		validate:      validate,
+		authorization: pkg.NewAuthenticator(),
 	}
 }
 
 func (api *API) initMobileRoute(config *config.Config, db *sql.DB) {
-	userRepo := repository.NewUserRepository()
-	userService := service.NewUserService(userRepo, db, api.validate)
+	userService := service.NewUserService(db, api.validate)
 	userController := controller.NewUserController(userService)
 
-	transactionRepo := repository.NewTransactionRepository()
-	transactionService := service.NewTransactioService(transactionRepo, db, api.validate)
+	transactionService := service.NewTransactioService(db, api.validate)
 	transactionController := controller.NewTransactionController(transactionService)
 
-	categoryRepo := repository.NewCategoryRepository()
-	categoryService := service.NewCategoryService(categoryRepo, db, api.validate)
+	categoryService := service.NewCategoryService(db, api.validate)
 	categoryController := controller.NewCategoryController(categoryService)
+
+	authService := service.NewAuthService(db)
+	authController := controller.NewAuth(authService)
+
+	secureAccessMiddlewares := []func(http.Handler) http.Handler{
+		api.authorization.Handler,
+	}
 
 	// route
 
 	api.router.Route("/api/v1", func(r chi.Router) {
-		r.Route("/", func(r chi.Router) {
-			r.Get("/", func(rw http.ResponseWriter, r *http.Request) {
-				rw.Write([]byte("works"))
-			}) // testing api
+
+		r.Route("/auth", func(r chi.Router) {
+			r.Post("/login", authController.Login)
+			r.With(secureAccessMiddlewares...).Delete("/session", authController.Logout)
+			r.Post("/register", userController.CreateUser)
 		})
-		r.Route("/users", func(r chi.Router) {
+		r.With(secureAccessMiddlewares...).Route("/users", func(r chi.Router) {
 			r.Get("/{id}", userController.GetUser)
-			r.Post("/", userController.CreateUser)
 			r.Put("/{id}", userController.UpdateUser)
 		})
-		r.Route("/categories", func(r chi.Router) {
+		r.With(secureAccessMiddlewares...).Route("/categories", func(r chi.Router) {
 			r.Get("/{id}", categoryController.GetCategory)
 			r.Get("/", categoryController.ListCategory)
 			r.Post("/", categoryController.CreateCategory)
 			r.Put("/{id}", categoryController.UpdateCategory)
 			r.Delete("/{id}", categoryController.DeleteCategory)
 		})
-		r.Route("/transactions", func(r chi.Router) {
+		r.With(secureAccessMiddlewares...).Route("/transactions", func(r chi.Router) {
 			r.Get("/{id}", transactionController.GetTransaction)
 			r.Get("/", transactionController.ListTransaction)
 			r.Post("/", transactionController.CreateTransaction)

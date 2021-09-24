@@ -21,6 +21,14 @@ func NewCategoryController(categoryService service.CategoryServiceInterface) Cat
 	}
 }
 
+type CategoryControllerInterface interface {
+	CreateCategory(writer http.ResponseWriter, request *http.Request)
+	GetCategory(writer http.ResponseWriter, request *http.Request)
+	ListCategory(writer http.ResponseWriter, request *http.Request)
+	UpdateCategory(writer http.ResponseWriter, request *http.Request)
+	DeleteCategory(writer http.ResponseWriter, request *http.Request)
+}
+
 func (c *CategoryController) CreateCategory(writer http.ResponseWriter, request *http.Request) {
 	categoryRequest := web.CategoryCreateRequest{}
 

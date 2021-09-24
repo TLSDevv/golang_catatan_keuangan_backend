@@ -17,6 +17,14 @@ func NewCategoryRepository() CategoryRepository {
 	return &categoryRepo{}
 }
 
+type CategoryRepository interface {
+	ListByUser(ctx context.Context, tx *sql.Tx, userId int) ([]domain.Category, error)
+	GetByID(ctx context.Context, tx *sql.Tx, id int) (domain.Category, error)
+	Store(ctx context.Context, tx *sql.Tx, category domain.Category) error
+	Update(ctx context.Context, tx *sql.Tx, transaction domain.Category) error
+	Delete(ctx context.Context, tx *sql.Tx, id int) error
+}
+
 var structureCategory string = `user_id,name_category,description, icon_name, icon_color`                            //5
 var structureCategoryStore string = `user_id,name_category,description, icon_name, icon_color,created_at,updated_at` //7
 var structureCategoryUpdate string = `user_id,name_category,description, icon_name, icon_color,updated_at`           //6

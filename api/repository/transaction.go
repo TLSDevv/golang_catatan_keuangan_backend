@@ -17,11 +17,19 @@ func NewTransactionRepository() TransactionRepository {
 	return &transactionRepo{}
 }
 
+type TransactionRepository interface {
+	List(ctx context.Context, tx *sql.Tx, limit int, page int, userId int) ([]domain.Transaction, error)
+	GetByID(ctx context.Context, tx *sql.Tx, transactionId int) (domain.Transaction, error)
+	Store(ctx context.Context, tx *sql.Tx, transaction domain.Transaction) error
+	Update(ctx context.Context, tx *sql.Tx, transaction domain.Transaction) error
+	Delete(ctx context.Context, tx *sql.Tx, transactionId int) error
+}
+
 var structureTransaction string = `id,name_transaction,type_transaction,category_id,amount,description,created_at,updated_at`
 var structureTransactionStore string = `id,user_id,name_transaction,type_transaction,category_id,amount,description,created_at,updated_at,deleted_at`
 var structureTransactionUpdate string = `name_transaction,type_transaction,category_id,amount,description,updated_at`
 
-func (t *transactionRepo) ListByUser(ctx context.Context, tx *sql.Tx, limit int, page int, userId int) ([]domain.Transaction, error) {
+func (t *transactionRepo) List(ctx context.Context, tx *sql.Tx, limit int, page int, userId int) ([]domain.Transaction, error) {
 	transactions := []domain.Transaction{}
 
 	var err error

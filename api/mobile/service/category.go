@@ -12,17 +12,28 @@ import (
 )
 
 type CategoryService struct {
-	CategoryRepo repository.CategoryRepository
-	DB           *sql.DB
-	Validate     *validator.Validate
+	DB       *sql.DB
+	Validate *validator.Validate
 }
 
-func NewCategoryService(categoryRepository repository.CategoryRepository, db *sql.DB, v *validator.Validate) CategoryServiceInterface {
+var (
+	//Register Repo
+	categoryRepo = repository.NewCategoryRepository()
+)
+
+func NewCategoryService(db *sql.DB, v *validator.Validate) CategoryServiceInterface {
 	return &CategoryService{
-		CategoryRepo: categoryRepository,
-		DB:           db,
-		Validate:     v,
+		DB:       db,
+		Validate: v,
 	}
+}
+
+type CategoryServiceInterface interface {
+	CreateCategory(ctx context.Context, category web.CategoryCreateRequest)
+	GetCategory(ctx context.Context, categoryId int) web.CategoryResponse
+	ListCategory(ctx context.Context, userId int) []web.CategoryResponse
+	UpdateCategory(ctx context.Context, category web.CategoryUpdateRequest)
+	DeleteCategory(ctx context.Context, categoryId int)
 }
 
 func (c *CategoryService) CreateCategory(ctx context.Context, categoryRequest web.CategoryCreateRequest) {
@@ -35,7 +46,7 @@ func (c *CategoryService) CreateCategory(ctx context.Context, categoryRequest we
 	defer func() {
 		helper.CommitOrRollback(tx)
 	}()
-	err = c.CategoryRepo.Store(ctx, tx, helper.ToCategoryCreate(categoryRequest))
+	err = categoryRepo.Store(ctx, tx, helper.ToCategoryCreate(categoryRequest))
 	helper.PanicIfError(err)
 }
 func (c *CategoryService) GetCategory(ctx context.Context, categoryId int) web.CategoryResponse {
@@ -46,7 +57,7 @@ func (c *CategoryService) GetCategory(ctx context.Context, categoryId int) web.C
 		helper.CommitOrRollback(tx)
 	}()
 
-	category, err := c.CategoryRepo.GetByID(ctx, tx, categoryId)
+	category, err := categoryRepo.GetByID(ctx, tx, categoryId)
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
 	}
@@ -62,7 +73,7 @@ func (c *CategoryService) ListCategory(ctx context.Context, userId int) []web.Ca
 		helper.CommitOrRollback(tx)
 	}()
 
-	categories, err := c.CategoryRepo.ListByUser(ctx, tx, userId)
+	categories, err := categoryRepo.ListByUser(ctx, tx, userId)
 	helper.PanicIfError(err)
 
 	return helper.ToCategoryResponses(categories)
@@ -79,12 +90,12 @@ func (c *CategoryService) UpdateCategory(ctx context.Context, categoryRequest we
 		helper.CommitOrRollback(tx)
 	}()
 
-	_, err = c.CategoryRepo.GetByID(ctx, tx, int(categoryRequest.Id))
+	_, err = categoryRepo.GetByID(ctx, tx, int(categoryRequest.Id))
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
 	}
 
-	err = c.CategoryRepo.Update(ctx, tx, helper.ToCategoryUpdate(categoryRequest))
+	err = categoryRepo.Update(ctx, tx, helper.ToCategoryUpdate(categoryRequest))
 	helper.PanicIfError(err)
 }
 
@@ -96,11 +107,11 @@ func (c *CategoryService) DeleteCategory(ctx context.Context, categoryId int) {
 		helper.CommitOrRollback(tx)
 	}()
 
-	_, err = c.CategoryRepo.GetByID(ctx, tx, categoryId)
+	_, err = categoryRepo.GetByID(ctx, tx, categoryId)
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
 	}
 
-	err = c.CategoryRepo.Delete(ctx, tx, categoryId)
+	err = categoryRepo.Delete(ctx, tx, categoryId)
 	helper.PanicIfError(err)
 }

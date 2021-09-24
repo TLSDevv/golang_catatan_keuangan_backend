@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -24,8 +25,9 @@ func New() (*Config, error) {
 	viper.AutomaticEnv()
 
 	config := &Config{
-		API: newApi(),
-		DB:  newDB(),
+		API:  newApi(),
+		DB:   newDB(),
+		AUTH: newAuth(),
 	}
 
 	return config, nil
@@ -47,4 +49,26 @@ func newDB() DB {
 		Password: viper.GetString("db.password"),
 		Name:     viper.GetString("db.name"),
 	}
+}
+
+func newAuth() Auth {
+	tokenLifetimeMapping := viper.GetStringMapString("auth.jwt_lifetime")
+
+	auth := Auth{
+		JWTPrivateKey: viper.GetString("auth.jwt_private_key"),
+		JWTPublicKey:  viper.GetString("auth.jwt_public_key"),
+		JWTLifetime:   make(map[string]time.Duration, len(tokenLifetimeMapping)),
+	}
+
+	// fmt.Println(tokenLifetimeMapping)
+
+	for issuer, durationStr := range tokenLifetimeMapping {
+		duration, err := time.ParseDuration(durationStr)
+		if err != nil {
+			continue
+		}
+		auth.JWTLifetime[issuer] = duration
+	}
+
+	return auth
 }

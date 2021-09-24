@@ -12,17 +12,28 @@ import (
 )
 
 type TransactionService struct {
-	TransactionRepo repository.TransactionRepository
-	DB              *sql.DB
-	Validate        *validator.Validate
+	DB       *sql.DB
+	Validate *validator.Validate
 }
 
-func NewTransactioService(transactionRepository repository.TransactionRepository, db *sql.DB, v *validator.Validate) TransactionServiceInterface {
+var (
+	//Register Repo
+	transactionRepo = repository.NewTransactionRepository()
+)
+
+func NewTransactioService(db *sql.DB, v *validator.Validate) TransactionServiceInterface {
 	return &TransactionService{
-		TransactionRepo: transactionRepository,
-		DB:              db,
-		Validate:        v,
+		DB:       db,
+		Validate: v,
 	}
+}
+
+type TransactionServiceInterface interface {
+	ListTransaction(ctx context.Context, int, page int, userId int) []web.TransactionResponse
+	GetTransaction(ctx context.Context, idTransaction int) web.TransactionResponse
+	CreateTransaction(ctx context.Context, t web.TransactionCreateRequest)
+	UpdateTransaction(ctx context.Context, t web.TransactionUpdateRequest)
+	DeleteTransaction(ctx context.Context, idTransaction int)
 }
 
 func (t *TransactionService) ListTransaction(ctx context.Context, limit int, page int, userId int) []web.TransactionResponse {
@@ -33,7 +44,7 @@ func (t *TransactionService) ListTransaction(ctx context.Context, limit int, pag
 		helper.CommitOrRollback(tx)
 	}()
 
-	transactions, err := t.TransactionRepo.ListByUser(ctx, tx, limit, page, userId)
+	transactions, err := transactionRepo.List(ctx, tx, limit, page, userId)
 	helper.PanicIfError(err)
 
 	return helper.ToTransactionResponses(transactions)
@@ -47,7 +58,7 @@ func (t *TransactionService) GetTransaction(ctx context.Context, idTransaction i
 		helper.CommitOrRollback(tx)
 	}()
 
-	transaction, err := t.TransactionRepo.GetByID(ctx, tx, idTransaction)
+	transaction, err := transactionRepo.GetByID(ctx, tx, idTransaction)
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
 	}
@@ -68,7 +79,7 @@ func (t *TransactionService) CreateTransaction(ctx context.Context, transactionR
 
 	transaction := helper.ToTransactionCreate(transactionRequest)
 
-	err = t.TransactionRepo.Store(ctx, tx, transaction)
+	err = transactionRepo.Store(ctx, tx, transaction)
 	helper.PanicIfError(err)
 }
 
@@ -83,14 +94,14 @@ func (t *TransactionService) UpdateTransaction(ctx context.Context, transactionR
 		helper.CommitOrRollback(tx)
 	}()
 
-	_, err = t.TransactionRepo.GetByID(ctx, tx, int(transactionRequest.Id))
+	_, err = transactionRepo.GetByID(ctx, tx, int(transactionRequest.Id))
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
 	}
 
 	transaction := helper.ToTransactionUpdate(transactionRequest)
 
-	err = t.TransactionRepo.Update(ctx, tx, transaction)
+	err = transactionRepo.Update(ctx, tx, transaction)
 	helper.PanicIfError(err)
 }
 
@@ -102,11 +113,11 @@ func (t *TransactionService) DeleteTransaction(ctx context.Context, transactionI
 		helper.CommitOrRollback(tx)
 	}()
 
-	_, err = t.TransactionRepo.GetByID(ctx, tx, transactionId)
+	_, err = transactionRepo.GetByID(ctx, tx, transactionId)
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
 	}
 
-	err = t.TransactionRepo.Delete(ctx, tx, transactionId)
+	err = transactionRepo.Delete(ctx, tx, transactionId)
 	helper.PanicIfError(err)
 }

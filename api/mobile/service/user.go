@@ -12,20 +12,30 @@ import (
 )
 
 type UserService struct {
-	UserRepository repository.UserRepository
-	DB             *sql.DB
-	Validate       *validator.Validate
+	DB *sql.DB
+	//todo fix validate
+	Validate *validator.Validate
 }
 
-func NewUserService(userRepo repository.UserRepository, db *sql.DB, v *validator.Validate) UserServiceInterface {
+var (
+	//Register Repo
+	userRepo = repository.NewUserRepository()
+)
+
+func NewUserService(db *sql.DB, v *validator.Validate) UserServiceInterface {
 	return &UserService{
-		UserRepository: userRepo,
-		DB:             db,
-		Validate:       v,
+		DB:       db,
+		Validate: v,
 	}
 }
 
-func (u *UserService) GetUser(ctx context.Context, userId int) web.UserResponse {
+type UserServiceInterface interface {
+	GetUser(ctx context.Context, userId int) *web.UserResponse
+	CreateUser(ctx context.Context, userRequest web.UserCreateRequest)
+	UpdateUser(ctx context.Context, userRequest web.UserUpdateRequest)
+}
+
+func (u *UserService) GetUser(ctx context.Context, userId int) *web.UserResponse {
 	tx, err := u.DB.Begin()
 	helper.PanicIfError(err)
 
@@ -33,7 +43,7 @@ func (u *UserService) GetUser(ctx context.Context, userId int) web.UserResponse 
 		helper.CommitOrRollback(tx)
 	}()
 
-	user, err := u.UserRepository.GetByID(ctx, tx, userId)
+	user, err := userRepo.GetByID(ctx, tx, userId)
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))
 	}
@@ -53,7 +63,7 @@ func (u *UserService) CreateUser(ctx context.Context, userRequest web.UserCreate
 
 	user := helper.ToUserCreate(userRequest)
 
-	err = u.UserRepository.Store(ctx, tx, user)
+	err = userRepository.Store(ctx, tx, user)
 	helper.PanicIfError(err)
 }
 func (u *UserService) UpdateUser(ctx context.Context, userRequest web.UserUpdateRequest) {
@@ -69,6 +79,6 @@ func (u *UserService) UpdateUser(ctx context.Context, userRequest web.UserUpdate
 
 	user := helper.ToUserUpdate(userRequest)
 
-	err = u.UserRepository.Update(ctx, tx, user)
+	err = userRepository.Update(ctx, tx, user)
 	helper.PanicIfError(err)
 }
