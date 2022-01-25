@@ -1,9 +1,9 @@
 {
     "openapi": "3.0.3",
     "info": {
-        "title": "Mo",
-        "description": "API Spec for HC App",
-        "version": "1.0.0"
+        "title": "Keuanganku App",
+        "description": "API for Keuanganku App",
+        "version": "0.0.1"
     },
     "servers": [
         {
@@ -36,7 +36,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Success Login",
+                        "description": "Sign in success",
                         "content": {
                             "appilication/json":{
                                 "schema": {
@@ -48,11 +48,50 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Login Success"
+                                            "example": "Sign in succeed"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "400"
                                         },
-                                        "error": {
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "username": "username is required",
+                                                "password": "password is required"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "500"
+                                        },
+                                        "message": {
                                             "type": "string",
-                                            "example": ""
+                                            "example": "Something went wrong"
                                         }
                                     }
                                 }
@@ -95,6 +134,94 @@
                 },
                 "responses": {
                     "200": {
+                        "description": "Sign up success",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sign up succeed"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "400"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "username": "username is required",
+                                                "email": "email is required",
+                                                "fullname": "fullname is required",
+                                                "password": "password is required"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "500"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/forgotPassword": {
+            "post": {
+                "tags": ["Auth"],
+                "requestBody": {
+                    "content": {
+                        "appilication/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    }
+                                },
+                                "required": ["email"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
                         "description": "Success Login",
                         "content": {
                             "appilication/json":{
@@ -112,6 +239,68 @@
                                         "error": {
                                             "type": "string",
                                             "example": ""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "400"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "email": "email is required"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "404"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "500"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something went wrong"
                                         }
                                     }
                                 }
@@ -157,6 +346,112 @@
                 }
             },
             "post": {
+                "tags": ["Transaction"],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "appilication/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "jonidoe"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "asd2314"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Get Transaction",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login Success"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Transaction"],
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "appilication/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "jonidoe"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "asd2314"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Get Transaction",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login Success"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
                 "tags": ["Transaction"],
                 "security": [
                     {
