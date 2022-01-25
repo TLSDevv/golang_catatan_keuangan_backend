@@ -11,7 +11,7 @@
         }
     ],
     "paths": {
-        "/auth/login": {
+        "/auth/signIn": {
             "post": {
                 "tags": ["Auth"],
                 "requestBody": {
@@ -28,7 +28,8 @@
                                         "type": "string",
                                         "example": "asd2314"
                                     }
-                                }
+                                },
+                                "required": ["username", "password"]
                             }
                         }
                     }
@@ -61,8 +62,99 @@
                 }
             }
         },
-        "/transactions/{id}": {
+        "/auth/signUp": {
+            "post": {
+                "tags": ["Auth"],
+                "requestBody": {
+                    "content": {
+                        "appilication/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "jdoe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "fullname": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "12345"
+                                    }
+                                },
+                                "required": ["username", "email", "fullname", "password"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success Login",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login Success"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions": {
             "get": {
+                "tags": ["Transaction"],
+                "security": [{
+                    "BearerAuth": []
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get Transaction",
+                        "content": {
+                            "appilication/json":{
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "number",
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login Success"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
                 "tags": ["Transaction"],
                 "security": [{
                     "BearerAuth": []
@@ -112,15 +204,6 @@
                         }
                     }
                 }
-            }
-        }
-    },
-    "components": {
-        "securitySchemes": {
-            "BearerAuth":{
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
             }
         }
     }
