@@ -1,10 +1,10 @@
-openapi: '3.0.2'
+openapi: "3.0.2"
 info:
-  title: 'KeuanganKu App'
-  version: '1.0'
-  description: 'REST API Documentation for KeuanganKu APP by TLSDev'
+  title: "KeuanganKu App"
+  version: "1.0"
+  description: "REST API Documentation for KeuanganKu APP by TLSDev"
 servers:
-  - url: 'http://localhost:8000/api/v1'
+  - url: "http://localhost:8000/api/v1"
     description: Local
 tags:
   - name: Authentication
@@ -23,7 +23,7 @@ paths:
         - Users
       description: Create New user
       responses:
-        '200':
+        "200":
           description: Return user data
           content:
             application/json:
@@ -34,11 +34,11 @@ paths:
                     type: number
                     example: 200
                   data:
-                      $ref: ./schema/UsersResponse.v1.yml
+                    $ref: ./schema/UsersResponse.v1.yml
                   message:
                     type: string
                     example: Success Create User
-        '400':
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -46,53 +46,53 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
 
   /auth/login:
     post:
-      summary: 'Login'
-      description: 'For Login App'
+      summary: "Login"
+      description: "For Login App"
       requestBody:
         content:
           application/json:
             schema:
               $ref: ./schema/AuthLoginRequest.v1.yml
 
-      responses: 
-        '200':
-          description: 'OK'
+      responses:
+        "200":
+          description: "OK"
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   code:
-                      $ref: '#/components/schemas/Status200'
+                    $ref: "#/components/schemas/Status200"
                   message:
                     type: string
                     example: Success update transaction
 
-        '400':
-          description: 'Bad Request'
+        "400":
+          description: "Bad Request"
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
-                    example: Bad Request 
+                    example: Bad Request
       tags:
         - Authentication
 
   /auth/logout:
     post:
-      summary: 'Logout'
+      summary: "Logout"
       security:
         - ActivatedToken: []
       requestBody:
@@ -101,7 +101,7 @@ paths:
             schema:
               type: object
       responses:
-        '200':
+        "200":
           description: Success Logout Info
           content:
             application/json:
@@ -109,11 +109,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status200'
+                    $ref: "#/components/schemas/Status200"
                   message:
                     type: string
                     example: Success Logout
-        '400':
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -121,13 +121,13 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
       tags:
         - Authentication
-  
+
   /users/{id}:
     put:
       tags:
@@ -139,10 +139,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateUser'
+              $ref: "#/components/schemas/UpdateUser"
 
       responses:
-        '200':
+        "200":
           description: Return user data
           content:
             application/json:
@@ -153,11 +153,11 @@ paths:
                     type: number
                     example: 200
                   data:
-                      $ref: ./schema/UsersResponse.v1.yml
+                    $ref: ./schema/UsersResponse.v1.yml
                   message:
                     type: string
                     example: Success Update User
-        '400':
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -165,11 +165,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -177,18 +177,18 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status401'
+                    $ref: "#/components/schemas/Status401"
                   message:
                     type: string
                     example: Unauthorized
     get:
       tags:
         - Users
-      description: "Get user by id" 
+      description: "Get user by id"
       security:
         - ActivatedToken: []
       responses:
-        '200':
+        "200":
           description: Return user data
           content:
             application/json:
@@ -199,11 +199,11 @@ paths:
                     type: number
                     example: 200
                   data:
-                      $ref: ./schema/UsersResponse.v1.yml
+                    $ref: ./schema/UsersResponse.v1.yml
                   message:
                     type: string
                     example: todo
-        '400':
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -211,11 +211,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -223,7 +223,7 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status401'
+                    $ref: "#/components/schemas/Status401"
                   message:
                     type: string
                     example: Unauthorized
@@ -235,10 +235,10 @@ paths:
       security:
         - ActivatedToken: []
       parameters:
-        - $ref: '#components/parameters/PaginationPage'
-        - $ref: '#components/parameters/PaginationLimit'
+        - $ref: "#components/parameters/PaginationPage"
+        - $ref: "#components/parameters/PaginationLimit"
       responses:
-        '200':
+        "200":
           description: Return paginated transactions
           content:
             application/json:
@@ -246,15 +246,15 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status200'
+                    $ref: "#/components/schemas/Status200"
                   data:
                     type: array
                     description: Get List Transaction
                     items:
-                      $ref: '#/components/schemas/Transaction'
+                      $ref: "#/components/schemas/Transaction"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
-        '400':
+                    $ref: "#/components/schemas/Pagination"
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -262,11 +262,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -274,23 +274,23 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status401'
+                    $ref: "#/components/schemas/Status401"
                   message:
                     type: string
                     example: Unauthorized
     post:
       tags:
-      - Transaction
-      description: Create a new transaction 
+        - Transaction
+      description: Create a new transaction
       security:
         - ActivatedToken: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestTransaction'
+              $ref: "#/components/schemas/RequestTransaction"
       responses:
-        '200':
+        "200":
           description: Success create new transaction
           content:
             application/json:
@@ -298,11 +298,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status200'
+                    $ref: "#/components/schemas/Status200"
                   message:
                     type: string
                     example: Success Create New Transaction
-        '400':
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -310,11 +310,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -322,11 +322,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status401'
+                    $ref: "#/components/schemas/Status401"
                   message:
                     type: string
                     example: Unauthorized
-        
+
   /transaction/{id}:
     get:
       tags:
@@ -335,7 +335,7 @@ paths:
       security:
         - ActivatedToken: []
       responses:
-        '200':
+        "200":
           description: Return a transaction by id
           content:
             application/json:
@@ -343,13 +343,13 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status200'
+                    $ref: "#/components/schemas/Status200"
                   data:
-                    $ref: '#/components/schemas/Transaction'
+                    $ref: "#/components/schemas/Transaction"
                   message:
                     type: string
                     example: Success Get Transaction
-        '400':
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -357,11 +357,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -369,7 +369,7 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status401'
+                    $ref: "#/components/schemas/Status401"
                   message:
                     type: string
                     example: Unauthorized
@@ -383,9 +383,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestTransaction'
+              $ref: "#/components/schemas/RequestTransaction"
       responses:
-        '200':
+        "200":
           description: Return a TODO
           content:
             application/json:
@@ -393,11 +393,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status200'
+                    $ref: "#/components/schemas/Status200"
                   message:
                     type: string
                     example: Success update transaction
-        '400':
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -405,11 +405,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -417,7 +417,7 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status401'
+                    $ref: "#/components/schemas/Status401"
                   message:
                     type: string
                     example: Unauthorized
@@ -435,7 +435,7 @@ paths:
               type: object
 
       responses:
-        '200':
+        "200":
           description: Success create new category
           content:
             application/json:
@@ -443,11 +443,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status200'
+                    $ref: "#/components/schemas/Status200"
                   message:
                     type: string
                     example: Success Create New Category
-        '400':
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -455,11 +455,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -467,7 +467,7 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status401'
+                    $ref: "#/components/schemas/Status401"
                   message:
                     type: string
                     example: Unauthorized
@@ -483,7 +483,7 @@ paths:
             schema:
               type: object
       responses:
-        '200':
+        "200":
           description: Success Get List Category
           content:
             application/json:
@@ -491,14 +491,14 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status200'
+                    $ref: "#/components/schemas/Status200"
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Category'
+                      $ref: "#/components/schemas/Category"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
-        '400':
+                    $ref: "#/components/schemas/Pagination"
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -506,11 +506,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -518,11 +518,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status401'
+                    $ref: "#/components/schemas/Status401"
                   message:
                     type: string
                     example: Unauthorized
-        
+
   /category/{id}:
     get:
       tags:
@@ -531,7 +531,7 @@ paths:
       security:
         - ActivatedToken: []
       responses:
-        '200':
+        "200":
           description: Return a Category by id
           content:
             application/json:
@@ -539,13 +539,13 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status200'
+                    $ref: "#/components/schemas/Status200"
                   data:
-                    $ref: '#/components/schemas/Category'
+                    $ref: "#/components/schemas/Category"
                   message:
                     type: string
                     example: Success Get Category
-        '400':
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -553,11 +553,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -565,7 +565,7 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status401'
+                    $ref: "#/components/schemas/Status401"
                   message:
                     type: string
                     example: Unauthorized
@@ -579,9 +579,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RequestCategory'
+              $ref: "#/components/schemas/RequestCategory"
       responses:
-        '200':
+        "200":
           description: Success Update data Category by ID
           content:
             application/json:
@@ -589,11 +589,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status200'
+                    $ref: "#/components/schemas/Status200"
                   message:
                     type: string
                     example: Success Update Category
-        '400':
+        "400":
           description: "Bad Request"
           content:
             application/json:
@@ -601,11 +601,11 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status400'
+                    $ref: "#/components/schemas/Status400"
                   message:
                     type: string
                     example: Bad Request
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
@@ -613,11 +613,10 @@ paths:
                 type: object
                 properties:
                   code:
-                    $ref: '#/components/schemas/Status401'
+                    $ref: "#/components/schemas/Status401"
                   message:
                     type: string
                     example: Unauthorized
-    
 
 components:
   schemas:
@@ -637,7 +636,7 @@ components:
         name:
           type: string
           example: joni rapan
-    
+
     RequestCategory:
       type: object
       properties:
@@ -688,7 +687,7 @@ components:
           type: string
           description: unique id from transaction
           example: asdjfhjksh
-        
+
     #common
     #common code
     Status200:
@@ -712,7 +711,7 @@ components:
     Status401:
       type: number
       example: 401
-    
+
     Pagination:
       type: object
       description: Pagination Info
@@ -736,7 +735,6 @@ components:
         - limit
         - total
 
-    
     Category:
       type: object
       properties:
@@ -774,7 +772,7 @@ components:
           type: string
           example: Pengeluaran
         category:
-          $ref: '#/components/schemas/Category'
+          $ref: "#/components/schemas/Category"
         amount:
           type: number
           example: 20000

@@ -8,3 +8,10 @@ db:
   name: "catatan_keuangan"
   user: "mapple"
   password: "afandy"
+auth:
+  jwt_private_key : "./.keys/id_rsa_local.pem"
+  jwt_public_key : "./.keys/id_rsa_local.pub.pem"
+
+  jwt_lifetime:
+    mobile : "1h"
+    refreshToken: "12h"
