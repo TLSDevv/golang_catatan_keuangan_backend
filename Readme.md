@@ -1,5 +1,1 @@
-# Catatan KeuanganKu
-
-## Libraries
-- Gorila Mux
-- Logrus 
+# Backend Keuanganku
