@@ -11,9 +11,12 @@ var (
 func init() {
 	loadConfig()
 	conf = initConfig()
+	dbconf := loadConfigDB()
+	db = initDatabase(dbconf)
 }
 
 func Execute() {
+	defer db.Close()
 	//register all server needs, db,repo, etc
 
 	api := handler.NewAPI()
