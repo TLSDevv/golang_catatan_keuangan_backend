@@ -11,7 +11,7 @@ type Config struct {
 }
 
 func loadConfig() {
-	viper.SetConfigName("env")  // name of config file (without extension)
+	viper.SetConfigName(".env")  // name of config file (without extension)
 	viper.SetConfigType("yml")  // REQUIRED if the config file does not have the extension in the name
 	viper.AddConfigPath(".")    // optionally look for config in the working directory
 	err := viper.ReadInConfig() // Find and read the config file
