@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/dto"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 )
 
 type User struct {
@@ -35,16 +36,17 @@ func (user User) Validate() error {
 		return errors.New("Email required")
 	}
 
-	// password needs to hash before save
+	user.Password = pkg.PasswordToHash(user.Password)
 
 	return nil
 }
 
 func (u User) CheckPassword(password string) error {
-	if u.Password != password {
-		return errors.New("Wrong username and password!")
+	if pkg.ComparePassword(password, u.Password) {
+		return nil
 	}
-	return nil
+
+	return errors.New("Wrong username and password!")
 }
 
 func (u User) Update(userDto dto.UserRequest) {

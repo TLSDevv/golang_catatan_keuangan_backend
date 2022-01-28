@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	model "github.com/TLSDevv/golang_catatan_keuangan_backend/model/entity"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/spf13/viper"
 )
@@ -54,11 +53,11 @@ type AccessDetails struct {
 	Username string
 }
 
-func PrepareTokenClaims(user model.User, typeToken int) *TokenClaims {
+func PrepareTokenClaims(username string, id, typeToken int) *TokenClaims {
 	if typeToken == 1 {
 		return &TokenClaims{
-			ID:       user.ID,
-			Username: user.Username,
+			ID:       id,
+			Username: username,
 			StandardClaims: jwt.StandardClaims{
 				ExpiresAt: time.Now().Add(time.Minute * time.Duration(AccessTokenLifeTime)).Unix(),
 			},
@@ -66,8 +65,8 @@ func PrepareTokenClaims(user model.User, typeToken int) *TokenClaims {
 	}
 
 	return &TokenClaims{
-		ID:       user.ID,
-		Username: user.Username,
+		ID:       id,
+		Username: username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Minute * time.Duration(RefreshTokenLifeTime)).Unix(),
 		},
