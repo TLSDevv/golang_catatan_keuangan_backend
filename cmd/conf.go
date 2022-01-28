@@ -74,7 +74,7 @@ func loadConfigDB() *Database {
 
 	password := viper.GetString("DB_PASSWORD")
 	if len(password) == 0 {
-		password = "root"
+		password = ""
 	}
 
 	name := viper.GetString("DB_NAME")
