@@ -17,9 +17,9 @@ CREATE TABLE users(
 CREATE TABLE transactions(
     id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
-    name VARCHAR(255),
+    trc_name VARCHAR(255),
     category VARCHAR(100),
-    type TINYINT(1),
+    trc_type TINYINT(1),
     amount BIGINT,
     transaction_at DATETIME NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
