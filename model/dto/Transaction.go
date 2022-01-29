@@ -4,6 +4,7 @@ import "time"
 
 type Transaction struct {
 	ID            int       `json:"id"`
+	UserId        int       `json:"user_id"`
 	TrcName       string    `json:"trc_name"`
 	Category      string    `json:"category"`
 	TrcType       int       `json:"trc_type"`

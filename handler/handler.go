@@ -4,16 +4,21 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/service"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
 
 type API struct {
-	//service
+	userService service.IUserService
 }
 
-func NewAPI() *API {
-	return &API{}
+func NewAPI(
+	usService service.IUserService,
+) *API {
+	return &API{
+		userService: usService,
+	}
 }
 
 func (a API) Start(host, port string) {
@@ -25,6 +30,10 @@ func (a API) Start(host, port string) {
 		Addr:    endPoint(host, port),
 		Handler: r,
 	}
+
+	apiRoute := r.PathPrefix("/api/v1").Subrouter()
+
+	NewUserHandler(apiRoute, a.userService)
 
 	fmt.Printf("Listening %s to port %s", host, port)
 	err := server.ListenAndServe()

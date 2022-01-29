@@ -33,3 +33,25 @@ func UserDTOToUser(u dto.User) entity.User {
 		Fullname: u.Fullname,
 	}
 }
+
+func TransactionToDTO(t entity.Transaction) dto.Transaction {
+	return dto.Transaction{
+		ID:            t.ID,
+		TrcName:       t.TrcName,
+		Amount:        t.Amount,
+		CreatedAt:     t.CreatedAt,
+		TransactionAt: t.TransactionAt,
+		TrcType:       t.TrcType,
+	}
+}
+
+func TransactionsToDTO(t []entity.Transaction) []dto.Transaction {
+	transactions := []dto.Transaction{}
+
+	for _, value := range t {
+		transaction := TransactionToDTO(value)
+		transactions = append(transactions, transaction)
+	}
+
+	return transactions
+}
