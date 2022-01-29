@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/dto"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 )
 
 type User struct {
@@ -13,9 +14,9 @@ type User struct {
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
 	Fullname  string    `json:"fullname"`
-	createdAt time.Time `json:"created_at"`
-	updatedAt time.Time `json:"updated_at"`
-	deletedAt time.Time `json:"deleted_at"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt time.Time `json:"deleted_at"`
 }
 
 func (user User) Validate() error {
@@ -35,23 +36,35 @@ func (user User) Validate() error {
 		return errors.New("Email required")
 	}
 
-	// password needs to hash before save
+	user.Password = pkg.PasswordToHash(user.Password)
 
 	return nil
-}
-
-func (u User) ToDTO() dto.User {
-	return dto.User{
-		ID:       u.ID,
-		Username: u.Username,
-		Email:    u.Email,
-		Fullname: u.Fullname,
-	}
 }
 
 func (u User) CheckPassword(password string) error {
-	if u.Password != password {
-		return errors.New("Wrong username and password!")
+	if pkg.ComparePassword(password, u.Password) {
+		return nil
 	}
-	return nil
+
+	return errors.New("Wrong username and password!")
+}
+
+func (u User) Update(userDto dto.UserRequest) {
+	if len(userDto.Username) != 0 {
+		u.Username = userDto.Username
+	}
+
+	if len(userDto.Email) != 0 {
+		u.Email = userDto.Email
+	}
+
+	if len(userDto.Password) != 0 {
+		u.Password = userDto.Password
+	}
+
+	if len(userDto.Fullname) != 0 {
+		u.Fullname = userDto.Fullname
+	}
+
+	u.UpdatedAt = time.Now()
 }

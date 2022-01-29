@@ -21,12 +21,11 @@ func initDatabase(dbConf *Database) *sql.DB {
 		dbConf.Port,
 		dbConf.Name,
 	)
-	print(dbConn)
 	db, err := sql.Open(dbConf.Driver, dbConn)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Sprintln(db)
+
 	err = db.Ping()
 
 	if err != nil {
