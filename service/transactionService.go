@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/helper"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/dto"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/repository"
 )
@@ -40,7 +39,23 @@ func (service TransactionService) FindAll(ctx context.Context) ([]dto.Transactio
 		tx.Commit()
 	}()
 
-	transactions, err := service.TransactionRepository.FindAll(ctx, tx)
+	trcList, err := service.TransactionRepository.FindAll(ctx, tx)
+	if err != nil {
+		return []dto.Transaction{}, nil
+	}
 
-	return helper.TransactionsToDTO(transactions), nil
+	trcDtoList := []dto.Transaction{}
+	for _, tItem := range trcList {
+		trcDtoList = append(trcDtoList, dto.Transaction{
+			ID:            tItem.ID,
+			UserId:        tItem.UserId,
+			TrcName:       tItem.TrcName,
+			Category:      tItem.Category,
+			TrcType:       tItem.TrcType,
+			TransactionAt: tItem.TransactionAt,
+			CreatedAt:     tItem.CreatedAt,
+		})
+	}
+
+	return trcDtoList, nil
 }

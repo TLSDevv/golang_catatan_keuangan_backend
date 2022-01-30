@@ -7,13 +7,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type TransactionHandler struct {
-	trcService service.ITransactionService
+type ITransactionHandler interface {
+	FindAll(w http.ResponseWriter, r *http.Request)
 }
 
-func NewTransactionHandler(r *mux.Router, trcService service.ITransactionService) TransactionHandler {
+type TransactionHandler struct {
+	ts service.ITransactionService
+}
+
+func NewTransactionHandler(r *mux.Router, ts service.ITransactionService) ITransactionHandler {
 	th := TransactionHandler{
-		trcService: trcService,
+		ts: ts,
 	}
 
 	r.HandleFunc("/transactions", th.FindAll).Methods("GET")
@@ -22,13 +26,13 @@ func NewTransactionHandler(r *mux.Router, trcService service.ITransactionService
 }
 
 func (th TransactionHandler) FindAll(w http.ResponseWriter, r *http.Request) {
-	result, err := th.trcService.FindAll(r.Context())
+	result, err := th.ts.FindAll(r.Context())
 
 	if err != nil {
-		SendNoData(w, http.StatusInternalServerError, err.Error())
+		SendNoData(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	SendWithData(w, http.StatusOK, "Success", result)
+	SendWithData(w, http.StatusOK, "", result)
 	return
 }

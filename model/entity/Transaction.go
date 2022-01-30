@@ -55,3 +55,13 @@ func (t Transaction) ToDTO() dto.Transaction {
 		CreatedAt:     t.CreatedAt,
 	}
 }
+
+func (t Transaction) Update() {
+	t.Validate()
+
+	t.UpdatedAt = time.Now()
+}
+
+func (t Transaction) Delete() {
+	t.DeletedAt = time.Now()
+}
