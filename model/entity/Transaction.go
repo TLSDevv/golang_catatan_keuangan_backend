@@ -3,8 +3,6 @@ package entity
 import (
 	"errors"
 	"time"
-
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/dto"
 )
 
 type Transaction struct {
@@ -44,17 +42,17 @@ func (t Transaction) Validate() error {
 	return nil
 }
 
-func (t Transaction) ToDTO() dto.Transaction {
-	return dto.Transaction{
-		ID:            t.ID,
-		TrcName:       t.TrcName,
-		Category:      t.Category,
-		TrcType:       t.TrcType,
-		Amount:        t.Amount,
-		TransactionAt: t.TransactionAt,
-		CreatedAt:     t.CreatedAt,
-	}
-}
+// func (t Transaction) ToDTO() dto.Transaction {
+// 	return dto.Transaction{
+// 		ID:            t.ID,
+// 		TrcName:       t.TrcName,
+// 		Category:      t.Category,
+// 		TrcType:       t.TrcType,
+// 		Amount:        t.Amount,
+// 		TransactionAt: t.TransactionAt,
+// 		CreatedAt:     t.CreatedAt,
+// 	}
+// }
 
 func (t Transaction) Update() {
 	t.Validate()

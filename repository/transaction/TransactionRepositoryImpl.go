@@ -8,31 +8,24 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/entity"
 )
 
-type TransactionRepository struct {
+type transactionRepository struct {
 }
 
-type ITransactionRepository interface {
-	FindAll(ctx context.Context, tx *sql.Tx) ([]entity.Transaction, error)
-	FindById(ctx context.Context, tx *sql.Tx, trcId int) (entity.Transaction, error)
-	Create(ctx context.Context, tx *sql.Tx, trc entity.Transaction) error
-	Update(ctx context.Context, tx *sql.Tx, trc entity.Transaction) error
-	Delete(ctx context.Context, tx *sql.Tx, trcId int) error
-	Restore(ctx context.Context, tx *sql.Tx, trcId int) error
-	Purge(ctx context.Context, tx *sql.Tx, trcId int) error
+func NewTransactionRepository() TransactionRepository {
+	return transactionRepository{}
 }
 
-func NewTransactionRepository() ITransactionRepository {
-	return TransactionRepository{}
-}
-
-func (t TransactionRepository) FindAll(ctx context.Context, tx *sql.Tx) ([]entity.Transaction, error) {
+func (t transactionRepository) FindAll(ctx context.Context, tx *sql.Tx) ([]entity.Transaction, error) {
 	sql := `
 		SELECT 
 			id, user_id, trc_name, category, trc_type, amount, transaction_at, created_at
 		FROM
 			transactions`
 
-	// use string builder
+	// userId, userIdExist := params["userId"]
+	// if userIdExist {
+	// 	sql += " WHERE user_id = $1"
+	// }
 
 	rows, err := tx.QueryContext(ctx, sql)
 	defer rows.Close()
@@ -65,7 +58,7 @@ func (t TransactionRepository) FindAll(ctx context.Context, tx *sql.Tx) ([]entit
 	return transactions, nil
 }
 
-func (t TransactionRepository) FindById(ctx context.Context, tx *sql.Tx, trcId int) (entity.Transaction, error) {
+func (t transactionRepository) FindById(ctx context.Context, tx *sql.Tx, trcId int) (entity.Transaction, error) {
 	sql := `
 		SELECT
 			id, user_id, trc_name, category, trc_type, amount, transaction_at, created_at
@@ -101,7 +94,7 @@ func (t TransactionRepository) FindById(ctx context.Context, tx *sql.Tx, trcId i
 	return trc, nil
 }
 
-func (t TransactionRepository) Create(ctx context.Context, tx *sql.Tx, trc entity.Transaction) error {
+func (t transactionRepository) Create(ctx context.Context, tx *sql.Tx, trc entity.Transaction) error {
 	sql := `
 		INSERT INTO
 			transactions(
@@ -129,7 +122,7 @@ func (t TransactionRepository) Create(ctx context.Context, tx *sql.Tx, trc entit
 	return nil
 }
 
-func (t TransactionRepository) Update(ctx context.Context, tx *sql.Tx, trc entity.Transaction) error {
+func (t transactionRepository) Update(ctx context.Context, tx *sql.Tx, trc entity.Transaction) error {
 	sql := `
 		UPDATE
 			transactions
@@ -157,7 +150,7 @@ func (t TransactionRepository) Update(ctx context.Context, tx *sql.Tx, trc entit
 	return nil
 }
 
-func (t TransactionRepository) Delete(ctx context.Context, tx *sql.Tx, trcId int) error {
+func (t transactionRepository) Delete(ctx context.Context, tx *sql.Tx, trcId int) error {
 	sql := `
 		UPDATE
 			transactions
@@ -179,7 +172,7 @@ func (t TransactionRepository) Delete(ctx context.Context, tx *sql.Tx, trcId int
 	return nil
 }
 
-func (t TransactionRepository) Restore(ctx context.Context, tx *sql.Tx, trcId int) error {
+func (t transactionRepository) Restore(ctx context.Context, tx *sql.Tx, trcId int) error {
 	sql := `
 		UPDATE
 			transactions
@@ -197,7 +190,7 @@ func (t TransactionRepository) Restore(ctx context.Context, tx *sql.Tx, trcId in
 	return nil
 }
 
-func (t TransactionRepository) Purge(ctx context.Context, tx *sql.Tx, trcId int) error {
+func (t transactionRepository) Purge(ctx context.Context, tx *sql.Tx, trcId int) error {
 	sql := `
 		DELETE FROM 
 			transactions

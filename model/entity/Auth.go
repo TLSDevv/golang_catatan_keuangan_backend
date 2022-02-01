@@ -5,6 +5,6 @@ type Auth struct {
 	RefreshToken string `json:"refresh_token`
 }
 
-type ResponseToken struct{
+type ResponseToken struct {
 	Token string `json:"token"`
 }

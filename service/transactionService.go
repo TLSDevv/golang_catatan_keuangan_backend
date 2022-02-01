@@ -8,10 +8,6 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/repository"
 )
 
-type ITransactionService interface {
-	FindAll(ctx context.Context) ([]dto.Transaction, error)
-}
-
 type TransactionService struct {
 	TransactionRepository repository.ITransactionRepository
 	DB                    *sql.DB

@@ -1,6 +1,8 @@
 package dto
 
-import "errors"
+import (
+	"errors"
+)
 
 type User struct {
 	ID       int    `json:"id"`

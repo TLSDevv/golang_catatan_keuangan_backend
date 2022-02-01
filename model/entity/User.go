@@ -4,7 +4,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/dto"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 )
 
@@ -49,22 +48,22 @@ func (u User) CheckPassword(password string) error {
 	return errors.New("Wrong username and password!")
 }
 
-func (u User) Update(userDto dto.UserRequest) {
-	if len(userDto.Username) != 0 {
-		u.Username = userDto.Username
-	}
+// func (u User) Update(userDto dto.UserRequest) {
+// 	if len(userDto.Username) != 0 {
+// 		u.Username = userDto.Username
+// 	}
 
-	if len(userDto.Email) != 0 {
-		u.Email = userDto.Email
-	}
+// 	if len(userDto.Email) != 0 {
+// 		u.Email = userDto.Email
+// 	}
 
-	if len(userDto.Password) != 0 {
-		u.Password = userDto.Password
-	}
+// 	if len(userDto.Password) != 0 {
+// 		u.Password = userDto.Password
+// 	}
 
-	if len(userDto.Fullname) != 0 {
-		u.Fullname = userDto.Fullname
-	}
+// 	if len(userDto.Fullname) != 0 {
+// 		u.Fullname = userDto.Fullname
+// 	}
 
-	u.UpdatedAt = time.Now()
-}
+// 	u.UpdatedAt = time.Now()
+// }
