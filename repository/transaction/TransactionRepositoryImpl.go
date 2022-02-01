@@ -1,207 +1,199 @@
 package repository
 
-import (
-	"context"
-	"database/sql"
-	"time"
+// type transactionRepository struct {
+// }
 
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/entity"
-)
+// func NewTransactionRepository() TransactionRepository {
+// 	return transactionRepository{}
+// }
 
-type transactionRepository struct {
-}
+// func (t transactionRepository) FindAll(ctx context.Context, tx *sql.Tx) ([]entity.Transaction, error) {
+// 	sql := `
+// 		SELECT
+// 			id, user_id, trc_name, category, trc_type, amount, transaction_at, created_at
+// 		FROM
+// 			transactions`
 
-func NewTransactionRepository() TransactionRepository {
-	return transactionRepository{}
-}
+// 	// userId, userIdExist := params["userId"]
+// 	// if userIdExist {
+// 	// 	sql += " WHERE user_id = $1"
+// 	// }
 
-func (t transactionRepository) FindAll(ctx context.Context, tx *sql.Tx) ([]entity.Transaction, error) {
-	sql := `
-		SELECT 
-			id, user_id, trc_name, category, trc_type, amount, transaction_at, created_at
-		FROM
-			transactions`
+// 	rows, err := tx.QueryContext(ctx, sql)
+// 	defer rows.Close()
 
-	// userId, userIdExist := params["userId"]
-	// if userIdExist {
-	// 	sql += " WHERE user_id = $1"
-	// }
+// 	if err == nil {
+// 		panic(err)
+// 	}
 
-	rows, err := tx.QueryContext(ctx, sql)
-	defer rows.Close()
+// 	transactions := []entity.Transaction{}
+// 	for rows.Next() {
+// 		transaction := entity.Transaction{}
 
-	if err == nil {
-		panic(err)
-	}
+// 		err := rows.Scan(
+// 			&transaction.ID,
+// 			&transaction.TrcName,
+// 			&transaction.Category,
+// 			&transaction.TrcType,
+// 			&transaction.Amount,
+// 			&transaction.TransactionAt,
+// 			&transaction.CreatedAt,
+// 		)
 
-	transactions := []entity.Transaction{}
-	for rows.Next() {
-		transaction := entity.Transaction{}
+// 		if err == nil {
+// 			panic(err)
+// 		}
 
-		err := rows.Scan(
-			&transaction.ID,
-			&transaction.TrcName,
-			&transaction.Category,
-			&transaction.TrcType,
-			&transaction.Amount,
-			&transaction.TransactionAt,
-			&transaction.CreatedAt,
-		)
+// 		transactions = append(transactions, transaction)
+// 	}
 
-		if err == nil {
-			panic(err)
-		}
+// 	return transactions, nil
+// }
 
-		transactions = append(transactions, transaction)
-	}
+// func (t transactionRepository) FindById(ctx context.Context, tx *sql.Tx, trcId int) (entity.Transaction, error) {
+// 	sql := `
+// 		SELECT
+// 			id, user_id, trc_name, category, trc_type, amount, transaction_at, created_at
+// 		FROM
+// 			transactions
+// 		WHERE
+// 			id=$1`
 
-	return transactions, nil
-}
+// 	rows, err := tx.QueryContext(ctx, sql, trcId)
+// 	if err != nil {
+// 		return entity.Transaction{}, err
+// 	}
 
-func (t transactionRepository) FindById(ctx context.Context, tx *sql.Tx, trcId int) (entity.Transaction, error) {
-	sql := `
-		SELECT
-			id, user_id, trc_name, category, trc_type, amount, transaction_at, created_at
-		FROM
-			transactions
-		WHERE
-			id=$1`
+// 	defer rows.Close()
 
-	rows, err := tx.QueryContext(ctx, sql, trcId)
-	if err != nil {
-		return entity.Transaction{}, err
-	}
+// 	trc := entity.Transaction{}
 
-	defer rows.Close()
+// 	if rows.Next() {
+// 		err := rows.Scan(
+// 			&trc.ID,
+// 			&trc.TrcName,
+// 			&trc.Category,
+// 			&trc.TrcType,
+// 			&trc.TransactionAt,
+// 			&trc.CreatedAt,
+// 		)
 
-	trc := entity.Transaction{}
+// 		if err != nil {
+// 			return entity.Transaction{}, err
+// 		}
+// 	}
 
-	if rows.Next() {
-		err := rows.Scan(
-			&trc.ID,
-			&trc.TrcName,
-			&trc.Category,
-			&trc.TrcType,
-			&trc.TransactionAt,
-			&trc.CreatedAt,
-		)
+// 	return trc, nil
+// }
 
-		if err != nil {
-			return entity.Transaction{}, err
-		}
-	}
+// func (t transactionRepository) Create(ctx context.Context, tx *sql.Tx, trc entity.Transaction) error {
+// 	sql := `
+// 		INSERT INTO
+// 			transactions(
+// 				user_id,
+// 				trc_name,
+// 				category,
+// 				trc_type,
+// 				amount,
+// 				transaction_at
+// 			)
+// 			VALUES($1, $2, $3, $4, $5, $6)`
 
-	return trc, nil
-}
+// 	_, err := tx.ExecContext(ctx, sql,
+// 		trc.UserId,
+// 		trc.TrcName,
+// 		trc.Category,
+// 		trc.TrcType,
+// 		trc.Amount,
+// 		trc.TransactionAt)
 
-func (t transactionRepository) Create(ctx context.Context, tx *sql.Tx, trc entity.Transaction) error {
-	sql := `
-		INSERT INTO
-			transactions(
-				user_id,
-				trc_name,
-				category,
-				trc_type,
-				amount,
-				transaction_at
-			)
-			VALUES($1, $2, $3, $4, $5, $6)`
+// 	if err != nil {
+// 		return err
+// 	}
 
-	_, err := tx.ExecContext(ctx, sql,
-		trc.UserId,
-		trc.TrcName,
-		trc.Category,
-		trc.TrcType,
-		trc.Amount,
-		trc.TransactionAt)
+// 	return nil
+// }
 
-	if err != nil {
-		return err
-	}
+// func (t transactionRepository) Update(ctx context.Context, tx *sql.Tx, trc entity.Transaction) error {
+// 	sql := `
+// 		UPDATE
+// 			transactions
+// 		SET
+// 			trc_name=$1,
+// 			category=$2,
+// 			trc_type=$3,
+// 			amount=$4,
+// 			transaction_at=$5
+// 		WHERE
+// 			id=$6`
 
-	return nil
-}
+// 	_, err := tx.ExecContext(ctx, sql,
+// 		trc.TrcName,
+// 		trc.Category,
+// 		trc.TrcType,
+// 		trc.Amount,
+// 		trc.TransactionAt,
+// 		trc.ID)
 
-func (t transactionRepository) Update(ctx context.Context, tx *sql.Tx, trc entity.Transaction) error {
-	sql := `
-		UPDATE
-			transactions
-		SET
-			trc_name=$1,
-			category=$2,
-			trc_type=$3,
-			amount=$4,
-			transaction_at=$5
-		WHERE
-			id=$6`
+// 	if err != nil {
+// 		return err
+// 	}
 
-	_, err := tx.ExecContext(ctx, sql,
-		trc.TrcName,
-		trc.Category,
-		trc.TrcType,
-		trc.Amount,
-		trc.TransactionAt,
-		trc.ID)
+// 	return nil
+// }
 
-	if err != nil {
-		return err
-	}
+// func (t transactionRepository) Delete(ctx context.Context, tx *sql.Tx, trcId int) error {
+// 	sql := `
+// 		UPDATE
+// 			transactions
+// 		SET
+// 			deleted_at=$1
+// 		WHERE
+// 			id=$2`
 
-	return nil
-}
+// 	deletedAt := time.Now()
 
-func (t transactionRepository) Delete(ctx context.Context, tx *sql.Tx, trcId int) error {
-	sql := `
-		UPDATE
-			transactions
-		SET
-			deleted_at=$1
-		WHERE
-			id=$2`
+// 	_, err := tx.ExecContext(ctx, sql,
+// 		deletedAt,
+// 		trcId)
 
-	deletedAt := time.Now()
+// 	if err != nil {
+// 		return err
+// 	}
 
-	_, err := tx.ExecContext(ctx, sql,
-		deletedAt,
-		trcId)
+// 	return nil
+// }
 
-	if err != nil {
-		return err
-	}
+// func (t transactionRepository) Restore(ctx context.Context, tx *sql.Tx, trcId int) error {
+// 	sql := `
+// 		UPDATE
+// 			transactions
+// 		SET
+// 			deleted_at=NULL
+// 		WHERE
+// 			id=$1`
 
-	return nil
-}
+// 	_, err := tx.ExecContext(ctx, sql, trcId)
 
-func (t transactionRepository) Restore(ctx context.Context, tx *sql.Tx, trcId int) error {
-	sql := `
-		UPDATE
-			transactions
-		SET
-			deleted_at=NULL
-		WHERE
-			id=$1`
+// 	if err != nil {
+// 		return err
+// 	}
 
-	_, err := tx.ExecContext(ctx, sql, trcId)
+// 	return nil
+// }
 
-	if err != nil {
-		return err
-	}
+// func (t transactionRepository) Purge(ctx context.Context, tx *sql.Tx, trcId int) error {
+// 	sql := `
+// 		DELETE FROM
+// 			transactions
+// 		WHERE
+// 			id=$1`
 
-	return nil
-}
+// 	_, err := tx.ExecContext(ctx, sql, trcId)
 
-func (t transactionRepository) Purge(ctx context.Context, tx *sql.Tx, trcId int) error {
-	sql := `
-		DELETE FROM 
-			transactions
-		WHERE
-			id=$1`
+// 	if err != nil {
+// 		return err
+// 	}
 
-	_, err := tx.ExecContext(ctx, sql, trcId)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
+// 	return nil
+// }

@@ -1,38 +1,31 @@
 package handler
 
-import (
-	"net/http"
+// type ITransactionHandler interface {
+// 	FindAll(w http.ResponseWriter, r *http.Request)
+// }
 
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/service"
-	"github.com/gorilla/mux"
-)
+// type TransactionHandler struct {
+// 	ts service.ITransactionService
+// }
 
-type ITransactionHandler interface {
-	FindAll(w http.ResponseWriter, r *http.Request)
-}
+// func NewTransactionHandler(r *mux.Router, ts service.ITransactionService) ITransactionHandler {
+// 	th := TransactionHandler{
+// 		ts: ts,
+// 	}
 
-type TransactionHandler struct {
-	ts service.ITransactionService
-}
+// 	r.HandleFunc("/transactions", th.FindAll).Methods("GET")
 
-func NewTransactionHandler(r *mux.Router, ts service.ITransactionService) ITransactionHandler {
-	th := TransactionHandler{
-		ts: ts,
-	}
+// 	return th
+// }
 
-	r.HandleFunc("/transactions", th.FindAll).Methods("GET")
+// func (th TransactionHandler) FindAll(w http.ResponseWriter, r *http.Request) {
+// 	result, err := th.ts.FindAll(r.Context())
 
-	return th
-}
+// 	if err != nil {
+// 		SendNoData(w, http.StatusBadRequest, err.Error())
+// 		return
+// 	}
 
-func (th TransactionHandler) FindAll(w http.ResponseWriter, r *http.Request) {
-	result, err := th.ts.FindAll(r.Context())
-
-	if err != nil {
-		SendNoData(w, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	SendWithData(w, http.StatusOK, "", result)
-	return
-}
+// 	SendWithData(w, http.StatusOK, "", result)
+// 	return
+// }

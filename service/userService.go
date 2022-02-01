@@ -1,188 +1,177 @@
 package service
 
-import (
-	"context"
-	"database/sql"
-	"errors"
+// type IUserService interface {
+// 	Create(ctx context.Context, user dto.UserRequest) error
+// 	Update(ctx context.Context, id int, user dto.UserRequest) error
+// 	Delete(ctx context.Context, id int) error
+// 	FindById(ctx context.Context, id int) (dto.User, error)
+// 	List(ctx context.Context) ([]dto.User, error)
+// }
 
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/helper"
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/dto"
-	model "github.com/TLSDevv/golang_catatan_keuangan_backend/model/entity"
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/repository"
-)
+// type UserService struct {
+// 	UserRepository repository.IUserRepository
+// 	DB             *sql.DB
+// }
 
-type IUserService interface {
-	Create(ctx context.Context, user dto.UserRequest) error
-	Update(ctx context.Context, id int, user dto.UserRequest) error
-	Delete(ctx context.Context, id int) error
-	FindById(ctx context.Context, id int) (dto.User, error)
-	List(ctx context.Context) ([]dto.User, error)
-}
+// func NewUserService(userRepo repository.IUserRepository, db *sql.DB) IUserService {
+// 	return UserService{
+// 		UserRepository: userRepo,
+// 		DB:             db,
+// 	}
+// }
 
-type UserService struct {
-	UserRepository repository.IUserRepository
-	DB             *sql.DB
-}
+// func (service UserService) Create(ctx context.Context, userDto dto.UserRequest) error {
+// 	tx, err := service.DB.Begin()
 
-func NewUserService(userRepo repository.IUserRepository, db *sql.DB) IUserService {
-	return UserService{
-		UserRepository: userRepo,
-		DB:             db,
-	}
-}
+// 	if err != nil {
+// 		return err
+// 	}
 
-func (service UserService) Create(ctx context.Context, userDto dto.UserRequest) error {
-	tx, err := service.DB.Begin()
+// 	defer func() {
+// 		if err != nil {
+// 			tx.Rollback()
+// 		}
 
-	if err != nil {
-		return err
-	}
+// 		tx.Commit()
+// 	}()
 
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
+// 	user := model.User{
+// 		Username: userDto.Username,
+// 		Email:    userDto.Email,
+// 		Password: userDto.Password,
+// 		Fullname: userDto.Fullname,
+// 	}
 
-		tx.Commit()
-	}()
+// 	err = service.UserRepository.Create(ctx, tx, user)
 
-	user := model.User{
-		Username: userDto.Username,
-		Email:    userDto.Email,
-		Password: userDto.Password,
-		Fullname: userDto.Fullname,
-	}
+// 	if err != nil {
+// 		return err
+// 	}
 
-	err = service.UserRepository.Create(ctx, tx, user)
+// 	return nil
+// }
 
-	if err != nil {
-		return err
-	}
+// func (service UserService) Update(ctx context.Context, id int, userDto dto.UserRequest) error {
+// 	tx, err := service.DB.Begin()
 
-	return nil
-}
+// 	if err != nil {
+// 		return err
+// 	}
 
-func (service UserService) Update(ctx context.Context, id int, userDto dto.UserRequest) error {
-	tx, err := service.DB.Begin()
+// 	defer func() {
+// 		if err != nil {
+// 			tx.Rollback()
+// 		}
 
-	if err != nil {
-		return err
-	}
+// 		tx.Commit()
+// 	}()
 
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
+// 	user, err := service.UserRepository.FindById(ctx, tx, id)
 
-		tx.Commit()
-	}()
+// 	if err != nil {
+// 		return err
+// 	}
 
-	user, err := service.UserRepository.FindById(ctx, tx, id)
+// 	if user.ID == 0 {
+// 		return errors.New("User Not Found")
+// 	}
 
-	if err != nil {
-		return err
-	}
+// 	user.Update(userDto)
 
-	if user.ID == 0 {
-		return errors.New("User Not Found")
-	}
+// 	err = service.UserRepository.Update(ctx, tx, user)
 
-	user.Update(userDto)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	err = service.UserRepository.Update(ctx, tx, user)
+// 	return nil
+// }
 
-	if err != nil {
-		return err
-	}
+// func (service UserService) Delete(ctx context.Context, id int) error {
+// 	tx, err := service.DB.Begin()
 
-	return nil
-}
+// 	if err != nil {
+// 		return err
+// 	}
 
-func (service UserService) Delete(ctx context.Context, id int) error {
-	tx, err := service.DB.Begin()
+// 	defer func() {
+// 		if err != nil {
+// 			tx.Rollback()
+// 		}
 
-	if err != nil {
-		return err
-	}
+// 		tx.Commit()
+// 	}()
 
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
+// 	user, err := service.UserRepository.FindById(ctx, tx, id)
 
-		tx.Commit()
-	}()
+// 	if err != nil {
+// 		return err
+// 	}
 
-	user, err := service.UserRepository.FindById(ctx, tx, id)
+// 	if user.ID == 0 {
+// 		return errors.New("User Not Found")
+// 	}
 
-	if err != nil {
-		return err
-	}
+// 	err = service.UserRepository.Delete(ctx, tx, user)
 
-	if user.ID == 0 {
-		return errors.New("User Not Found")
-	}
+// 	if err != nil {
+// 		return err
+// 	}
 
-	err = service.UserRepository.Delete(ctx, tx, user)
+// 	return nil
+// }
 
-	if err != nil {
-		return err
-	}
+// func (service UserService) FindById(ctx context.Context, id int) (dto.User, error) {
+// 	tx, err := service.DB.Begin()
 
-	return nil
-}
+// 	if err != nil {
+// 		return dto.User{}, nil
+// 	}
 
-func (service UserService) FindById(ctx context.Context, id int) (dto.User, error) {
-	tx, err := service.DB.Begin()
+// 	defer func() {
+// 		if err != nil {
+// 			tx.Rollback()
+// 		}
 
-	if err != nil {
-		return dto.User{}, nil
-	}
+// 		tx.Commit()
+// 	}()
 
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
+// 	user, err := service.UserRepository.FindById(ctx, tx, id)
 
-		tx.Commit()
-	}()
+// 	if err != nil {
+// 		return dto.User{}, err
+// 	}
 
-	user, err := service.UserRepository.FindById(ctx, tx, id)
+// 	if user.ID == 0 {
+// 		return dto.User{}, errors.New("User Not Found")
+// 	}
 
-	if err != nil {
-		return dto.User{}, err
-	}
+// 	userDto := dto.User{
+// 		ID:       user.ID,
+// 		Username: user.Username,
+// 		Email:    user.Email,
+// 		Fullname: user.Fullname,
+// 	}
 
-	if user.ID == 0 {
-		return dto.User{}, errors.New("User Not Found")
-	}
+// 	return userDto, nil
+// }
 
-	userDto := dto.User{
-		ID:       user.ID,
-		Username: user.Username,
-		Email:    user.Email,
-		Fullname: user.Fullname,
-	}
+// func (service UserService) List(ctx context.Context) ([]dto.User, error) {
+// 	tx, err := service.DB.Begin()
 
-	return userDto, nil
-}
+// 	if err != nil {
+// 		return []dto.User{}, nil
+// 	}
 
-func (service UserService) List(ctx context.Context) ([]dto.User, error) {
-	tx, err := service.DB.Begin()
+// 	defer func() {
+// 		if err != nil {
+// 			tx.Rollback()
+// 		}
 
-	if err != nil {
-		return []dto.User{}, nil
-	}
+// 		tx.Commit()
+// 	}()
 
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
+// 	users, err := service.UserRepository.List(ctx, tx)
 
-		tx.Commit()
-	}()
-
-	users, err := service.UserRepository.List(ctx, tx)
-
-	return helper.UsersToDTO(users), nil
-}
+// 	return helper.UsersToDTO(users), nil
+// }

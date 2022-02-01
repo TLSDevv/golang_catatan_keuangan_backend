@@ -1,130 +1,122 @@
 package handler
 
-import (
-	"net/http"
+// type UserHandler struct {
+// 	usService service.IUserService
+// }
 
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/dto"
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/service"
-	"github.com/gorilla/mux"
-)
+// // r.URL.Query()["name"]
 
-type UserHandler struct {
-	usService service.IUserService
-}
+// func NewUserHandler(r *mux.Router, usService service.IUserService) UserHandler {
+// 	userHandler := UserHandler{
+// 		usService: usService,
+// 	}
 
-// r.URL.Query()["name"]
+// 	r.HandleFunc("/users", userHandler.List).Methods("GET")
+// 	r.HandleFunc("/users", userHandler.Create).Methods("POST")
+// 	r.HandleFunc("/users/{id}", userHandler.FindById).Methods("GET")
+// 	r.HandleFunc("/users/{id}", userHandler.Update).Methods("PUT")
+// 	r.HandleFunc("/users/{id}", userHandler.Delete).Methods("DELETE")
 
-func NewUserHandler(r *mux.Router, usService service.IUserService) UserHandler {
-	userHandler := UserHandler{
-		usService: usService,
-	}
+// 	return userHandler
+// }
 
-	r.HandleFunc("/users", userHandler.List).Methods("GET")
-	r.HandleFunc("/users", userHandler.Create).Methods("POST")
-	r.HandleFunc("/users/{id}", userHandler.FindById).Methods("GET")
-	r.HandleFunc("/users/{id}", userHandler.Update).Methods("PUT")
-	r.HandleFunc("/users/{id}", userHandler.Delete).Methods("DELETE")
+// func (ush UserHandler) Create(w http.ResponseWriter, r *http.Request) {
+// 	var reqBody dto.UserRequest
 
-	return userHandler
-}
+// 	err := Encode(w, &reqBody)
 
-func (ush UserHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var reqBody dto.UserRequest
+// 	if err != nil {
+// 		SendNoData(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	err := Encode(w, &reqBody)
+// 	err = reqBody.Validate()
 
-	if err != nil {
-		SendNoData(w, http.StatusInternalServerError, err.Error())
-		return
-	}
+// 	if err != nil {
+// 		SendNoData(w, http.StatusBadRequest, err.Error())
+// 		return
+// 	}
 
-	err = reqBody.Validate()
+// 	err = ush.usService.Create(r.Context(), reqBody)
 
-	if err != nil {
-		SendNoData(w, http.StatusBadRequest, err.Error())
-		return
-	}
+// 	if err != nil {
+// 		SendNoData(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	err = ush.usService.Create(r.Context(), reqBody)
+// 	SendNoData(w, http.StatusOK, "Success Create User")
+// 	return
+// }
 
-	if err != nil {
-		SendNoData(w, http.StatusInternalServerError, err.Error())
-		return
-	}
+// func (ush UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 
-	SendNoData(w, http.StatusOK, "Success Create User")
-	return
-}
+// 	var reqBody dto.UserRequest
 
-func (ush UserHandler) Update(w http.ResponseWriter, r *http.Request) {
+// 	err := Encode(w, &reqBody)
 
-	var reqBody dto.UserRequest
+// 	userId := GetParams(r, "id")
 
-	err := Encode(w, &reqBody)
+// 	if err != nil {
+// 		SendNoData(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	userId := GetParams(r, "id")
+// 	err = reqBody.Validate()
 
-	if err != nil {
-		SendNoData(w, http.StatusInternalServerError, err.Error())
-		return
-	}
+// 	if err != nil {
+// 		SendNoData(w, http.StatusBadRequest, err.Error())
+// 		return
+// 	}
 
-	err = reqBody.Validate()
+// 	err = ush.usService.Update(r.Context(), userId, reqBody)
 
-	if err != nil {
-		SendNoData(w, http.StatusBadRequest, err.Error())
-		return
-	}
+// 	if err != nil {
+// 		SendNoData(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	err = ush.usService.Update(r.Context(), userId, reqBody)
+// 	SendNoData(w, http.StatusOK, "Success Update User")
+// 	return
+// }
 
-	if err != nil {
-		SendNoData(w, http.StatusInternalServerError, err.Error())
-		return
-	}
+// func (ush UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
 
-	SendNoData(w, http.StatusOK, "Success Update User")
-	return
-}
+// 	userId := GetParams(r, "id")
 
-func (ush UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
+// 	err := ush.usService.Delete(r.Context(), userId)
 
-	userId := GetParams(r, "id")
+// 	if err != nil {
+// 		SendNoData(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	err := ush.usService.Delete(r.Context(), userId)
+// 	SendNoData(w, http.StatusOK, "Success Delete User")
+// 	return
+// }
 
-	if err != nil {
-		SendNoData(w, http.StatusInternalServerError, err.Error())
-		return
-	}
+// func (ush UserHandler) FindById(w http.ResponseWriter, r *http.Request) {
 
-	SendNoData(w, http.StatusOK, "Success Delete User")
-	return
-}
+// 	userId := GetParams(r, "id")
 
-func (ush UserHandler) FindById(w http.ResponseWriter, r *http.Request) {
+// 	result, err := ush.usService.FindById(r.Context(), userId)
 
-	userId := GetParams(r, "id")
+// 	if err != nil {
+// 		SendNoData(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-	result, err := ush.usService.FindById(r.Context(), userId)
+// 	SendWithData(w, http.StatusOK, "Success Delete User", result)
+// 	return
+// }
 
-	if err != nil {
-		SendNoData(w, http.StatusInternalServerError, err.Error())
-		return
-	}
+// func (ush UserHandler) List(w http.ResponseWriter, r *http.Request) {
+// 	result, err := ush.usService.List(r.Context())
 
-	SendWithData(w, http.StatusOK, "Success Delete User", result)
-	return
-}
+// 	if err != nil {
+// 		SendNoData(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
 
-func (ush UserHandler) List(w http.ResponseWriter, r *http.Request) {
-	result, err := ush.usService.List(r.Context())
-
-	if err != nil {
-		SendNoData(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	SendWithData(w, http.StatusOK, "Success List User", result)
-	return
-}
+// 	SendWithData(w, http.StatusOK, "Success List User", result)
+// 	return
+// }

@@ -1,57 +1,49 @@
 package service
 
-import (
-	"context"
-	"database/sql"
+// type TransactionService struct {
+// 	TransactionRepository repository.ITransactionRepository
+// 	DB                    *sql.DB
+// }
 
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/model/dto"
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/repository"
-)
+// func NewTransactionService(transactionRepo repository.ITransactionRepository, db *sql.DB) ITransactionService {
+// 	return TransactionService{
+// 		TransactionRepository: transactionRepo,
+// 		DB:                    db,
+// 	}
+// }
 
-type TransactionService struct {
-	TransactionRepository repository.ITransactionRepository
-	DB                    *sql.DB
-}
+// func (service TransactionService) FindAll(ctx context.Context) ([]dto.Transaction, error) {
+// 	tx, err := service.DB.Begin()
 
-func NewTransactionService(transactionRepo repository.ITransactionRepository, db *sql.DB) ITransactionService {
-	return TransactionService{
-		TransactionRepository: transactionRepo,
-		DB:                    db,
-	}
-}
+// 	if err != nil {
+// 		return []dto.Transaction{}, nil
+// 	}
 
-func (service TransactionService) FindAll(ctx context.Context) ([]dto.Transaction, error) {
-	tx, err := service.DB.Begin()
+// 	defer func() {
+// 		if err != nil {
+// 			tx.Rollback()
+// 		}
 
-	if err != nil {
-		return []dto.Transaction{}, nil
-	}
+// 		tx.Commit()
+// 	}()
 
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
+// 	trcList, err := service.TransactionRepository.FindAll(ctx, tx)
+// 	if err != nil {
+// 		return []dto.Transaction{}, nil
+// 	}
 
-		tx.Commit()
-	}()
+// 	trcDtoList := []dto.Transaction{}
+// 	for _, tItem := range trcList {
+// 		trcDtoList = append(trcDtoList, dto.Transaction{
+// 			ID:            tItem.ID,
+// 			UserId:        tItem.UserId,
+// 			TrcName:       tItem.TrcName,
+// 			Category:      tItem.Category,
+// 			TrcType:       tItem.TrcType,
+// 			TransactionAt: tItem.TransactionAt,
+// 			CreatedAt:     tItem.CreatedAt,
+// 		})
+// 	}
 
-	trcList, err := service.TransactionRepository.FindAll(ctx, tx)
-	if err != nil {
-		return []dto.Transaction{}, nil
-	}
-
-	trcDtoList := []dto.Transaction{}
-	for _, tItem := range trcList {
-		trcDtoList = append(trcDtoList, dto.Transaction{
-			ID:            tItem.ID,
-			UserId:        tItem.UserId,
-			TrcName:       tItem.TrcName,
-			Category:      tItem.Category,
-			TrcType:       tItem.TrcType,
-			TransactionAt: tItem.TransactionAt,
-			CreatedAt:     tItem.CreatedAt,
-		})
-	}
-
-	return trcDtoList, nil
-}
+// 	return trcDtoList, nil
+// }
