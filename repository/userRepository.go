@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	model "github.com/TLSDevv/golang_catatan_keuangan_backend/model/entity"
 )
@@ -11,6 +12,8 @@ type IUserRepository interface {
 	Create(ctx context.Context, tx *sql.Tx, user model.User) error
 	Update(ctx context.Context, tx *sql.Tx, user model.User) error
 	Delete(ctx context.Context, tx *sql.Tx, user model.User) error
+	Purge(ctx context.Context, tx *sql.Tx, user model.User) error
+	Restore(ctx context.Context, tx *sql.Tx, user model.User) error
 	FindById(ctx context.Context, tx *sql.Tx, userId int) (model.User, error)
 	FindByUsername(ctx context.Context, tx *sql.Tx, username string) (model.User, error)
 	List(ctx context.Context, tx *sql.Tx) ([]model.User, error)
@@ -33,12 +36,12 @@ func (u UserRepository) Create(ctx context.Context, tx *sql.Tx, user model.User)
 				fullname)
 			VALUES($1, $2, $3, $4)`
 
-	err := tx.QueryRowContext(ctx, sql,
+	_, err := tx.ExecContext(ctx, sql,
 		user.Username,
 		user.Email,
 		user.Password,
 		user.Fullname,
-	).Scan(&user.CreatedAt)
+	)
 
 	if err != nil {
 		return err
@@ -76,10 +79,53 @@ func (u UserRepository) Update(ctx context.Context, tx *sql.Tx, user model.User)
 	return nil
 }
 
-func (u UserRepository) Delete(ctx context.Context, tx *sql.Tx, user model.User) error {
+func (u UserRepository) Purge(ctx context.Context, tx *sql.Tx, user model.User) error {
 	sql := `
 		DELETE FROM 
 			users 
+		WHERE
+			id=$1`
+
+	_, err := tx.ExecContext(ctx, sql,
+		user.ID,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u UserRepository) Delete(ctx context.Context, tx *sql.Tx, user model.User) error {
+	sql := `
+		UPDATE
+			users
+		SET
+			deleted_at=$1
+		WHERE
+			id=$2`
+
+	deletedAt := time.Now()
+
+	_, err := tx.ExecContext(ctx, sql,
+		deletedAt,
+		user.ID,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u UserRepository) Restore(ctx context.Context, tx *sql.Tx, user model.User) error {
+	sql := `
+		UPDATE
+			users
+		SET
+			deleted_at= NULL
 		WHERE
 			id=$1`
 
