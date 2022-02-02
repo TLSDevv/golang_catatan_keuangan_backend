@@ -39,6 +39,32 @@ type User struct {
 	DeletedAt time.Time `json:"deleted_at"`
 }
 
+func UserToUserResponse(u User) UserResponse {
+	return UserResponse{
+		u.ID,
+		u.Username,
+		u.Email,
+		u.Fullname,
+	}
+}
+
+func UsersToUsersResponse(u []User) []UserResponse {
+	users := []UserResponse{}
+
+	for _, value := range u {
+		user := UserResponse{
+			value.ID,
+			value.Username,
+			value.Email,
+			value.Fullname,
+		}
+
+		users = append(users, user)
+	}
+
+	return users
+}
+
 // response data
 type UserResponse struct {
 	ID       int    `json:"id"`
@@ -53,6 +79,26 @@ type UserInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Fullname string `json:"fullname"`
+}
+
+func (user UserInput) Validate() error {
+	if len(user.Username) == 0 {
+		return ErrUnameRequired
+	}
+
+	if len(user.Email) == 0 {
+		return ErrEmailRequired
+	}
+
+	if len(user.Password) == 0 {
+		return ErrPassRequired
+	}
+
+	if len(user.Fullname) == 0 {
+		return ErrFNameRequired
+	}
+
+	return nil
 }
 
 func (user User) Validate() error {

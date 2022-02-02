@@ -1,40 +1,50 @@
 package handler
 
-// type API struct {
-// 	userService service.IUserService
-// }
+import (
+	"fmt"
+	"net/http"
 
-// func NewAPI(
-// 	usService service.IUserService,
-// ) *API {
-// 	return &API{
-// 		userService: usService,
-// 	}
-// }
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user"
+	user_handler "github.com/TLSDevv/golang_catatan_keuangan_backend/handler/user"
+	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
+)
 
-// func (a API) Start(host, port string) {
-// 	r := mux.NewRouter()
+type API struct {
+	userService user.Service
+}
 
-// 	fmt.Println(host, port)
+func NewAPI(
+	usService user.Service,
+) *API {
+	return &API{
+		userService: usService,
+	}
+}
 
-// 	server := http.Server{
-// 		Addr:    endPoint(host, port),
-// 		Handler: r,
-// 	}
+func (a API) Start(host, port string) {
+	r := mux.NewRouter()
 
-// 	apiRoute := r.PathPrefix("/api/v1").Subrouter()
+	fmt.Println(host, port)
 
-// 	NewUserHandler(apiRoute, a.userService)
+	server := http.Server{
+		Addr:    endPoint(host, port),
+		Handler: r,
+	}
 
-// 	fmt.Printf("Listening %s to port %s", host, port)
-// 	err := server.ListenAndServe()
+	apiRoute := r.PathPrefix("/api/v1").Subrouter()
 
-// 	if err != nil {
-// 		logrus.Error("error Listen serve ", err)
-// 		return
-// 	}
-// }
+	user_handler.NewUserHandler(apiRoute, a.userService)
 
-// func endPoint(host, port string) string {
-// 	return fmt.Sprintf("%s:%s", host, port)
-// }
+	fmt.Printf("Listening %s to port %s", host, port)
+	err := server.ListenAndServe()
+
+	if err != nil {
+		logrus.Error("error Listen serve ", err)
+		return
+	}
+}
+
+func endPoint(host, port string) string {
+	return fmt.Sprintf("%s:%s", host, port)
+}

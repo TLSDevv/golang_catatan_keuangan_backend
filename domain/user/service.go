@@ -7,9 +7,9 @@ import (
 )
 
 type Service interface {
-	Create(ctx context.Context, user entities.UserResponse) error
-	Update(ctx context.Context, id int, user entities.UserResponse) error
+	Create(ctx context.Context, user entities.UserInput) error
+	Update(ctx context.Context, id int, user entities.UserInput) error
 	Delete(ctx context.Context, id int) error
-	FindById(ctx context.Context, id int) (entities.User, error)
-	List(ctx context.Context) ([]entities.User, error)
+	FindById(ctx context.Context, id int) (user entities.UserResponse, err error)
+	List(ctx context.Context) ([]entities.UserResponse, error)
 }
