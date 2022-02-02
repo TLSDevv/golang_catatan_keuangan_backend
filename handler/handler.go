@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/middleware"
 	user_handler "github.com/TLSDevv/golang_catatan_keuangan_backend/handler/user"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -25,16 +26,16 @@ func NewAPI(
 func (a API) Start(host, port string) {
 	r := mux.NewRouter()
 
-	fmt.Println(host, port)
+	r.Use(middleware.CORS)
+
+	apiRoute := r.PathPrefix("/api/v1").Subrouter()
+
+	user_handler.NewUserHandler(apiRoute, a.userService)
 
 	server := http.Server{
 		Addr:    endPoint(host, port),
 		Handler: r,
 	}
-
-	apiRoute := r.PathPrefix("/api/v1").Subrouter()
-
-	user_handler.NewUserHandler(apiRoute, a.userService)
 
 	fmt.Printf("Listening %s to port %s", host, port)
 	err := server.ListenAndServe()
