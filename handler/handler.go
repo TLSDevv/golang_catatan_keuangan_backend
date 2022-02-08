@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/middleware"
@@ -23,7 +25,7 @@ func NewAPI(
 	}
 }
 
-func (a API) Start(host, port string) {
+func (a API) Start(ctx context.Context, host, port string) (err error) {
 	r := mux.NewRouter()
 
 	r.Use(middleware.CORS)
@@ -37,13 +39,32 @@ func (a API) Start(host, port string) {
 		Handler: r,
 	}
 
-	fmt.Printf("Listening %s to port %s", host, port)
-	err := server.ListenAndServe()
+	user_handler.NewUserHandler(apiRoute, a.userService)
 
-	if err != nil {
-		logrus.Error("error Listen serve ", err)
-		return
+	go func() {
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logrus.Fatal("Listening %s to port %s", host, port)
+		}
+	}()
+
+	logrus.Info("Server Started")
+
+	<-ctx.Done()
+
+	logrus.Info("Server Stopped")
+
+	ctxShutDown, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer func() {
+		cancel()
+	}()
+
+	if err := server.Shutdown(ctxShutDown); err != nil {
+		logrus.Fatal("server Shutdown Failed:%+s", err)
 	}
+
+	logrus.Info("server exited properly")
+
+	return
 }
 
 func endPoint(host, port string) string {

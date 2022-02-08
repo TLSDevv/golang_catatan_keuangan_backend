@@ -10,6 +10,6 @@ require (
 	github.com/spf13/afero v1.8.0 // indirect
 	github.com/spf13/viper v1.10.1
 	golang.org/x/crypto v0.0.0-20220126234351-aa10faf2a1f8
-	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
+	golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27 // indirect
 	gopkg.in/ini.v1 v1.66.3 // indirect
 )
