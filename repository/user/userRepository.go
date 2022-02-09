@@ -177,7 +177,7 @@ func (u UserRepository) FindByUsername(ctx context.Context, tx *sql.Tx, username
 		FROM
 			users
 		WHERE
-			id=$1`
+			username=$1`
 
 	rows, err := tx.QueryContext(ctx, sql,
 		username,
