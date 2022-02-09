@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/auth"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user"
+	auth_handler "github.com/TLSDevv/golang_catatan_keuangan_backend/handler/auth"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/middleware"
 	user_handler "github.com/TLSDevv/golang_catatan_keuangan_backend/handler/user"
 	"github.com/gorilla/mux"
@@ -15,13 +17,16 @@ import (
 
 type API struct {
 	userService user.Service
+	authService auth.Service
 }
 
 func NewAPI(
 	usService user.Service,
+	auService auth.Service,
 ) *API {
 	return &API{
 		userService: usService,
+		authService: auService,
 	}
 }
 
@@ -30,16 +35,19 @@ func (a API) Start(ctx context.Context, host, port string) (err error) {
 
 	r.Use(middleware.CORS)
 
-	apiRoute := r.PathPrefix("/api/v1").Subrouter()
+	route := r.PathPrefix("/api/v1").Subrouter()
 
-	user_handler.NewUserHandler(apiRoute, a.userService)
+	route.HandleFunc("/ping", func(rw http.ResponseWriter, r *http.Request) {
+		rw.Write([]byte("works"))
+	}).Methods("GET")
+
+	user_handler.NewUserHandler(route, a.userService)
+	auth_handler.NewAuthHandler(route, a.authService)
 
 	server := http.Server{
 		Addr:    endPoint(host, port),
 		Handler: r,
 	}
-
-	user_handler.NewUserHandler(apiRoute, a.userService)
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
