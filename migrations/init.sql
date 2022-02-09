@@ -6,13 +6,22 @@ CREATE TABLE users(
     email VARCHAR(255),
     password VARCHAR(255),
     fullname VARCHAR(50),
-    token VARCHAR(255),
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL,
     deleted_at DATETIME,
 
     PRIMARY KEY(id)
 );
+
+CREATE TABLE auths(
+    id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    refresh_token VARCHAR(255),
+
+    PRIMARY KEY(id),
+    CONSTRAINT fk_auth_users
+		FOREIGN KEY(user_id) REFERENCES users(id)
+)
 
 CREATE TABLE transactions(
     id INT NOT NULL AUTO_INCREMENT,
