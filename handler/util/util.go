@@ -2,6 +2,7 @@ package util
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -20,7 +21,10 @@ func GetParams(r *http.Request, params string) int {
 }
 
 func Decode(r *http.Request, toBody interface{}) error {
-	return json.NewDecoder(r.Body).Decode(toBody)
+	if err := json.NewDecoder(r.Body).Decode(toBody); err != nil {
+		return errors.New("Body Request Nil")
+	}
+	return nil
 }
 
 func Send(w http.ResponseWriter, responseBody interface{}, statusCode int) error {
