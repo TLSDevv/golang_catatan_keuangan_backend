@@ -54,7 +54,7 @@ type AccessDetails struct {
 }
 
 func PrepareTokenClaims(username string, id, typeToken int) *TokenClaims {
-	if typeToken == 1 {
+	if typeToken == TypeTokenAccess {
 		return &TokenClaims{
 			ID:       id,
 			Username: username,
@@ -74,7 +74,7 @@ func PrepareTokenClaims(username string, id, typeToken int) *TokenClaims {
 }
 
 func GenerateToken(tokenClaims *TokenClaims, typeToken int) (string, error) {
-	if typeToken == 1 {
+	if typeToken == TypeTokenAccess {
 		return signedToken(tokenClaims, AccessToken)
 	}
 	return signedToken(tokenClaims, RefreshToken)
@@ -120,19 +120,13 @@ func VerifyToken(r *http.Request, typeToken int) (*jwt.Token, error) {
 	if err != nil {
 		return nil, err
 	}
-	return token, nil
-}
 
-func TokenValid(r *http.Request, typeToken int) error {
-	token, err := VerifyToken(r, typeToken)
-	if err != nil {
-		return err
-	}
-
+	// Token Valid Check
 	if _, ok := token.Claims.(TokenClaims); !ok && !token.Valid {
-		return err
+		return nil, err
 	}
-	return nil
+
+	return token, nil
 }
 
 func ExtractTokenMetadata(r *http.Request, typeToken int) (*AccessDetails, error) {
