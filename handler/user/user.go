@@ -5,6 +5,7 @@ import (
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/middleware"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/util"
 	"github.com/gorilla/mux"
 )
@@ -13,26 +14,27 @@ type UserHandler struct {
 	usService user.Service
 }
 
-// r.URL.Query()["name"]
-
 func NewUserHandler(r *mux.Router, usService user.Service) UserHandler {
 	userHandler := UserHandler{
 		usService: usService,
 	}
-
-	r.HandleFunc("/users", userHandler.List).Methods("GET")
 	r.HandleFunc("/users", userHandler.Create).Methods("POST")
-	r.HandleFunc("/users/{id}", userHandler.FindById).Methods("GET")
-	r.HandleFunc("/users/{id}", userHandler.Update).Methods("PUT")
-	r.HandleFunc("/users/{id}", userHandler.Delete).Methods("DELETE")
+
+	authRoute := r.PathPrefix("/").Subrouter()
+	authRoute.Use(middleware.Authorization)
+	authRoute.HandleFunc("/users", userHandler.List).Methods("GET")
+	authRoute.HandleFunc("/users/{id}", userHandler.FindById).Methods("GET")
+	authRoute.HandleFunc("/users/{id}", userHandler.Update).Methods("PUT")
+	authRoute.HandleFunc("/users/{id}", userHandler.Delete).Methods("DELETE")
 
 	return userHandler
 }
 
 func (ush UserHandler) Create(w http.ResponseWriter, r *http.Request) {
+
 	var reqBody entities.UserInput
 
-	err := util.Encode(w, &reqBody)
+	err := util.Decode(r, &reqBody)
 
 	if err != nil {
 		util.SendNoData(w, http.StatusInternalServerError, err.Error())
@@ -61,7 +63,7 @@ func (ush UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 	var reqBody entities.UserInput
 
-	err := util.Encode(w, &reqBody)
+	err := util.Decode(r, &reqBody)
 
 	userId := util.GetParams(r, "id")
 
