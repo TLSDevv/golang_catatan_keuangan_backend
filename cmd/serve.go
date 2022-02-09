@@ -5,8 +5,10 @@ import (
 	"os"
 	"os/signal"
 
+	auth_service "github.com/TLSDevv/golang_catatan_keuangan_backend/domain/auth/service"
 	user_service "github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user/service"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler"
+	auth_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/repository/auth"
 	user_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/repository/user"
 	"github.com/sirupsen/logrus"
 )
@@ -43,7 +45,9 @@ func Execute() {
 
 	userRepo := user_repo.NewUserRepository()
 	userService := user_service.NewUserService(userRepo, db)
+	authRepo := auth_repo.NewAuthRepository()
+	authService := auth_service.NewAuthService(authRepo, userRepo, db)
 
-	api := handler.NewAPI(userService)
+	api := handler.NewAPI(userService, authService)
 	api.Start(ctx, conf.Host, conf.Port)
 }
