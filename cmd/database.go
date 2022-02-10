@@ -14,7 +14,7 @@ var (
 )
 
 func initDatabase(dbConf *Database) *sql.DB {
-	dbConn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+	dbConn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		dbConf.Username,
 		dbConf.Password,
 		dbConf.Host,
