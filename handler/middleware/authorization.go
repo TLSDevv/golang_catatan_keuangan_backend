@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/util"
