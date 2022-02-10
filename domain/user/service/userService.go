@@ -7,6 +7,7 @@ import (
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 )
 
 type UserService struct {
@@ -36,10 +37,12 @@ func (service UserService) Create(ctx context.Context, userRequest entities.User
 		tx.Commit()
 	}()
 
+	password := pkg.PasswordToHash(userRequest.Password)
+
 	user := entities.User{
 		Username: userRequest.Username,
 		Email:    userRequest.Email,
-		Password: userRequest.Password,
+		Password: password,
 		Fullname: userRequest.Fullname,
 	}
 
