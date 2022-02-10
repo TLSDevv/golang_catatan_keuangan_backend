@@ -22,14 +22,16 @@ func (u UserRepository) Create(ctx context.Context, tx *sql.Tx, user entities.Us
 				username,
 				email,
 				password,
-				fullname)
-			VALUES($1, $2, $3, $4)`
+				fullname,
+				updated_at)
+		VALUES( ?, ?, ?, ?, ?)`
 
 	_, err := tx.ExecContext(ctx, sql,
 		user.Username,
 		user.Email,
 		user.Password,
 		user.Fullname,
+		time.Now(),
 	)
 
 	if err != nil {
@@ -44,13 +46,13 @@ func (u UserRepository) Update(ctx context.Context, tx *sql.Tx, user entities.Us
 		UPDATE
 			users
 		SET
-			username=$1,
-			email=$2,
-			password=$3,
-			fullname=$4,
-			updated_at=$5
+			username=?,
+			email=?,
+			password=?,
+			fullname=?,
+			updated_at=?
 		WHERE
-			id=$6`
+			id=?`
 
 	_, err := tx.ExecContext(ctx, sql,
 		user.Username,
@@ -73,7 +75,7 @@ func (u UserRepository) Purge(ctx context.Context, tx *sql.Tx, user entities.Use
 		DELETE FROM
 			users
 		WHERE
-			id=$1`
+			id=?`
 
 	_, err := tx.ExecContext(ctx, sql,
 		user.ID,
@@ -91,9 +93,9 @@ func (u UserRepository) Delete(ctx context.Context, tx *sql.Tx, user entities.Us
 		UPDATE
 			users
 		SET
-			deleted_at=$1
+			deleted_at=?
 		WHERE
-			id=$2`
+			id=?`
 
 	deletedAt := time.Now()
 
@@ -116,7 +118,7 @@ func (u UserRepository) Restore(ctx context.Context, tx *sql.Tx, user entities.U
 		SET
 			deleted_at= NULL
 		WHERE
-			id=$1`
+			id=?`
 
 	_, err := tx.ExecContext(ctx, sql,
 		user.ID,
@@ -136,7 +138,7 @@ func (u UserRepository) FindById(ctx context.Context, tx *sql.Tx, userId int) (e
 		FROM
 			users
 		WHERE
-			id=$1`
+			id=?`
 
 	rows, err := tx.QueryContext(ctx, sql,
 		userId,
@@ -173,11 +175,11 @@ func (u UserRepository) FindById(ctx context.Context, tx *sql.Tx, userId int) (e
 func (u UserRepository) FindByUsername(ctx context.Context, tx *sql.Tx, username string) (entities.User, error) {
 	sql := `
 		SELECT
-			id, username, email, password, fullname, created_at, updated_at, deleted_at
+			id, username, email, password, fullname, created_at, updated_at
 		FROM
 			users
 		WHERE
-			username=$1`
+			username=?`
 
 	rows, err := tx.QueryContext(ctx, sql,
 		username,
@@ -200,7 +202,6 @@ func (u UserRepository) FindByUsername(ctx context.Context, tx *sql.Tx, username
 			&user.Fullname,
 			&user.CreatedAt,
 			&user.UpdatedAt,
-			&user.DeletedAt,
 		)
 
 		if err != nil {

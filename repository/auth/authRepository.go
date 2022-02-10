@@ -21,7 +21,7 @@ func (repository AuthRepository) FindRefreshTokenByUserId(ctx context.Context, t
 		FROM
 			auths
 		WHERE
-			user_id=$1`
+			user_id=?`
 
 	rows, err := tx.QueryContext(ctx, sql,
 		userId,
@@ -52,7 +52,7 @@ func (repository AuthRepository) Save(ctx context.Context, tx *sql.Tx, userId in
 			auths(
 				user_id,
 				refresh_token)
-			VALUES($1, $2)`
+			VALUES(?, ?)`
 
 	_, err := tx.ExecContext(ctx, sql,
 		userId,
@@ -71,13 +71,13 @@ func (repository AuthRepository) Update(ctx context.Context, tx *sql.Tx, userId 
 		UPDATE
 			auths
 		SET
-			refresh_token=$2,
+			refresh_token=?,
 		WHERE
-			user_id=$1`
+			user_id=?`
 
 	_, err := tx.ExecContext(ctx, sql,
-		userId,
 		refreshToken,
+		userId,
 	)
 
 	if err != nil {
@@ -92,7 +92,7 @@ func (repository AuthRepository) Delete(ctx context.Context, tx *sql.Tx, userId 
 		DELETE FROM
 			auths
 		WHERE
-			user_id=$1`
+			user_id=?`
 
 	_, err := tx.ExecContext(ctx, sql,
 		userId,
