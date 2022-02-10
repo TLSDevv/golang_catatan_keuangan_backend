@@ -1,4 +1,4 @@
-package handler
+package transaction
 
 // type ITransactionHandler interface {
 // 	FindAll(w http.ResponseWriter, r *http.Request)

@@ -26,14 +26,14 @@ CREATE TABLE auths(
 CREATE TABLE transactions(
     id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
-    trc_name VARCHAR(255),
-    category VARCHAR(100),
-    trc_type TINYINT(1),
-    amount BIGINT,
-    transaction_at DATETIME NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL,
-    deleted_at DATETIME,
+    transaction_name VARCHAR(255) NULL,
+    category VARCHAR(100) NULL,
+    transaction_type TINYINT(1) NULL,
+    amount BIGINT NULL,
+    transaction_at DATETIME NULL,
+    created_at DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NULL,
+    deleted_at DATETIME NULL,
 
     PRIMARY KEY(id),
     CONSTRAINT fk_users

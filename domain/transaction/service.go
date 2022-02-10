@@ -7,5 +7,5 @@ import (
 )
 
 type Service interface {
-	FindAll(ctx context.Context) ([]entities.TransactionResponse, error)
+	GetTransactions(ctx context.Context) ([]entities.Transaction, error)
 }
