@@ -8,4 +8,5 @@ import (
 
 type Service interface {
 	GetTransactions(ctx context.Context) ([]entities.Transaction, error)
+	GetByID(ctx context.Context, transactionID int) (*entities.Transaction, error)
 }
