@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/util"
@@ -11,7 +12,7 @@ import (
 func Authorization(h http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			accessDetails, err := pkg.ExtractTokenMetadata(r, pkg.AccessTokenLifeTime)
+			accessDetails, err := pkg.ExtractTokenMetadata(r, pkg.TypeTokenAccess)
 
 			if err != nil {
 				util.SendNoData(w, http.StatusBadRequest, err.Error())
@@ -21,7 +22,7 @@ func Authorization(h http.Handler) http.Handler {
 			ctx := context.WithValue(context.Background(), "user_id", accessDetails.Id)
 			ctx = context.WithValue(ctx, "username", accessDetails.Username)
 			r.WithContext(ctx)
-			
+
 			h.ServeHTTP(w, r)
 		})
 }
