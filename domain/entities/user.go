@@ -139,7 +139,7 @@ func (u User) Update(ui UserInput) {
 	}
 
 	if len(ui.Password) != 0 {
-		u.Password = ui.Password
+		u.Password = pkg.PasswordToHash(ui.Password)
 	}
 
 	if len(ui.Fullname) != 0 {
@@ -147,8 +147,4 @@ func (u User) Update(ui UserInput) {
 	}
 
 	u.UpdatedAt = time.Now()
-}
-
-func (user User) hashPassword() {
-	user.Password = pkg.PasswordToHash(user.Password)
 }
