@@ -11,19 +11,27 @@ import (
 )
 
 var (
-	method               = jwt.SigningMethodHS256
-	RefreshToken         string
-	AccessToken          string
-	AccessTokenLifeTime  int
-	RefreshTokenLifeTime int
-	TypeTokenAccess      = 1
-	TypeTokenRefresh     = 2
+	method           = jwt.SigningMethodHS256
+	TypeTokenAccess  = 1
+	TypeTokenRefresh = 2
+	JWT              *JWTEnv
 )
 
+type JWTEnv struct {
+	RefreshToken         string
+	AccessToken          string
+	AccessTokenLifeTime  int64
+	RefreshTokenLifeTime int64
+}
+
 func init() {
-	token := viper.GetString("JWT_TOKEN")
-	if len(token) == 0 {
-		token = "secret"
+	JWT = load()
+}
+
+func load() *JWTEnv {
+	accessToken := viper.GetString("JWT_TOKEN")
+	if len(accessToken) == 0 {
+		accessToken = "secret"
 	}
 
 	refreshToken := viper.GetString("JWT_REFRESH_TOKEN")
@@ -31,14 +39,21 @@ func init() {
 		refreshToken = "refreshSecret"
 	}
 
-	tokenLifeTime := viper.GetInt("JWT_TOKEN_LIFETIME")
-	if tokenLifeTime == 0 {
-		tokenLifeTime = 24
+	accessTokenLifeTime := viper.GetInt("JWT_TOKEN_LIFETIME")
+	if accessTokenLifeTime == 0 {
+		accessTokenLifeTime = 24
 	}
 
 	refreshTokenLifeTime := viper.GetInt("JWT_REFRESH_TOKEN_LIFETIME")
 	if refreshTokenLifeTime == 0 {
 		refreshTokenLifeTime = 48
+	}
+
+	return &JWTEnv{
+		AccessToken:          accessToken,
+		AccessTokenLifeTime:  int64(accessTokenLifeTime),
+		RefreshToken:         refreshToken,
+		RefreshTokenLifeTime: int64(refreshTokenLifeTime),
 	}
 }
 
@@ -53,37 +68,36 @@ type AccessDetails struct {
 	Username string
 }
 
-func PrepareTokenClaims(username string, id, typeToken int) *TokenClaims {
+func PrepareTokenClaims(username string, id, typeToken int) TokenClaims {
 	if typeToken == TypeTokenAccess {
-		return &TokenClaims{
+		return TokenClaims{
 			ID:       id,
 			Username: username,
 			StandardClaims: jwt.StandardClaims{
-				ExpiresAt: time.Now().Add(time.Minute * time.Duration(AccessTokenLifeTime)).Unix(),
+				ExpiresAt: time.Now().Add(time.Minute * time.Duration(JWT.AccessTokenLifeTime)).Unix(),
 			},
 		}
 	}
 
-	return &TokenClaims{
+	return TokenClaims{
 		ID:       id,
 		Username: username,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Minute * time.Duration(RefreshTokenLifeTime)).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * time.Duration(JWT.RefreshTokenLifeTime)).Unix(),
 		},
 	}
 }
 
-func GenerateToken(tokenClaims *TokenClaims, typeToken int) (string, error) {
+func GenerateToken(tokenClaims TokenClaims, typeToken int) (string, error) {
 	if typeToken == TypeTokenAccess {
-		return signedToken(tokenClaims, AccessToken)
+		return signedToken(tokenClaims, JWT.AccessToken)
 	}
-	return signedToken(tokenClaims, RefreshToken)
+	return signedToken(tokenClaims, JWT.RefreshToken)
 }
 
-func signedToken(claims *TokenClaims, signed string) (string, error) {
+func signedToken(claims TokenClaims, signed string) (string, error) {
 	at := jwt.NewWithClaims(method, claims)
-	token, err := at.SignedString(signed)
-
+	token, err := at.SignedString([]byte(signed))
 	if err != nil {
 		return "", err
 	}
@@ -111,10 +125,10 @@ func VerifyToken(r *http.Request, typeToken int) (*jwt.Token, error) {
 		}
 
 		if typeToken == TypeTokenAccess {
-			return AccessToken, nil
+			return []byte(JWT.AccessToken), nil
 		}
 
-		return RefreshToken, nil
+		return []byte(JWT.RefreshToken), nil
 	})
 
 	if err != nil {
@@ -136,14 +150,14 @@ func ExtractTokenMetadata(r *http.Request, typeToken int) (*AccessDetails, error
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-		id, ok := claims["id"].(int)
-		if !ok {
-			return nil, err
-		}
+
+		id := int(claims["id"].(float64))
+
 		username, ok := claims["username"].(string)
 		if !ok {
 			return nil, err
 		}
+
 		return &AccessDetails{
 			Id:       id,
 			Username: username,
