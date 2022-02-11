@@ -43,10 +43,10 @@ func Execute() {
 	defer db.Close()
 	//register all server needs, db,repo, etc
 
-	userRepo := user_repo.NewUserRepository()
-	userService := user_service.NewUserService(userRepo, db)
-	authRepo := auth_repo.NewAuthRepository()
-	authService := auth_service.NewAuthService(authRepo, userRepo, db)
+	userRepo := user_repo.NewUserRepository(db)
+	userService := user_service.NewUserService(userRepo)
+	authRepo := auth_repo.NewAuthRepository(db)
+	authService := auth_service.NewAuthService(authRepo, userRepo)
 
 	api := handler.NewAPI(userService, authService)
 	api.Start(ctx, conf.Host, conf.Port)

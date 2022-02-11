@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/auth"
@@ -14,33 +13,17 @@ import (
 type AuthService struct {
 	UserRepo user.Repository
 	AuthRepo auth.Repository
-	DB       *sql.DB
 }
 
-func NewAuthService(authRepo auth.Repository, userRepo user.Repository, db *sql.DB) AuthService {
+func NewAuthService(authRepo auth.Repository, userRepo user.Repository) AuthService {
 	return AuthService{
 		AuthRepo: authRepo,
 		UserRepo: userRepo,
-		DB:       db,
 	}
 }
 
 func (service AuthService) Login(ctx context.Context, login entities.Login) (entities.Token, error) {
-	tx, err := service.DB.Begin()
-
-	if err != nil {
-		return entities.Token{}, err
-	}
-
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
-
-		tx.Commit()
-	}()
-
-	user, err := service.UserRepo.FindByUsername(ctx, tx, login.Username)
+	user, err := service.UserRepo.FindByUsername(ctx, login.Username)
 
 	if err != nil {
 		return entities.Token{}, errors.New("Username Not Found")
@@ -69,7 +52,7 @@ func (service AuthService) Login(ctx context.Context, login entities.Login) (ent
 		return entities.Token{}, err
 	}
 
-	err = service.AuthRepo.Save(ctx, tx, user.ID, refreshToken)
+	err = service.AuthRepo.Save(ctx, user.ID, refreshToken)
 
 	if err != nil {
 		return entities.Token{}, err
@@ -83,44 +66,16 @@ func (service AuthService) Login(ctx context.Context, login entities.Login) (ent
 	return token, nil
 }
 func (service AuthService) Logout(ctx context.Context) error {
-	tx, err := service.DB.Begin()
-
-	if err != nil {
-		return err
-	}
-
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
-
-		tx.Commit()
-	}()
-
 	userId := ctx.Value("user_id").(int)
-	_ = service.AuthRepo.Delete(ctx, tx, userId)
+	_ = service.AuthRepo.Delete(ctx, userId)
 
 	return nil
 }
 func (service AuthService) Refresh(ctx context.Context) (entities.Token, error) {
-	tx, err := service.DB.Begin()
-
-	if err != nil {
-		return entities.Token{}, err
-	}
-
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
-
-		tx.Commit()
-	}()
-
 	userId := ctx.Value("user_id").(int)
 	refreshToken := ctx.Value("refresh_token").(string)
 
-	auth, err := service.AuthRepo.FindRefreshTokenByUserId(ctx, tx, userId)
+	auth, err := service.AuthRepo.FindRefreshTokenByUserId(ctx, userId)
 
 	if err != nil {
 		return entities.Token{}, err
@@ -146,7 +101,7 @@ func (service AuthService) Refresh(ctx context.Context) (entities.Token, error) 
 		return entities.Token{}, err
 	}
 
-	err = service.AuthRepo.Update(ctx, tx, userId, refreshToken)
+	err = service.AuthRepo.Update(ctx, userId, refreshToken)
 
 	if err != nil {
 		return entities.Token{}, err

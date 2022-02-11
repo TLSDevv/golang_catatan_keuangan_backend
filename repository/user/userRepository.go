@@ -9,13 +9,16 @@ import (
 )
 
 type UserRepository struct {
+	DB *sql.DB
 }
 
-func NewUserRepository() UserRepository {
-	return UserRepository{}
+func NewUserRepository(db *sql.DB) UserRepository {
+	return UserRepository{
+		DB: db,
+	}
 }
 
-func (u UserRepository) Create(ctx context.Context, tx *sql.Tx, user entities.User) error {
+func (u UserRepository) Create(ctx context.Context, user entities.User) error {
 	sql := `
 		INSERT INTO
 			users(
@@ -26,7 +29,7 @@ func (u UserRepository) Create(ctx context.Context, tx *sql.Tx, user entities.Us
 				updated_at)
 		VALUES( ?, ?, ?, ?, ?)`
 
-	_, err := tx.ExecContext(ctx, sql,
+	_, err := u.DB.ExecContext(ctx, sql,
 		user.Username,
 		user.Email,
 		user.Password,
@@ -41,7 +44,7 @@ func (u UserRepository) Create(ctx context.Context, tx *sql.Tx, user entities.Us
 	return nil
 }
 
-func (u UserRepository) Update(ctx context.Context, tx *sql.Tx, user entities.User) error {
+func (u UserRepository) Update(ctx context.Context, user entities.User) error {
 	sql := `
 		UPDATE
 			users
@@ -54,7 +57,7 @@ func (u UserRepository) Update(ctx context.Context, tx *sql.Tx, user entities.Us
 		WHERE
 			id=?`
 
-	_, err := tx.ExecContext(ctx, sql,
+	_, err := u.DB.ExecContext(ctx, sql,
 		user.Username,
 		user.Email,
 		user.Password,
@@ -70,14 +73,14 @@ func (u UserRepository) Update(ctx context.Context, tx *sql.Tx, user entities.Us
 	return nil
 }
 
-func (u UserRepository) Purge(ctx context.Context, tx *sql.Tx, user entities.User) error {
+func (u UserRepository) Purge(ctx context.Context, user entities.User) error {
 	sql := `
 		DELETE FROM
 			users
 		WHERE
 			id=?`
 
-	_, err := tx.ExecContext(ctx, sql,
+	_, err := u.DB.ExecContext(ctx, sql,
 		user.ID,
 	)
 
@@ -88,7 +91,7 @@ func (u UserRepository) Purge(ctx context.Context, tx *sql.Tx, user entities.Use
 	return nil
 }
 
-func (u UserRepository) Delete(ctx context.Context, tx *sql.Tx, user entities.User) error {
+func (u UserRepository) Delete(ctx context.Context, user entities.User) error {
 	sql := `
 		UPDATE
 			users
@@ -99,7 +102,7 @@ func (u UserRepository) Delete(ctx context.Context, tx *sql.Tx, user entities.Us
 
 	deletedAt := time.Now()
 
-	_, err := tx.ExecContext(ctx, sql,
+	_, err := u.DB.ExecContext(ctx, sql,
 		deletedAt,
 		user.ID,
 	)
@@ -111,7 +114,7 @@ func (u UserRepository) Delete(ctx context.Context, tx *sql.Tx, user entities.Us
 	return nil
 }
 
-func (u UserRepository) Restore(ctx context.Context, tx *sql.Tx, user entities.User) error {
+func (u UserRepository) Restore(ctx context.Context, user entities.User) error {
 	sql := `
 		UPDATE
 			users
@@ -120,7 +123,7 @@ func (u UserRepository) Restore(ctx context.Context, tx *sql.Tx, user entities.U
 		WHERE
 			id=?`
 
-	_, err := tx.ExecContext(ctx, sql,
+	_, err := u.DB.ExecContext(ctx, sql,
 		user.ID,
 	)
 
@@ -131,7 +134,7 @@ func (u UserRepository) Restore(ctx context.Context, tx *sql.Tx, user entities.U
 	return nil
 }
 
-func (u UserRepository) FindById(ctx context.Context, tx *sql.Tx, userId int) (entities.User, error) {
+func (u UserRepository) FindById(ctx context.Context, userId int) (entities.User, error) {
 	sql := `
 		SELECT
 			id, username, email, password, fullname, created_at, updated_at, deleted_at
@@ -140,7 +143,7 @@ func (u UserRepository) FindById(ctx context.Context, tx *sql.Tx, userId int) (e
 		WHERE
 			id=?`
 
-	rows, err := tx.QueryContext(ctx, sql,
+	rows, err := u.DB.QueryContext(ctx, sql,
 		userId,
 	)
 
@@ -172,7 +175,7 @@ func (u UserRepository) FindById(ctx context.Context, tx *sql.Tx, userId int) (e
 	return user, nil
 }
 
-func (u UserRepository) FindByUsername(ctx context.Context, tx *sql.Tx, username string) (entities.User, error) {
+func (u UserRepository) FindByUsername(ctx context.Context, username string) (entities.User, error) {
 	sql := `
 		SELECT
 			id, username, email, password, fullname, created_at, updated_at
@@ -181,7 +184,7 @@ func (u UserRepository) FindByUsername(ctx context.Context, tx *sql.Tx, username
 		WHERE
 			username=?`
 
-	rows, err := tx.QueryContext(ctx, sql,
+	rows, err := u.DB.QueryContext(ctx, sql,
 		username,
 	)
 
@@ -212,14 +215,14 @@ func (u UserRepository) FindByUsername(ctx context.Context, tx *sql.Tx, username
 	return user, nil
 }
 
-func (u UserRepository) List(ctx context.Context, tx *sql.Tx) ([]entities.User, error) {
+func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 	sql := `
 		SELECT
 			id, username, email, password, fullname, created_at, updated_at, deleted_at
 		FROM
 			users`
 
-	rows, err := tx.QueryContext(ctx, sql)
+	rows, err := u.DB.QueryContext(ctx, sql)
 
 	if err != nil {
 		return []entities.User{}, err
