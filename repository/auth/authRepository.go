@@ -8,13 +8,16 @@ import (
 )
 
 type AuthRepository struct {
+	DB *sql.DB
 }
 
-func NewAuthRepository() AuthRepository {
-	return AuthRepository{}
+func NewAuthRepository(db *sql.DB) AuthRepository {
+	return AuthRepository{
+		DB: db,
+	}
 }
 
-func (repository AuthRepository) FindRefreshTokenByUserId(ctx context.Context, tx *sql.Tx, userId int) (entities.Auth, error) {
+func (repository AuthRepository) FindRefreshTokenByUserId(ctx context.Context, userId int) (entities.Auth, error) {
 	sql := `
 		SELECT
 			refresh_token
@@ -23,7 +26,7 @@ func (repository AuthRepository) FindRefreshTokenByUserId(ctx context.Context, t
 		WHERE
 			user_id=?`
 
-	rows, err := tx.QueryContext(ctx, sql,
+	rows, err := repository.DB.QueryContext(ctx, sql,
 		userId,
 	)
 
@@ -46,7 +49,7 @@ func (repository AuthRepository) FindRefreshTokenByUserId(ctx context.Context, t
 	return auth, nil
 }
 
-func (repository AuthRepository) Save(ctx context.Context, tx *sql.Tx, userId int, refreshToken string) error {
+func (repository AuthRepository) Save(ctx context.Context, userId int, refreshToken string) error {
 	sql := `
 		INSERT INTO
 			auths(
@@ -54,7 +57,7 @@ func (repository AuthRepository) Save(ctx context.Context, tx *sql.Tx, userId in
 				refresh_token)
 			VALUES(?, ?)`
 
-	_, err := tx.ExecContext(ctx, sql,
+	_, err := repository.DB.ExecContext(ctx, sql,
 		userId,
 		refreshToken,
 	)
@@ -66,7 +69,7 @@ func (repository AuthRepository) Save(ctx context.Context, tx *sql.Tx, userId in
 	return nil
 }
 
-func (repository AuthRepository) Update(ctx context.Context, tx *sql.Tx, userId int, refreshToken string) error {
+func (repository AuthRepository) Update(ctx context.Context, userId int, refreshToken string) error {
 	sql := `
 		UPDATE
 			auths
@@ -75,7 +78,7 @@ func (repository AuthRepository) Update(ctx context.Context, tx *sql.Tx, userId 
 		WHERE
 			user_id=?`
 
-	_, err := tx.ExecContext(ctx, sql,
+	_, err := repository.DB.ExecContext(ctx, sql,
 		refreshToken,
 		userId,
 	)
@@ -87,14 +90,14 @@ func (repository AuthRepository) Update(ctx context.Context, tx *sql.Tx, userId 
 	return nil
 }
 
-func (repository AuthRepository) Delete(ctx context.Context, tx *sql.Tx, userId int) error {
+func (repository AuthRepository) Delete(ctx context.Context, userId int) error {
 	sql := `
 		DELETE FROM
 			auths
 		WHERE
 			user_id=?`
 
-	_, err := tx.ExecContext(ctx, sql,
+	_, err := repository.DB.ExecContext(ctx, sql,
 		userId,
 	)
 
