@@ -31,4 +31,5 @@ type Repository interface {
 	Purge(ctx context.Context, transactionID int) error         // only admin
 
 	CheckUser(ctx context.Context, userID int) (bool, error)
+	CheckTransactionByID(ctx context.Context, tID int) (bool, error)
 }

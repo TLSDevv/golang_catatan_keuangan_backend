@@ -6,6 +6,8 @@
 - [ ] Create mysql helper
 - [ ] Use https://github.com/cosmtrek/air to have live reloading
 - [ ] Implement user role
+- [ ] Remove user_id from transaction payload, we could get it from authorization header
+- [ ] Protect transactions endpoint with authorization
 
 ## Structure Rules
 These coding rules below is inspired by simple-bank structure.

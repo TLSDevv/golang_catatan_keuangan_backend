@@ -11,15 +11,17 @@ func (r Repository) Update(ctx context.Context, trc entities.Transaction) error 
 			UPDATE
 				transactions
 			SET
-				trc_name=$1,
-				category=$2,
-				trc_type=$3,
-				amount=$4,
-				transaction_at=$5
+				user_id=?
+				trc_name=?,
+				category=?,
+				trc_type=?,
+				amount=?,
+				transaction_at=?
 			WHERE
-				id=$6`
+				id=?`
 
 	_, err := r.DB.ExecContext(ctx, sql,
+		trc.UserID,
 		trc.TransactionName,
 		trc.Category,
 		trc.TransactionType,

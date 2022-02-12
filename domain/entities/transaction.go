@@ -3,6 +3,8 @@ package entities
 import (
 	"errors"
 	"time"
+
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 )
 
 var (
@@ -25,58 +27,35 @@ var (
 	}
 )
 
-type CreateTransactionInput struct {
-	UserID          int    `json:"user_id"`
-	TransactionName string `json:"transaction_name"`
-	Category        string `json:"category"`
-	TransactionType int    `json:"transaction_type"`
-	Amount          int    `json:"amount"`
-	TransactionAt   string `json:"transaction_at"`
-}
-
-func (cti CreateTransactionInput) Validate() []string {
-	var errors []string
-
-	if cti.UserID <= 0 {
-		errors = append(errors, ErrUserIDRequired.Error())
-	}
-	if len(cti.TransactionName) == 0 {
-		errors = append(errors, ErrTransactionNameRequired.Error())
-	}
-	if len(cti.Category) == 0 {
-		errors = append(errors, ErrCategoryRequired.Error())
-	}
-	if cti.TransactionType < 0 || cti.TransactionType > 1 {
-		errors = append(errors, ErrTransactionTypeIsInvalid.Error())
-	}
-	if cti.Amount == 0 {
-		errors = append(errors, ErrAmountRequired.Error())
-	}
-	if len(cti.TransactionAt) == 0 {
-		errors = append(errors, ErrTransactionAtRequired.Error())
+type (
+	TransactionInput struct {
+		UserID          int    `json:"user_id"`
+		TransactionName string `json:"transaction_name"`
+		Category        string `json:"category"`
+		TransactionType int    `json:"transaction_type"`
+		Amount          int    `json:"amount"`
+		TransactionAt   string `json:"transaction_at"`
 	}
 
-	if errors != nil {
-		return errors
+	CountResult struct {
+		Total int `json:"total"`
 	}
 
-	return nil
-}
+	Transaction struct {
+		ID              int       `json:"id"`
+		UserID          int       `json:"user_id"`
+		TransactionName string    `json:"transaction_name"`
+		Category        string    `json:"category"`
+		TransactionType int       `json:"transaction_type"`
+		Amount          int       `json:"amount"`
+		TransactionAt   time.Time `json:"transaction_at"`
+		CreatedAt       time.Time `json:"created_at"`
+		UpdatedAt       time.Time `json:"updated_at"`
+		DeletedAt       time.Time `json:"deleted_at"`
+	}
+)
 
-type Transaction struct {
-	ID              int       `json:"id"`
-	UserID          int       `json:"user_id"`
-	TransactionName string    `json:"transaction_name"`
-	Category        string    `json:"category"`
-	TransactionType int       `json:"transaction_type"`
-	Amount          int       `json:"amount"`
-	TransactionAt   time.Time `json:"transaction_at"`
-	CreatedAt       time.Time `json:"created_at"`
-	UpdatedAt       time.Time `json:"updated_at"`
-	DeletedAt       time.Time `json:"deleted_at"`
-}
-
-func NewTransaction(userID int, transactionName string, category string, transactionType int, amount int, transactionAt time.Time) (*Transaction, error) {
+func SetTransaction(userID int, transactionName string, category string, transactionType int, amount int, transactionAt time.Time) (*Transaction, error) {
 	transaction := Transaction{
 		UserID:          userID,
 		TransactionName: transactionName,
@@ -91,6 +70,35 @@ func NewTransaction(userID int, transactionName string, category string, transac
 	}
 
 	return &transaction, nil
+}
+
+func (ti TransactionInput) Validate() []string {
+	var errors []string
+
+	if ti.UserID <= 0 {
+		errors = append(errors, ErrUserIDRequired.Error())
+	}
+	if len(ti.TransactionName) == 0 {
+		errors = append(errors, ErrTransactionNameRequired.Error())
+	}
+	if len(ti.Category) == 0 {
+		errors = append(errors, ErrCategoryRequired.Error())
+	}
+	if ti.TransactionType < 0 || ti.TransactionType > 1 {
+		errors = append(errors, ErrTransactionTypeIsInvalid.Error())
+	}
+	if ti.Amount == 0 {
+		errors = append(errors, ErrAmountRequired.Error())
+	}
+	if len(ti.TransactionAt) == 0 {
+		errors = append(errors, ErrTransactionAtRequired.Error())
+	}
+
+	if errors != nil {
+		return errors
+	}
+
+	return nil
 }
 
 func (t Transaction) Validate() error {
@@ -109,9 +117,14 @@ func (t Transaction) Validate() error {
 	return nil
 }
 
-func (t Transaction) Update() {
-	t.Validate()
-
+func (t Transaction) Update(ti TransactionInput) {
+	tAt, _ := pkg.StringDateToDateTime(ti.TransactionAt)
+	t.UserID = ti.UserID
+	t.TransactionName = ti.TransactionName
+	t.Category = ti.Category
+	t.TransactionType = ti.TransactionType
+	t.Amount = ti.Amount
+	t.TransactionAt = *tAt
 	t.UpdatedAt = time.Now()
 }
 

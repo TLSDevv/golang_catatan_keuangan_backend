@@ -7,7 +7,7 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 )
 
-func (t Transaction) Create(ctx context.Context, input entities.TransactionInput) error {
+func (t Transaction) Update(ctx context.Context, input entities.TransactionInput) error {
 	transactionAt, err := pkg.StringDateToDateTime(input.TransactionAt)
 	if err != nil {
 		return err
@@ -22,7 +22,7 @@ func (t Transaction) Create(ctx context.Context, input entities.TransactionInput
 		*transactionAt,
 	)
 
-	err = t.tr.Create(ctx, *transaction)
+	err = t.repo.Update(ctx, *transaction)
 	if err != nil {
 		return err
 	}

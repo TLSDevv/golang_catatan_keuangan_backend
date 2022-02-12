@@ -13,21 +13,23 @@ func (r Repository) GetByID(ctx context.Context, transactionID int) (*entities.T
 		FROM
 			transactions
 		WHERE
-			id=$1`
+			id=?`
 
-	trc := entities.Transaction{}
+	t := entities.Transaction{}
 	err := r.DB.QueryRowContext(ctx, sql, transactionID).Scan(
-		&trc.ID,
-		&trc.TransactionName,
-		&trc.Category,
-		&trc.TransactionType,
-		&trc.TransactionAt,
-		&trc.CreatedAt,
+		&t.ID,
+		&t.UserID,
+		&t.TransactionName,
+		&t.Category,
+		&t.TransactionType,
+		&t.Amount,
+		&t.TransactionAt,
+		&t.CreatedAt,
 	)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &trc, nil
+	return &t, nil
 }

@@ -50,7 +50,7 @@ func Execute() {
 	authRepo := auth_repo.NewAuthRepository()
 	authService := auth_service.NewAuthService(authRepo, userRepo, db)
 	tr := transaction_repo.NewTransactionRepository(db)
-	ts := transaction_service.NewTransactionService(tr)
+	ts := transaction_service.NewTransactionService(tr, userRepo)
 
 	api := handler.NewAPI(userService, authService, ts)
 	api.Start(ctx, conf.Host, conf.Port)

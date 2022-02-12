@@ -5,7 +5,7 @@ import (
 )
 
 func (t Transaction) CheckUser(ctx context.Context, userID int) (bool, error) {
-	userExist, err := t.repo.CheckUser(ctx, userID)
+	userExist, err := t.tr.CheckUser(ctx, userID)
 	if err != nil {
 		return false, err
 	}

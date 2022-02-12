@@ -2,7 +2,6 @@ package util
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -42,7 +41,7 @@ func GetParams(r *http.Request, params string) int {
 
 func Decode(r *http.Request, toBody interface{}) error {
 	if err := json.NewDecoder(r.Body).Decode(toBody); err != nil {
-		return errors.New("Request payload is invalid")
+		return err
 	}
 	return nil
 }
@@ -83,8 +82,12 @@ func Encode(w http.ResponseWriter, responseBody interface{}) error {
 func SendWithData(w http.ResponseWriter, statusCode int, message string, data interface{}) {
 	resBody := ResponseBody{
 		Code:   statusCode,
-		Status: message,
 		Data:   data,
+		Status: message,
+	}
+
+	if len(message) != 0 {
+		resBody.Status = message
 	}
 
 	Send(w, resBody, statusCode)

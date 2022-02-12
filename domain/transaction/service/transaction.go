@@ -2,16 +2,19 @@ package service
 
 import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/transaction"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user"
 )
 
 var _ transaction.Service = Transaction{}
 
 type Transaction struct {
-	repo transaction.Repository
+	tr transaction.Repository
+	ur user.Repository
 }
 
-func NewTransactionService(repo transaction.Repository) *Transaction {
+func NewTransactionService(tr transaction.Repository, ur user.Repository) *Transaction {
 	return &Transaction{
-		repo: repo,
+		tr: tr,
+		ur: ur,
 	}
 }
