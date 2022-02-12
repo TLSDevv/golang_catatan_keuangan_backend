@@ -22,7 +22,7 @@ func (t Transaction) Update(ctx context.Context, input entities.TransactionInput
 		*transactionAt,
 	)
 
-	err = t.repo.Update(ctx, *transaction)
+	err = t.tr.Update(ctx, *transaction)
 	if err != nil {
 		return err
 	}

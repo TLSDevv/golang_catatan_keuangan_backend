@@ -7,7 +7,7 @@ import (
 )
 
 func (t Transaction) GetTransactions(ctx context.Context) ([]entities.Transaction, error) {
-	transactions, err := t.repo.GetTransactions(ctx)
+	transactions, err := t.tr.GetTransactions(ctx)
 	if err != nil {
 		return nil, err
 	}
