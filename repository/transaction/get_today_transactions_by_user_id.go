@@ -30,7 +30,7 @@ func (r Repository) GetTodayTransactionsByUserID(ctx context.Context, userID int
 
 	defer rows.Close()
 
-	trcs := []entities.Transaction{}
+	transactions := []entities.Transaction{}
 
 	for rows.Next() {
 		t := entities.Transaction{}
@@ -49,12 +49,12 @@ func (r Repository) GetTodayTransactionsByUserID(ctx context.Context, userID int
 			return nil, err
 		}
 
-		trcs = append(trcs, t)
+		transactions = append(transactions, t)
 	}
 
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
-	return trcs, nil
+	return transactions, nil
 }

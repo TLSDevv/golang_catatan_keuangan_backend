@@ -6,9 +6,11 @@ import (
 	"os/signal"
 
 	auth_service "github.com/TLSDevv/golang_catatan_keuangan_backend/domain/auth/service"
+	transaction_service "github.com/TLSDevv/golang_catatan_keuangan_backend/domain/transaction/service"
 	user_service "github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user/service"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler"
 	auth_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/repository/auth"
+	transaction_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/repository/transaction"
 	user_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/repository/user"
 	"github.com/sirupsen/logrus"
 )
@@ -41,13 +43,15 @@ func Execute() {
 	}()
 
 	defer db.Close()
-	//register all server needs, db,repo, etc
 
+	//register all server needs, db,repo, etc
 	userRepo := user_repo.NewUserRepository()
 	userService := user_service.NewUserService(userRepo, db)
 	authRepo := auth_repo.NewAuthRepository()
 	authService := auth_service.NewAuthService(authRepo, userRepo, db)
+	tr := transaction_repo.NewTransactionRepository(db)
+	ts := transaction_service.NewTransactionService(tr)
 
-	api := handler.NewAPI(userService, authService)
+	api := handler.NewAPI(userService, authService, ts)
 	api.Start(ctx, conf.Host, conf.Port)
 }

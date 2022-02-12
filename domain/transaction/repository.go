@@ -7,16 +7,16 @@ import (
 )
 
 type Repository interface {
-	GetTransactions(ctx context.Context) ([]entities.Transaction, error)         // only admin
+	GetTransactions(ctx context.Context) ([]entities.Transaction, error) // only admin
 	// GetActiveTransactions(ctx context.Context) ([]entities.Transaction, error)   // only admin
 	// GetInActiveTransactions(ctx context.Context) ([]entities.Transaction, error) // only admin
 
 	GetByID(ctx context.Context, transactionID int) (*entities.Transaction, error) // admin,user
 
-	GetTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error)                  // admin,user
+	GetTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error) // admin,user
 	// GetActiveTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error)            // admin,user
 	// GetInActiveTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error)          // admin
-	GetTodayTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error)       // admin, user
+	GetTodayTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error) // admin, user
 	// GetTodayActiveTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error)       // admin, user
 	// GetTodayInActiveTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error)     // admin
 	// GetThisWeekActiveTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error)    // admin, user
@@ -29,4 +29,6 @@ type Repository interface {
 	Delete(ctx context.Context, transactionID int) error        // admin,user
 	Restore(ctx context.Context, transactionID int) error       // only admin
 	Purge(ctx context.Context, transactionID int) error         // only admin
+
+	CheckUser(ctx context.Context, userID int) (bool, error)
 }

@@ -6,8 +6,8 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
 )
 
-func (s Transaction) GetTransactions(ctx context.Context) ([]entities.Transaction, error) {
-	transactions, err := s.repo.GetTransactions(ctx)
+func (t Transaction) GetTransactions(ctx context.Context) ([]entities.Transaction, error) {
+	transactions, err := t.repo.GetTransactions(ctx)
 	if err != nil {
 		return nil, err
 	}

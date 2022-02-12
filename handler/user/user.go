@@ -37,14 +37,14 @@ func (ush UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	err := util.Decode(r, &reqBody)
 
 	if err != nil {
-		util.SendNoData(w, http.StatusInternalServerError, err.Error())
+		util.SendNoData(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	err = reqBody.Validate()
 
 	if err != nil {
-		util.SendNoData(w, http.StatusBadRequest, err.Error())
+		util.SendNoData(w, http.StatusUnprocessableEntity, err.Error())
 		return
 	}
 

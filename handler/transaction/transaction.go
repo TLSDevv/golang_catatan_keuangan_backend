@@ -1,31 +1,21 @@
 package transaction
 
-// type ITransactionHandler interface {
-// 	FindAll(w http.ResponseWriter, r *http.Request)
-// }
+import (
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/transaction"
+	"github.com/gorilla/mux"
+)
 
-// type TransactionHandler struct {
-// 	ts service.ITransactionService
-// }
+type TransactionHandler struct {
+	service transaction.Service
+}
 
-// func NewTransactionHandler(r *mux.Router, ts service.ITransactionService) ITransactionHandler {
-// 	th := TransactionHandler{
-// 		ts: ts,
-// 	}
+func NewTransactionHandler(r *mux.Router, s transaction.Service) *TransactionHandler {
+	h := &TransactionHandler{
+		service: s,
+	}
 
-// 	r.HandleFunc("/transactions", th.FindAll).Methods("GET")
+	r.HandleFunc("/transactions", h.List).Methods("GET")
+	r.HandleFunc("/transactions", h.Create).Methods("POST")
 
-// 	return th
-// }
-
-// func (th TransactionHandler) FindAll(w http.ResponseWriter, r *http.Request) {
-// 	result, err := th.ts.FindAll(r.Context())
-
-// 	if err != nil {
-// 		SendNoData(w, http.StatusBadRequest, err.Error())
-// 		return
-// 	}
-
-// 	SendWithData(w, http.StatusOK, "", result)
-// 	return
-// }
+	return h
+}

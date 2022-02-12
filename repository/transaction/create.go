@@ -6,7 +6,7 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
 )
 
-func (r Repository) Create(ctx context.Context, trc entities.Transaction) error {
+func (r Repository) Create(ctx context.Context, t entities.Transaction) error {
 	sql := `
 		INSERT INTO
 			transactions(
@@ -17,15 +17,16 @@ func (r Repository) Create(ctx context.Context, trc entities.Transaction) error 
 				amount,
 				transaction_at
 			)
-			VALUES($1, $2, $3, $4, $5, $6)`
+			VALUES(?, ?, ?, ?, ?, ?);
+		`
 
 	_, err := r.DB.ExecContext(ctx, sql,
-		trc.UserId,
-		trc.TransactionName,
-		trc.Category,
-		trc.TransactionType,
-		trc.Amount,
-		trc.TransactionAt)
+		t.UserID,
+		t.TransactionName,
+		t.Category,
+		t.TransactionType,
+		t.Amount,
+		t.TransactionAt)
 
 	if err != nil {
 		return err

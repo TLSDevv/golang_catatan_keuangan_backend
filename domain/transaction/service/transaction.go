@@ -1,8 +1,6 @@
 package service
 
 import (
-	"database/sql"
-
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/transaction"
 )
 
@@ -12,7 +10,7 @@ type Transaction struct {
 	repo transaction.Repository
 }
 
-func NewTransactionService(repo transaction.Repository, db *sql.DB) *Transaction {
+func NewTransactionService(repo transaction.Repository) *Transaction {
 	return &Transaction{
 		repo: repo,
 	}

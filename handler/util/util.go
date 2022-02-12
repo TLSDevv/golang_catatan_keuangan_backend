@@ -9,10 +9,30 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var (
+	ErrInternalServer = "internal server error"
+	ErrUnauthorized   = "unauthorized"
+	ErrNotFound       = "not found"
+	ErrValidation     = "validation error"
+	ErrUserNotFound   = "user not found"
+)
+
 type ResponseBody struct {
 	Code   int         `json:"code"`
 	Status string      `json:"status"`
 	Data   interface{} `json:"data,omitempty"`
+}
+
+type ErrorResponse struct {
+	Success bool     `json:"success"`
+	Message string   `json:"message"`
+	Errors  []string `json:"errors"`
+}
+
+type SuccessResponse struct {
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 func GetParams(r *http.Request, params string) int {
@@ -22,7 +42,7 @@ func GetParams(r *http.Request, params string) int {
 
 func Decode(r *http.Request, toBody interface{}) error {
 	if err := json.NewDecoder(r.Body).Decode(toBody); err != nil {
-		return errors.New("Body Request Nil")
+		return errors.New("Request payload is invalid")
 	}
 	return nil
 }
@@ -31,6 +51,29 @@ func Send(w http.ResponseWriter, responseBody interface{}, statusCode int) error
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	return Encode(w, responseBody)
+}
+
+func SendError(w http.ResponseWriter, errorMessage string, statusCode int, errors []string) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+
+	errResponse := ErrorResponse{Success: false, Message: errorMessage}
+	if errors != nil {
+		errResponse.Errors = errors
+	}
+
+	return Encode(w, errResponse)
+}
+
+func SendSuccess(w http.ResponseWriter, successMessage string, statusCode int, data interface{}) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+
+	return Encode(w, SuccessResponse{
+		Success: true,
+		Message: successMessage,
+		Data:    data,
+	})
 }
 
 func Encode(w http.ResponseWriter, responseBody interface{}) error {

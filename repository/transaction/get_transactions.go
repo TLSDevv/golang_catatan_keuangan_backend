@@ -27,6 +27,7 @@ func (r Repository) GetTransactions(ctx context.Context) ([]entities.Transaction
 
 		err := rows.Scan(
 			&t.ID,
+			&t.UserID,
 			&t.TransactionName,
 			&t.Category,
 			&t.TransactionType,
