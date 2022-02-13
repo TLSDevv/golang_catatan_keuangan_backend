@@ -253,3 +253,15 @@ func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 
 	return users, nil
 }
+
+func (u UserRepository) CheckUser(ctx context.Context, userID int) (bool, error) {
+	var result entities.CountResult
+
+	query := `SELECT COUNT(*) as total FROM users WHERE id = ?`
+	err := u.DB.QueryRowContext(ctx, query, userID).Scan(&result.Total)
+	if err != nil {
+		return false, err
+	}
+
+	return result.Total > 0, nil
+}

@@ -15,4 +15,5 @@ type Repository interface {
 	FindById(ctx context.Context, userId int) (entities.User, error)
 	FindByUsername(ctx context.Context, username string) (entities.User, error)
 	List(ctx context.Context) ([]entities.User, error)
+	CheckUser(ctx context.Context, userID int) (bool, error)
 }
