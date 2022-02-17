@@ -39,6 +39,16 @@ type User struct {
 	DeletedAt time.Time `json:"deleted_at"`
 }
 
+func (u *User) UpdateUser(userRequest User) {
+	u.Username = userRequest.Username
+	u.Email = userRequest.Email
+	u.Fullname = userRequest.Fullname
+}
+
+func (u *User) UpdatePassword(password string) {
+	u.Password = password
+}
+
 func UserToUserResponse(u User) UserResponse {
 	return UserResponse{
 		u.ID,
@@ -73,78 +83,10 @@ type UserResponse struct {
 	Fullname string `json:"fullname"`
 }
 
-// request input
-type UserInput struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Fullname string `json:"fullname"`
-}
-
-func (user UserInput) Validate() error {
-	if len(user.Username) == 0 {
-		return ErrUnameRequired
-	}
-
-	if len(user.Email) == 0 {
-		return ErrEmailRequired
-	}
-
-	if len(user.Password) == 0 {
-		return ErrPassRequired
-	}
-
-	if len(user.Fullname) == 0 {
-		return ErrFNameRequired
-	}
-
-	return nil
-}
-
-func (user User) Validate() error {
-	if len(user.Username) == 0 {
-		return ErrUnameRequired
-	}
-
-	if len(user.Email) == 0 {
-		return ErrEmailRequired
-	}
-
-	if len(user.Password) == 0 {
-		return ErrPassRequired
-	}
-
-	if len(user.Fullname) == 0 {
-		return ErrFNameRequired
-	}
-
-	return nil
-}
-
 func (u User) CheckPassword(password string) error {
 	if pkg.ComparePassword(password, u.Password) {
 		return nil
 	}
 
 	return errors.New("Wrong username and password!")
-}
-
-func (u User) Update(ui UserInput) {
-	if len(ui.Username) != 0 {
-		u.Username = ui.Username
-	}
-
-	if len(ui.Email) != 0 {
-		u.Email = ui.Email
-	}
-
-	if len(ui.Password) != 0 {
-		u.Password = pkg.PasswordToHash(ui.Password)
-	}
-
-	if len(ui.Fullname) != 0 {
-		u.Fullname = ui.Fullname
-	}
-
-	u.UpdatedAt = time.Now()
 }

@@ -8,8 +8,9 @@ import (
 
 type Repository interface {
 	Create(ctx context.Context, user entities.User) error
-	Update(ctx context.Context, user entities.User) error
-	Delete(ctx context.Context, user entities.User) error
+	UpdateUser(ctx context.Context, id int, user entities.User) error
+	UpdatePassword(ctx context.Context, id int, password string) error
+	Delete(ctx context.Context, id int) error
 	Purge(ctx context.Context, user entities.User) error
 	Restore(ctx context.Context, user entities.User) error
 	FindById(ctx context.Context, userId int) (entities.User, error)
