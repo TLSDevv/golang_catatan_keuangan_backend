@@ -10,5 +10,5 @@ type Repository interface {
 	Save(ctx context.Context, userId int, refreshToken string) error
 	Update(ctx context.Context, userId int, refreshToken string) error
 	Delete(ctx context.Context, userId int) error
-	FindRefreshTokenByUserId(ctx context.Context, userId int) (entities.Auth, error)
+	FindAuthByUserId(ctx context.Context, userId int) (entities.Auth, error)
 }
