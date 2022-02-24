@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
 )
@@ -9,11 +10,11 @@ import (
 func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 	sql := `
 		SELECT
-			id, username, email, password, fullname, created_at, updated_at,
+			id, username, email, password, fullname, role, created_at, updated_at
 		FROM
 			users
 		WHERE
-		deleted_at = null`
+		deleted_at IS NULL`
 
 	rows, err := u.DB.QueryContext(ctx, sql)
 
@@ -33,6 +34,7 @@ func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 			&user.Email,
 			&user.Password,
 			&user.Fullname,
+			&user.Role,
 			&user.CreatedAt,
 			&user.UpdatedAt,
 		)
@@ -42,6 +44,8 @@ func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 		}
 		users = append(users, user)
 	}
+
+	fmt.Println(err)
 
 	return users, nil
 }

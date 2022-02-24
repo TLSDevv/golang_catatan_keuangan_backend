@@ -10,6 +10,7 @@ type Service interface {
 	Create(ctx context.Context, user entities.User) error
 	UpdateUser(ctx context.Context, id int, user entities.User) error
 	UpdatePassword(ctx context.Context, id int, password string) error
+	UpdateRole(ctx context.Context, id int, role int) error
 	Delete(ctx context.Context, id int) error
 	FindById(ctx context.Context, id int) (user entities.UserResponse, err error)
 	List(ctx context.Context) ([]entities.UserResponse, error)

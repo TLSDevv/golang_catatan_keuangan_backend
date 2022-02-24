@@ -10,7 +10,7 @@ func (service UserService) List(ctx context.Context) ([]entities.UserResponse, e
 	users, err := service.UserRepository.List(ctx)
 
 	if err != nil {
-		return []entities.UserResponse{}, nil
+		return []entities.UserResponse{}, err
 	}
 
 	return entities.UsersToUsersResponse(users), nil

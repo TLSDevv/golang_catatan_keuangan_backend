@@ -19,15 +19,20 @@ func NewUserHandler(r *mux.Router, usService user.Service) UserHandler {
 		usService: usService,
 		validator: util.NewValidate(),
 	}
-	r.HandleFunc("/users", userHandler.Create).Methods("POST")
+	r.HandleFunc("/register_user", userHandler.RegisterUser).Methods("POST")
 
 	authRoute := r.PathPrefix("/").Subrouter()
 	authRoute.Use(middleware.Authorization)
-	authRoute.HandleFunc("/users", userHandler.List).Methods("GET")
+
 	authRoute.HandleFunc("/users/{id}", userHandler.FindById).Methods("GET")
 	authRoute.HandleFunc("/users/{id}", userHandler.UpdateUser).Methods("PUT")
 	authRoute.HandleFunc("/users/{id}/password", userHandler.UpdatePassword).Methods("PUT")
 	authRoute.HandleFunc("/users/{id}", userHandler.Delete).Methods("DELETE")
+
+	adminRoute := r.PathPrefix("/").Subrouter()
+	adminRoute.Use(middleware.Admin)
+	adminRoute.HandleFunc("/users", userHandler.List).Methods("GET")
+	adminRoute.HandleFunc("/user", userHandler.Create).Methods("POST")
 
 	return userHandler
 }

@@ -9,5 +9,5 @@ import (
 type Service interface {
 	Login(ctx context.Context, login entities.Login) (entities.Token, error)
 	Logout(ctx context.Context) error
-	Refresh(ctx context.Context) (entities.Token, error)
+	Refresh(ctx context.Context, userId int) (entities.Token, error)
 }

@@ -9,11 +9,12 @@ import (
 func (u UserRepository) FindByUsername(ctx context.Context, username string) (entities.User, error) {
 	sql := `
 		SELECT
-			id, username, email, password, fullname, created_at, updated_at
+			id, username, email, password, fullname, role, created_at, updated_at
 		FROM
 			users
 		WHERE
-			username=? AND deleted_at=null`
+			username=?
+			AND deleted_at IS NULL`
 
 	rows, err := u.DB.QueryContext(ctx, sql,
 		username,
@@ -34,6 +35,7 @@ func (u UserRepository) FindByUsername(ctx context.Context, username string) (en
 			&user.Email,
 			&user.Password,
 			&user.Fullname,
+			&user.Role,
 			&user.CreatedAt,
 			&user.UpdatedAt,
 		)
