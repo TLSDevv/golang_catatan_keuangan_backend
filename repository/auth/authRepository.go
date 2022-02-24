@@ -17,10 +17,10 @@ func NewAuthRepository(db *sql.DB) AuthRepository {
 	}
 }
 
-func (repository AuthRepository) FindRefreshTokenByUserId(ctx context.Context, userId int) (entities.Auth, error) {
+func (repository AuthRepository) FindAuthByUserId(ctx context.Context, userId int) (entities.Auth, error) {
 	sql := `
 		SELECT
-			refresh_token
+			user_id, refresh_token
 		FROM
 			auths
 		WHERE
@@ -38,6 +38,7 @@ func (repository AuthRepository) FindRefreshTokenByUserId(ctx context.Context, u
 
 	if rows.Next() {
 		err := rows.Scan(
+			&auth.UserId,
 			&auth.RefreshToken,
 		)
 
@@ -50,6 +51,15 @@ func (repository AuthRepository) FindRefreshTokenByUserId(ctx context.Context, u
 }
 
 func (repository AuthRepository) Save(ctx context.Context, userId int, refreshToken string) error {
+
+	auth, err := repository.FindAuthByUserId(ctx, userId)
+
+	if auth.UserId != 0 {
+		repository.Update(ctx, userId, refreshToken)
+
+		return nil
+	}
+
 	sql := `
 		INSERT INTO
 			auths(
@@ -57,7 +67,7 @@ func (repository AuthRepository) Save(ctx context.Context, userId int, refreshTo
 				refresh_token)
 			VALUES(?, ?)`
 
-	_, err := repository.DB.ExecContext(ctx, sql,
+	_, err = repository.DB.ExecContext(ctx, sql,
 		userId,
 		refreshToken,
 	)

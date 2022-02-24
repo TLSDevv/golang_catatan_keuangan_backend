@@ -75,7 +75,7 @@ func (service AuthService) Refresh(ctx context.Context) (entities.Token, error) 
 	userId := ctx.Value("user_id").(int)
 	refreshToken := ctx.Value("refresh_token").(string)
 
-	auth, err := service.AuthRepo.FindRefreshTokenByUserId(ctx, userId)
+	auth, err := service.AuthRepo.FindAuthByUserId(ctx, userId)
 
 	if err != nil {
 		return entities.Token{}, err
