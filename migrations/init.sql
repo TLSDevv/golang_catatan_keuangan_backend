@@ -6,6 +6,7 @@ CREATE TABLE users(
     email VARCHAR(255),
     password VARCHAR(255),
     fullname VARCHAR(50),
+    role INT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL,
     deleted_at DATETIME,

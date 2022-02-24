@@ -9,7 +9,7 @@ import (
 func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 	sql := `
 		SELECT
-			id, username, email, password, fullname, created_at, updated_at,
+			id, username, email, password, fullname, role, created_at, updated_at,
 		FROM
 			users
 		WHERE
@@ -33,6 +33,7 @@ func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 			&user.Email,
 			&user.Password,
 			&user.Fullname,
+			&user.Role,
 			&user.CreatedAt,
 			&user.UpdatedAt,
 		)

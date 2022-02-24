@@ -60,24 +60,29 @@ func load() *JWTEnv {
 type TokenClaims struct {
 	ID       int    `json:"id"`
 	Username string `json:"username"`
+	Role     int    `json:"role"`
 	jwt.StandardClaims
 }
 
 type AccessDetails struct {
 	Id       int
 	Username string
+	Role     int
 }
 
-func PrepareTokenClaims(username string, id, typeToken int) TokenClaims {
-	if typeToken == TypeTokenAccess {
-		return TokenClaims{
-			ID:       id,
-			Username: username,
-			StandardClaims: jwt.StandardClaims{
-				ExpiresAt: time.Now().Add(time.Minute * time.Duration(JWT.AccessTokenLifeTime)).Unix(),
-			},
-		}
+func PrepareAccessTokenClaims(username string, id, role int) TokenClaims {
+	return TokenClaims{
+		ID:       id,
+		Username: username,
+		Role:     role,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Minute * time.Duration(JWT.AccessTokenLifeTime)).Unix(),
+		},
 	}
+
+}
+
+func PrepareRefreshTokenClaims(username string, id int) TokenClaims {
 
 	return TokenClaims{
 		ID:       id,
@@ -86,6 +91,7 @@ func PrepareTokenClaims(username string, id, typeToken int) TokenClaims {
 			ExpiresAt: time.Now().Add(time.Hour * time.Duration(JWT.RefreshTokenLifeTime)).Unix(),
 		},
 	}
+
 }
 
 func GenerateToken(tokenClaims TokenClaims, typeToken int) (string, error) {
@@ -152,6 +158,7 @@ func ExtractTokenMetadata(r *http.Request, typeToken int) (*AccessDetails, error
 	if ok && token.Valid {
 
 		id := int(claims["id"].(float64))
+		role := int(claims["role"].(float64))
 
 		username, ok := claims["username"].(string)
 		if !ok {
@@ -161,6 +168,7 @@ func ExtractTokenMetadata(r *http.Request, typeToken int) (*AccessDetails, error
 		return &AccessDetails{
 			Id:       id,
 			Username: username,
+			Role:     role,
 		}, nil
 	}
 	return nil, err

@@ -7,6 +7,7 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/middleware"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/util"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 	"github.com/gorilla/mux"
 )
 
@@ -57,7 +58,14 @@ func (handler AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (handler AuthHandler) Refresh(w http.ResponseWriter, r *http.Request) {
-	token, err := handler.AuthService.Refresh(r.Context())
+	accessDetails, err := pkg.ExtractTokenMetadata(r, pkg.TypeTokenAccess)
+
+	if err != nil {
+		util.SendNoData(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	token, err := handler.AuthService.Refresh(r.Context(), accessDetails.Id)
 
 	if err != nil {
 		util.SendNoData(w, http.StatusInternalServerError, err.Error())

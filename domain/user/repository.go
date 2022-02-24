@@ -10,6 +10,7 @@ type Repository interface {
 	Create(ctx context.Context, user entities.User) error
 	UpdateUser(ctx context.Context, id int, user entities.User) error
 	UpdatePassword(ctx context.Context, id int, password string) error
+	UpdateRole(ctx context.Context, id int, role int) error
 	Delete(ctx context.Context, id int) error
 	Purge(ctx context.Context, user entities.User) error
 	Restore(ctx context.Context, user entities.User) error

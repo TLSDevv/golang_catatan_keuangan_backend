@@ -15,6 +15,7 @@ var (
 	ErrPassRequired      = errors.New("Password is required")
 	ErrPassInvalid       = errors.New("Password is required")
 	ErrFNameRequired     = errors.New("Fullname is required")
+	ErrRoleRequired      = errors.New("Role is required")
 
 	UserDomainErrors = []error{
 		ErrUnameRequired,
@@ -34,6 +35,7 @@ type User struct {
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
 	Fullname  string    `json:"fullname"`
+	Role      int       `json:"role"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `json:"deleted_at"`
@@ -49,12 +51,17 @@ func (u *User) UpdatePassword(password string) {
 	u.Password = password
 }
 
+func (u *User) UpdateRole(role int) {
+	u.Role = role
+}
+
 func UserToUserResponse(u User) UserResponse {
 	return UserResponse{
 		u.ID,
 		u.Username,
 		u.Email,
 		u.Fullname,
+		u.Role,
 	}
 }
 
@@ -67,6 +74,7 @@ func UsersToUsersResponse(u []User) []UserResponse {
 			value.Username,
 			value.Email,
 			value.Fullname,
+			value.Role,
 		}
 
 		users = append(users, user)
@@ -81,6 +89,7 @@ type UserResponse struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Fullname string `json:"fullname"`
+	Role     int    `json:"role"`
 }
 
 func (u User) CheckPassword(password string) error {

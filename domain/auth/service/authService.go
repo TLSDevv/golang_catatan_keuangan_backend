@@ -38,14 +38,14 @@ func (service AuthService) Login(ctx context.Context, login entities.Login) (ent
 	}
 
 	// todo refactor pkg jwt
-	claim := pkg.PrepareTokenClaims(login.Username, user.ID, pkg.TypeTokenAccess)
+	claim := pkg.PrepareAccessTokenClaims(login.Username, user.ID, user.Role)
 	accessToken, err := pkg.GenerateToken(claim, pkg.TypeTokenAccess)
 
 	if err != nil {
 		return entities.Token{}, err
 	}
 
-	claim = pkg.PrepareTokenClaims(login.Username, user.ID, pkg.TypeTokenRefresh)
+	claim = pkg.PrepareRefreshTokenClaims(login.Username, user.ID)
 	refreshToken, err := pkg.GenerateToken(claim, pkg.TypeTokenRefresh)
 
 	if err != nil {
@@ -71,37 +71,25 @@ func (service AuthService) Logout(ctx context.Context) error {
 
 	return nil
 }
-func (service AuthService) Refresh(ctx context.Context) (entities.Token, error) {
-	userId := ctx.Value("user_id").(int)
-	refreshToken := ctx.Value("refresh_token").(string)
+func (service AuthService) Refresh(ctx context.Context, userId int) (entities.Token, error) {
 
-	auth, err := service.AuthRepo.FindAuthByUserId(ctx, userId)
+	user, err := service.UserRepo.FindById(ctx, userId)
 
-	if err != nil {
-		return entities.Token{}, err
-	}
-
-	if refreshToken != auth.RefreshToken {
-		return entities.Token{}, err
-	}
-
-	username := ctx.Value("username").(string)
-
-	claim := pkg.PrepareTokenClaims(username, userId, pkg.TypeTokenAccess)
+	claim := pkg.PrepareAccessTokenClaims(user.Username, user.ID, user.Role)
 	accessToken, err := pkg.GenerateToken(claim, pkg.TypeTokenAccess)
 
 	if err != nil {
 		return entities.Token{}, err
 	}
 
-	claim = pkg.PrepareTokenClaims(username, userId, pkg.TypeTokenRefresh)
-	refreshToken, err = pkg.GenerateToken(claim, pkg.TypeTokenRefresh)
+	claim = pkg.PrepareRefreshTokenClaims(user.Username, user.ID)
+	refreshToken, err := pkg.GenerateToken(claim, pkg.TypeTokenRefresh)
 
 	if err != nil {
 		return entities.Token{}, err
 	}
 
-	err = service.AuthRepo.Update(ctx, userId, refreshToken)
+	err = service.AuthRepo.Update(ctx, user.ID, refreshToken)
 
 	if err != nil {
 		return entities.Token{}, err
