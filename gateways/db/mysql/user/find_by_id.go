@@ -9,7 +9,7 @@ import (
 func (u UserRepository) FindById(ctx context.Context, userId int) (entities.User, error) {
 	sql := `
 		SELECT
-			id, username, email, password, fullname, role, created_at, updated_at, deleted_at
+			id, username, email, password, fullname, role, created_at, updated_at
 		FROM
 			users
 		WHERE
@@ -38,7 +38,6 @@ func (u UserRepository) FindById(ctx context.Context, userId int) (entities.User
 			&user.Role,
 			&user.CreatedAt,
 			&user.UpdatedAt,
-			&user.DeletedAt,
 		)
 
 		if err != nil {

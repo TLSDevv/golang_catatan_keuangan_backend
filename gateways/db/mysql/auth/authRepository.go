@@ -84,7 +84,7 @@ func (repository AuthRepository) Update(ctx context.Context, userId int, refresh
 		UPDATE
 			auths
 		SET
-			refresh_token=?,
+			refresh_token=?
 		WHERE
 			user_id=?`
 
