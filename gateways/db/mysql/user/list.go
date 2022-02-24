@@ -13,7 +13,7 @@ func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 		FROM
 			users
 		WHERE
-		deleted_at = null`
+		deleted_at IS NULL`
 
 	rows, err := u.DB.QueryContext(ctx, sql)
 

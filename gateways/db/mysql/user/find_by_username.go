@@ -13,7 +13,8 @@ func (u UserRepository) FindByUsername(ctx context.Context, username string) (en
 		FROM
 			users
 		WHERE
-			username=? AND deleted_at=null`
+			username=?
+			AND deleted_at IS NULL`
 
 	rows, err := u.DB.QueryContext(ctx, sql,
 		username,

@@ -13,7 +13,8 @@ func (u UserRepository) FindById(ctx context.Context, userId int) (entities.User
 		FROM
 			users
 		WHERE
-			id=? AND deleted_at=null`
+			id=?
+			AND deleted_at IS NULL`
 
 	rows, err := u.DB.QueryContext(ctx, sql,
 		userId,
