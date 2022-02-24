@@ -23,13 +23,15 @@ func NewUserHandler(r *mux.Router, usService user.Service) UserHandler {
 
 	authRoute := r.PathPrefix("/").Subrouter()
 	authRoute.Use(middleware.Authorization)
-	authRoute.HandleFunc("/users", userHandler.List).Methods("GET")
+
 	authRoute.HandleFunc("/users/{id}", userHandler.FindById).Methods("GET")
 	authRoute.HandleFunc("/users/{id}", userHandler.UpdateUser).Methods("PUT")
 	authRoute.HandleFunc("/users/{id}/password", userHandler.UpdatePassword).Methods("PUT")
 	authRoute.HandleFunc("/users/{id}", userHandler.Delete).Methods("DELETE")
 
 	adminRoute := r.PathPrefix("/").Subrouter()
+	adminRoute.Use(middleware.Admin)
+	adminRoute.HandleFunc("/users", userHandler.List).Methods("GET")
 	adminRoute.HandleFunc("/user", userHandler.Create).Methods("POST")
 
 	return userHandler
