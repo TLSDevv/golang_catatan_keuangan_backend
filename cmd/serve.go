@@ -8,10 +8,10 @@ import (
 	auth_service "github.com/TLSDevv/golang_catatan_keuangan_backend/domain/auth/service"
 	transaction_service "github.com/TLSDevv/golang_catatan_keuangan_backend/domain/transaction/service"
 	user_service "github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user/service"
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler"
-	auth_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/repository/auth"
-	transaction_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/repository/transaction"
-	user_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/repository/user"
+	auth_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/db/mysql/auth"
+	transaction_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/db/mysql/transaction"
+	user_repo "github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/db/mysql/user"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http"
 	"github.com/sirupsen/logrus"
 )
 
@@ -52,6 +52,6 @@ func Execute() {
 	tr := transaction_repo.NewTransactionRepository(db)
 	ts := transaction_service.NewTransactionService(tr, userRepo)
 
-	api := handler.NewAPI(userService, authService, ts)
+	api := http.NewAPI(userService, authService, ts)
 	api.Start(ctx, conf.Host, conf.Port)
 }

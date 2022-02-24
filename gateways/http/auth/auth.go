@@ -5,8 +5,8 @@ import (
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/auth"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/middleware"
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/util"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/middleware"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/util"
 	"github.com/gorilla/mux"
 )
 

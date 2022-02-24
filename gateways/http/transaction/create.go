@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/util"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/util"
 )
 
 func (th TransactionHandler) Create(w http.ResponseWriter, r *http.Request) {

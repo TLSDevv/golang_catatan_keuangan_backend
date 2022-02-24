@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/util"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/util"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 )
 

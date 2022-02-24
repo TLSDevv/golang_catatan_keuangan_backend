@@ -1,4 +1,4 @@
-package handler
+package http
 
 import (
 	"context"
@@ -9,10 +9,10 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/auth"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/transaction"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/user"
-	auth_handler "github.com/TLSDevv/golang_catatan_keuangan_backend/handler/auth"
-	"github.com/TLSDevv/golang_catatan_keuangan_backend/handler/middleware"
-	transaction_handler "github.com/TLSDevv/golang_catatan_keuangan_backend/handler/transaction"
-	user_handler "github.com/TLSDevv/golang_catatan_keuangan_backend/handler/user"
+	auth_http "github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/auth"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/middleware"
+	transaction_http "github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/transaction"
+	user_http "github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/user"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -46,9 +46,9 @@ func (a API) Start(ctx context.Context, host, port string) (err error) {
 		rw.Write([]byte("works"))
 	}).Methods("GET")
 
-	user_handler.NewUserHandler(route, a.userService)
-	auth_handler.NewAuthHandler(route, a.authService)
-	transaction_handler.NewTransactionHandler(route, a.transactionService)
+	user_http.NewUserHandler(route, a.userService)
+	auth_http.NewAuthHandler(route, a.authService)
+	transaction_http.NewTransactionHandler(route, a.transactionService)
 
 	server := http.Server{
 		Addr:    endPoint(host, port),
