@@ -35,7 +35,6 @@ func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 			&user.Fullname,
 			&user.CreatedAt,
 			&user.UpdatedAt,
-			&user.DeletedAt,
 		)
 
 		if err != nil {
