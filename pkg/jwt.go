@@ -173,3 +173,20 @@ func ExtractTokenMetadata(r *http.Request, typeToken int) (*AccessDetails, error
 	}
 	return nil, err
 }
+
+func RefreshTokenIsValid(refreshToken string) bool {
+	token, _ := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
+		//Make sure that the token method conform to "SigningMethodHMAC"
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return []byte(JWT.RefreshToken), nil
+	})
+	// Token Valid Check
+	if !token.Valid {
+		return false
+	}
+
+	return true
+}
