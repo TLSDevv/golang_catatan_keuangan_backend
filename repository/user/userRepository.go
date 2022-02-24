@@ -218,7 +218,7 @@ func (u UserRepository) FindByUsername(ctx context.Context, username string) (en
 func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 	sql := `
 		SELECT
-			id, username, email, password, fullname, created_at, updated_at, deleted_at
+			id, username, email, password, fullname, created_at, updated_at
 		FROM
 			users`
 
@@ -242,7 +242,6 @@ func (u UserRepository) List(ctx context.Context) ([]entities.User, error) {
 			&user.Fullname,
 			&user.CreatedAt,
 			&user.UpdatedAt,
-			&user.DeletedAt,
 		)
 
 		if err != nil {
