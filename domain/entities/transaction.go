@@ -43,7 +43,6 @@ type (
 
 	Transaction struct {
 		ID              int       `json:"id"`
-		UserID          int       `json:"user_id"`
 		TransactionName string    `json:"transaction_name"`
 		Category        string    `json:"category"`
 		TransactionType int       `json:"transaction_type"`
@@ -57,7 +56,6 @@ type (
 
 func NewTransaction(userID int, transactionName string, category string, transactionType int, amount int, transactionAt time.Time) (*Transaction, error) {
 	transaction := Transaction{
-		UserID:          userID,
 		TransactionName: transactionName,
 		Category:        category,
 		TransactionType: transactionType,
@@ -73,9 +71,6 @@ func NewTransaction(userID int, transactionName string, category string, transac
 }
 
 func (t *Transaction) Update(ti TransactionInput) error {
-	if ti.UserID != 0 {
-		t.UserID = ti.UserID
-	}
 	if len(ti.TransactionName) != 0 {
 		t.TransactionName = ti.TransactionName
 	}

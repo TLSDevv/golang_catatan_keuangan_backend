@@ -30,7 +30,6 @@ func formatSliceResponse(transactions []entities.Transaction) []ResponseBody {
 	for i, t := range transactions {
 		transactionResponse[i] = ResponseBody{
 			ID:              t.ID,
-			UserID:          t.UserID,
 			TransactionName: t.TransactionName,
 			Category:        t.Category,
 			TransactionType: t.TransactionType,

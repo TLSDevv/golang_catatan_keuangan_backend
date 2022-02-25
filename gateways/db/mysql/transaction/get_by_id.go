@@ -19,7 +19,6 @@ func (r Repository) GetByID(ctx context.Context, transactionID int) (entities.Tr
 
 	err := r.DB.QueryRowContext(ctx, sql, transactionID).Scan(
 		&t.ID,
-		&t.UserID,
 		&t.TransactionName,
 		&t.Category,
 		&t.TransactionType,
