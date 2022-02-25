@@ -9,7 +9,7 @@ func (r Repository) Purge(ctx context.Context, transactionID int) error {
 		DELETE FROM
 			transactions
 		WHERE
-			id=$1`
+			id=?`
 
 	_, err := r.DB.ExecContext(ctx, sql, transactionID)
 

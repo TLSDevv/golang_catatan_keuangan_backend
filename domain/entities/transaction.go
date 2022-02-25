@@ -55,7 +55,7 @@ type (
 	}
 )
 
-func SetTransaction(userID int, transactionName string, category string, transactionType int, amount int, transactionAt time.Time) (*Transaction, error) {
+func NewTransaction(userID int, transactionName string, category string, transactionType int, amount int, transactionAt time.Time) (*Transaction, error) {
 	transaction := Transaction{
 		UserID:          userID,
 		TransactionName: transactionName,
@@ -70,6 +70,33 @@ func SetTransaction(userID int, transactionName string, category string, transac
 	}
 
 	return &transaction, nil
+}
+
+func (t *Transaction) Update(ti TransactionInput) error {
+	if ti.UserID != 0 {
+		t.UserID = ti.UserID
+	}
+	if len(ti.TransactionName) != 0 {
+		t.TransactionName = ti.TransactionName
+	}
+	if len(ti.Category) != 0 {
+		t.Category = ti.Category
+	}
+	if ti.TransactionType == 0 || ti.TransactionType == 1 {
+		t.TransactionType = ti.TransactionType
+	}
+	if ti.Amount != 0 {
+		t.Amount = ti.Amount
+	}
+	if len(ti.TransactionAt) != 0 {
+		tAt, err := pkg.StringDateToDateTime(ti.TransactionAt)
+		if err != nil {
+			return err
+		}
+		t.TransactionAt = *tAt
+	}
+
+	return nil
 }
 
 func (ti TransactionInput) Validate() []string {
@@ -117,16 +144,16 @@ func (t Transaction) Validate() error {
 	return nil
 }
 
-func (t Transaction) Update(ti TransactionInput) {
-	tAt, _ := pkg.StringDateToDateTime(ti.TransactionAt)
-	t.UserID = ti.UserID
-	t.TransactionName = ti.TransactionName
-	t.Category = ti.Category
-	t.TransactionType = ti.TransactionType
-	t.Amount = ti.Amount
-	t.TransactionAt = *tAt
-	t.UpdatedAt = time.Now()
-}
+// func (t Transaction) Update(ti TransactionInput) {
+// 	tAt, _ := pkg.StringDateToDateTime(ti.TransactionAt)
+// 	t.UserID = ti.UserID
+// 	t.TransactionName = ti.TransactionName
+// 	t.Category = ti.Category
+// 	t.TransactionType = ti.TransactionType
+// 	t.Amount = ti.Amount
+// 	t.TransactionAt = *tAt
+// 	t.UpdatedAt = time.Now()
+// }
 
 func (t Transaction) Delete() {
 	t.DeletedAt = time.Now()

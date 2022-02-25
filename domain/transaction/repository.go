@@ -11,7 +11,7 @@ type Repository interface {
 	// GetActiveTransactions(ctx context.Context) ([]entities.Transaction, error)   // only admin
 	// GetInActiveTransactions(ctx context.Context) ([]entities.Transaction, error) // only admin
 
-	GetByID(ctx context.Context, transactionID int) (*entities.Transaction, error) // admin,user
+	GetByID(ctx context.Context, transactionID int) (entities.Transaction, error) // admin,user
 
 	GetTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error) // admin,user
 	// GetActiveTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error)            // admin,user
@@ -24,11 +24,11 @@ type Repository interface {
 	// GetThisYearActiveTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error)    // admin, user
 	// GetThisYearInActiveTransactionsByUserID(ctx context.Context, userID int) ([]entities.Transaction, error)  // admin, user
 
-	Create(ctx context.Context, trc entities.Transaction) error // admin,user
-	Update(ctx context.Context, trc entities.Transaction) error // admin,user
-	Delete(ctx context.Context, transactionID int) error        // admin,user
-	Restore(ctx context.Context, transactionID int) error       // only admin
-	Purge(ctx context.Context, transactionID int) error         // only admin
+	Create(ctx context.Context, trc entities.Transaction) error          // admin,user
+	Update(ctx context.Context, trc entities.Transaction, tID int) error // admin,user
+	Delete(ctx context.Context, transactionID int) error                 // admin,user
+	Restore(ctx context.Context, transactionID int) error                // only admin
+	Purge(ctx context.Context, transactionID int) error                  // only admin
 
 	// CheckUser(ctx context.Context, userID int) (bool, error)
 	CheckTransactionByID(ctx context.Context, tID int) (bool, error)

@@ -46,7 +46,7 @@ func (th TransactionHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// call update service
-	err = th.service.Update(r.Context(), reqBody)
+	err = th.service.Update(r.Context(), reqBody, tID)
 	if err != nil {
 		_ = util.SendError(w, err.Error(), http.StatusInternalServerError, nil)
 		return

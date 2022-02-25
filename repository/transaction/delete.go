@@ -10,9 +10,9 @@ func (r Repository) Delete(ctx context.Context, transactionID int) error {
 		UPDATE
 			transactions
 		SET
-			deleted_at=$1
+			deleted_at=?
 		WHERE
-			id=$2`
+			id=?`
 
 	_, err := r.DB.ExecContext(ctx, sql,
 		time.Now(),

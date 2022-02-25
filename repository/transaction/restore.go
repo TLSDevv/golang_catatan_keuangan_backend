@@ -11,7 +11,7 @@ func (r Repository) Restore(ctx context.Context, transactionID int) error {
 		SET
 			deleted_at=NULL
 		WHERE
-			id=$1`
+			id=?`
 
 	_, err := r.DB.ExecContext(ctx, sql, transactionID)
 
