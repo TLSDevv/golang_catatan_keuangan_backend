@@ -115,9 +115,14 @@ func ExtractToken(r *http.Request) string {
 	bearToken := r.Header.Get("Authorization")
 
 	strArr := strings.Split(bearToken, " ")
+	if strArr[0] != "Bearer" {
+		return ""
+	}
+
 	if len(strArr) == 2 {
 		return strArr[1]
 	}
+
 	return ""
 }
 
