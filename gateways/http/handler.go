@@ -46,8 +46,8 @@ func (a API) Start(ctx context.Context, host, port string) (err error) {
 		rw.Write([]byte("works"))
 	}).Methods("GET")
 
-	user_http.NewUserHandler(route, a.userService)
 	auth_http.NewAuthHandler(route, a.authService)
+	user_http.NewUserHandler(route, a.userService)
 	transaction_http.NewTransactionHandler(route, a.transactionService)
 
 	server := http.Server{
