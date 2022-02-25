@@ -6,4 +6,4 @@ logs
 .keys
 .env
 .env.yml
-./tmp
+tmp
