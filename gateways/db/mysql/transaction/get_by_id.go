@@ -6,7 +6,7 @@ import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
 )
 
-func (r Repository) GetByID(ctx context.Context, transactionID int) (*entities.Transaction, error) {
+func (r Repository) GetByID(ctx context.Context, transactionID int) (entities.Transaction, error) {
 	sql := `
 		SELECT
 			id, user_id, transaction_name, category, transaction_type, amount, transaction_at, created_at
@@ -16,6 +16,7 @@ func (r Repository) GetByID(ctx context.Context, transactionID int) (*entities.T
 			id=?`
 
 	t := entities.Transaction{}
+
 	err := r.DB.QueryRowContext(ctx, sql, transactionID).Scan(
 		&t.ID,
 		&t.UserID,
@@ -28,8 +29,8 @@ func (r Repository) GetByID(ctx context.Context, transactionID int) (*entities.T
 	)
 
 	if err != nil {
-		return nil, err
+		return entities.Transaction{}, err
 	}
 
-	return &t, nil
+	return t, nil
 }

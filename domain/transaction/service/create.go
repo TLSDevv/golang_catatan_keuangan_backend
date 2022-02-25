@@ -13,7 +13,7 @@ func (t Transaction) Create(ctx context.Context, input entities.TransactionInput
 		return err
 	}
 
-	transaction, err := entities.SetTransaction(
+	transaction, err := entities.NewTransaction(
 		input.UserID,
 		input.TransactionName,
 		input.Category,
