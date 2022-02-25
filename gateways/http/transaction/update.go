@@ -24,7 +24,7 @@ func (th TransactionHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// validate user_id
-	ue, err := th.service.CheckUser(r.Context(), reqBody.UserID)
+	ue, err := th.service.CheckUser(r.Context(), r.Context().Value("user_id").(int))
 	if err != nil {
 		_ = util.SendError(w, err.Error(), http.StatusInternalServerError, nil)
 		return

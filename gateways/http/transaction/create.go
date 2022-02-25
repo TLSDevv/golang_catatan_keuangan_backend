@@ -30,7 +30,7 @@ func (th TransactionHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check user_id exist or not
-	userExist, err := th.service.CheckUser(r.Context(), reqBody.UserID)
+	userExist, err := th.service.CheckUser(r.Context(), r.Context().Value("user_id").(int))
 	if err != nil {
 		_ = util.SendError(w, err.Error(), http.StatusInternalServerError, nil)
 		return

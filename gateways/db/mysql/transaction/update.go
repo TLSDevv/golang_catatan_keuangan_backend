@@ -12,7 +12,6 @@ func (r Repository) Update(ctx context.Context, trc entities.Transaction, tID in
 			UPDATE
 				transactions
 			SET
-				user_id=?,
 				transaction_name=?,
 				category=?,
 				transaction_type=?,
@@ -22,7 +21,6 @@ func (r Repository) Update(ctx context.Context, trc entities.Transaction, tID in
 				id=?`
 
 	result, err := r.DB.ExecContext(ctx, sql,
-		trc.UserID,
 		trc.TransactionName,
 		trc.Category,
 		trc.TransactionType,

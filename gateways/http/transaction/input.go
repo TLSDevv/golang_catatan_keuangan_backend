@@ -9,7 +9,6 @@ import (
 type (
 	ResponseBody struct {
 		ID              int       `json:"id"`
-		UserID          int       `json:"user_id"`
 		TransactionName string    `json:"transaction_name"`
 		Category        string    `json:"category"`
 		TransactionType int       `json:"transaction_type"`
@@ -30,7 +29,6 @@ func formatSliceResponse(transactions []entities.Transaction) []ResponseBody {
 	for i, t := range transactions {
 		transactionResponse[i] = ResponseBody{
 			ID:              t.ID,
-			UserID:          t.UserID,
 			TransactionName: t.TransactionName,
 			Category:        t.Category,
 			TransactionType: t.TransactionType,

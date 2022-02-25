@@ -14,7 +14,7 @@ func (t Transaction) Create(ctx context.Context, input entities.TransactionInput
 	}
 
 	transaction, err := entities.NewTransaction(
-		input.UserID,
+		ctx.Value("user_id").(int),
 		input.TransactionName,
 		input.Category,
 		input.TransactionType,

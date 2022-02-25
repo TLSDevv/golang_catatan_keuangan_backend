@@ -29,7 +29,6 @@ var (
 
 type (
 	TransactionInput struct {
-		UserID          int    `json:"user_id"`
 		TransactionName string `json:"transaction_name"`
 		Category        string `json:"category"`
 		TransactionType int    `json:"transaction_type"`
@@ -43,7 +42,6 @@ type (
 
 	Transaction struct {
 		ID              int       `json:"id"`
-		UserID          int       `json:"user_id"`
 		TransactionName string    `json:"transaction_name"`
 		Category        string    `json:"category"`
 		TransactionType int       `json:"transaction_type"`
@@ -57,7 +55,6 @@ type (
 
 func NewTransaction(userID int, transactionName string, category string, transactionType int, amount int, transactionAt time.Time) (*Transaction, error) {
 	transaction := Transaction{
-		UserID:          userID,
 		TransactionName: transactionName,
 		Category:        category,
 		TransactionType: transactionType,
@@ -73,9 +70,6 @@ func NewTransaction(userID int, transactionName string, category string, transac
 }
 
 func (t *Transaction) Update(ti TransactionInput) error {
-	if ti.UserID != 0 {
-		t.UserID = ti.UserID
-	}
 	if len(ti.TransactionName) != 0 {
 		t.TransactionName = ti.TransactionName
 	}
@@ -102,9 +96,6 @@ func (t *Transaction) Update(ti TransactionInput) error {
 func (ti TransactionInput) Validate() []string {
 	var errors []string
 
-	if ti.UserID <= 0 {
-		errors = append(errors, ErrUserIDRequired.Error())
-	}
 	if len(ti.TransactionName) == 0 {
 		errors = append(errors, ErrTransactionNameRequired.Error())
 	}
@@ -143,17 +134,6 @@ func (t Transaction) Validate() error {
 	}
 	return nil
 }
-
-// func (t Transaction) Update(ti TransactionInput) {
-// 	tAt, _ := pkg.StringDateToDateTime(ti.TransactionAt)
-// 	t.UserID = ti.UserID
-// 	t.TransactionName = ti.TransactionName
-// 	t.Category = ti.Category
-// 	t.TransactionType = ti.TransactionType
-// 	t.Amount = ti.Amount
-// 	t.TransactionAt = *tAt
-// 	t.UpdatedAt = time.Now()
-// }
 
 func (t Transaction) Delete() {
 	t.DeletedAt = time.Now()

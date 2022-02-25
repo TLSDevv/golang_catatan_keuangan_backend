@@ -16,7 +16,6 @@ func (th TransactionHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 
 	_ = util.SendSuccess(w, "", http.StatusOK, ResponseBody{
 		ID:              t.ID,
-		UserID:          t.UserID,
 		TransactionName: t.TransactionName,
 		Category:        t.Category,
 		TransactionType: t.TransactionType,

@@ -19,9 +19,8 @@ func (r Repository) Create(ctx context.Context, t entities.Transaction) error {
 			)
 			VALUES(?, ?, ?, ?, ?, ?);
 		`
-
 	_, err := r.DB.ExecContext(ctx, sql,
-		t.UserID,
+		ctx.Value("user_id").(int),
 		t.TransactionName,
 		t.Category,
 		t.TransactionType,
