@@ -1,7 +1,6 @@
 package transaction
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
@@ -10,12 +9,6 @@ import (
 
 func (th TransactionHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var reqBody entities.TransactionInput
-
-	var test interface{} = ""
-	_, ok := test.(int)
-	if !ok {
-		fmt.Println("not int")
-	}
 
 	err := util.Decode(r, &reqBody)
 	if err != nil {
