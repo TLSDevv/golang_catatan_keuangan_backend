@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -114,6 +115,11 @@ func signedToken(claims TokenClaims, signed string) (string, error) {
 func ExtractToken(r *http.Request) string {
 	bearToken := r.Header.Get("Authorization")
 
+	// [jamil] - check if empty
+	if bearToken == "" {
+		return ""
+	}
+
 	strArr := strings.Split(bearToken, " ")
 	if strArr[0] != "Bearer" {
 		return ""
@@ -128,6 +134,11 @@ func ExtractToken(r *http.Request) string {
 
 func VerifyToken(r *http.Request, typeToken int) (*jwt.Token, error) {
 	tokenString := ExtractToken(r)
+
+	// [jamil] - No auth header
+	if tokenString == "" {
+		return nil, errors.New("Unauthorized")
+	}
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
