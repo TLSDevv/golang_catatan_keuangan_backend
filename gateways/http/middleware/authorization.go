@@ -14,19 +14,15 @@ func Authorization(h http.Handler) http.Handler {
 			accessDetails, err := pkg.ExtractTokenMetadata(r, pkg.TypeTokenAccess)
 
 			if err != nil {
-				// [jamil] - change to unauthorized 401
 				util.SendNoData(w, http.StatusUnauthorized, err.Error())
 				return
 			}
 
-			// [jamil] - change context.Background() to r.Context()
 			ctx := context.WithValue(r.Context(), util.CtxUserId, accessDetails.Id)
 			ctx = context.WithValue(ctx, util.CtxUsername, accessDetails.Username)
 			ctx = context.WithValue(ctx, util.CtxRole, accessDetails.Role)
 
-			// [jamil] - redefine the request
 			r = r.WithContext(ctx)
-
 			h.ServeHTTP(w, r)
 		})
 }
