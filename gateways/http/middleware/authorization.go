@@ -18,7 +18,7 @@ func Authorization(h http.Handler) http.Handler {
 				return
 			}
 
-			ctx := context.WithValue(context.Background(), "user_id", accessDetails.Id)
+			ctx := context.WithValue(r.Context(), "user_id", accessDetails.Id)
 			ctx = context.WithValue(ctx, "username", accessDetails.Username)
 			ctx = context.WithValue(ctx, "role", accessDetails.Role)
 			r = r.WithContext(ctx)
