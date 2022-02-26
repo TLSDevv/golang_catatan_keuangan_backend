@@ -17,7 +17,11 @@ func (h UserHandler) UpdateRole(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendNoData(w, http.StatusInternalServerError, err.Error())
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Update_Role",
+			"err":     err.Error(),
+		}).Error("Get Params")
 		return
 	}
 
@@ -26,7 +30,11 @@ func (h UserHandler) UpdateRole(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendNoData(w, http.StatusBadRequest, err.Error())
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Update Role",
+			"err":     err.Error(),
+		}).Error("Validate")
 		return
 	}
 
@@ -34,11 +42,20 @@ func (h UserHandler) UpdateRole(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendNoData(w, http.StatusInternalServerError, err.Error())
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Update Role",
+			"err":     err.Error(),
+		}).Error("Update Role")
 		return
 	}
 
 	util.SendNoData(w, http.StatusOK, "Success Update User Role")
 	logrus.Error("Success Update User Role")
+	logrus.WithFields(logrus.Fields{
+		"domain":  "User",
+		"handler": "Update Role",
+		"user_id": userId,
+	}).Info("Success")
 	return
 }

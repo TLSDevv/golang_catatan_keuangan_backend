@@ -60,6 +60,7 @@ func Execute() {
 
 	//every 2 hour
 	ticker := time.NewTicker(time.Hour * 2)
+	logrus.Info("Started Cron Job, every 2 minutes")
 	go func() {
 		for {
 			select {

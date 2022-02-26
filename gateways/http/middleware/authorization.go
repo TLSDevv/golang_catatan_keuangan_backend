@@ -20,9 +20,9 @@ func Authorization(h http.Handler) http.Handler {
 			}
 
 			// [jamil] - change context.Background() to r.Context()
-			ctx := context.WithValue(r.Context(), "user_id", accessDetails.Id)
-			ctx = context.WithValue(ctx, "username", accessDetails.Username)
-			ctx = context.WithValue(ctx, "role", accessDetails.Role)
+			ctx := context.WithValue(r.Context(), util.CtxUserId, accessDetails.Id)
+			ctx = context.WithValue(ctx, util.CtxUsername, accessDetails.Username)
+			ctx = context.WithValue(ctx, util.CtxRole, accessDetails.Role)
 
 			// [jamil] - redefine the request
 			r = r.WithContext(ctx)
@@ -34,7 +34,7 @@ func Authorization(h http.Handler) http.Handler {
 func Admin(h http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			role := r.Context().Value("role")
+			role := r.Context().Value(util.CtxRole)
 
 			if role != 1 {
 				util.SendNoData(w, http.StatusForbidden, "Forbidden Access")

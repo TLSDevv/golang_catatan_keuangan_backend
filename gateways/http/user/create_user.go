@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/entities"
@@ -18,7 +17,11 @@ func (h UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendNoData(w, http.StatusBadRequest, err.Error())
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Create User",
+			"err":     err.Error(),
+		}).Error("Decode")
 		return
 	}
 
@@ -27,7 +30,11 @@ func (h UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendWithData(w, http.StatusUnprocessableEntity, err.Error(), validationErrPayload)
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Create User",
+			"err":     err.Error(),
+		}).Error("Validate")
 		return
 	}
 
@@ -41,12 +48,20 @@ func (h UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendNoData(w, http.StatusInternalServerError, err.Error())
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Create User",
+			"err":     err.Error(),
+		}).Error("Create")
 		return
 	}
 
 	util.SendNoData(w, http.StatusOK, "Success Create User")
-	logrus.Info("Success Create User")
+	logrus.WithFields(logrus.Fields{
+		"domain":   "User",
+		"handler":  "Create User",
+		"username": reqBody.Username,
+	}).Info("Success")
 	return
 }
 
@@ -59,7 +74,11 @@ func (h UserHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendNoData(w, http.StatusBadRequest, err.Error())
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Register User",
+			"err":     err.Error(),
+		}).Error("Decode")
 		return
 	}
 
@@ -68,7 +87,11 @@ func (h UserHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendWithData(w, http.StatusUnprocessableEntity, err.Error(), validationErrPayload)
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Register User",
+			"err":     err.Error(),
+		}).Error("Validate")
 		return
 	}
 
@@ -82,18 +105,29 @@ func (h UserHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		errors, ok := err.(*helper.Errors)
-		fmt.Println(ok)
 		if ok {
 			util.SendWithData(w, http.StatusUnprocessableEntity, errors.Error(), errors.Data)
-			logrus.Error(err.Error())
+			logrus.WithFields(logrus.Fields{
+				"domain":  "User",
+				"handler": "Register User",
+				"err":     err.Error(),
+			}).Error("Create")
 			return
 		}
 		util.SendNoData(w, http.StatusInternalServerError, err.Error())
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Register User",
+			"err":     err.Error(),
+		}).Error("Create")
 		return
 	}
 
 	util.SendNoData(w, http.StatusOK, "Success Create User")
-	logrus.Info("Success Create User")
+	logrus.WithFields(logrus.Fields{
+		"domain":   "User",
+		"handler":  "Register User",
+		"username": reqBody.Username,
+	}).Info("Success")
 	return
 }

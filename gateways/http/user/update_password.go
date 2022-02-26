@@ -17,7 +17,11 @@ func (h UserHandler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendNoData(w, http.StatusInternalServerError, err.Error())
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Update_Password",
+			"err":     err.Error(),
+		}).Error("Get Params")
 		return
 	}
 
@@ -26,7 +30,11 @@ func (h UserHandler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendNoData(w, http.StatusBadRequest, err.Error())
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Update_Password",
+			"err":     err.Error(),
+		}).Error("Validate")
 		return
 	}
 
@@ -34,11 +42,19 @@ func (h UserHandler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		util.SendNoData(w, http.StatusInternalServerError, err.Error())
-		logrus.Error(err.Error())
+		logrus.WithFields(logrus.Fields{
+			"domain":  "User",
+			"handler": "Update Password",
+			"err":     err.Error(),
+		}).Error("Service.UpdatePassword")
 		return
 	}
 
 	util.SendNoData(w, http.StatusOK, "Success Update User")
-	logrus.Error("Success Update User")
+	logrus.WithFields(logrus.Fields{
+		"domain":  "User",
+		"handler": "Update Password",
+		"user_id": userId,
+	}).Info("Success")
 	return
 }
