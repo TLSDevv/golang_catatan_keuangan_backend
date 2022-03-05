@@ -7,6 +7,22 @@ import (
 )
 
 type (
+	TransactionRequest struct {
+		TransactionName string `json:"transaction_name"`
+		Category        string `json:"category"`
+		TransactionType int    `json:"transaction_type"`
+		Amount          int    `json:"amount"`
+		TransactionAt   string `json:"transaction_at"`
+	}
+
+	TransactionRequestValidationError struct {
+		TransactionName string `json:"transaction_name,omitempty"`
+		Category        string `json:"category,omitempty"`
+		TransactionType int    `json:"transaction_type,omitempty"`
+		Amount          int    `json:"amount,omitempty"`
+		TransactionAt   string `json:"transaction_at,omitempty"`
+	}
+
 	ResponseBody struct {
 		ID              int       `json:"id"`
 		TransactionName string    `json:"transaction_name"`
