@@ -92,6 +92,8 @@ func (t *Transaction) Update(ti TransactionInput) error {
 		t.TransactionAt = *tAt
 	}
 
+	t.UpdatedAt = time.Now()
+
 	return nil
 }
 
