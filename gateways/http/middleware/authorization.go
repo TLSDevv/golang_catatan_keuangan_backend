@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/util"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/helper"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 )
 
@@ -32,7 +33,7 @@ func Admin(h http.Handler) http.Handler {
 		func(w http.ResponseWriter, r *http.Request) {
 			role := r.Context().Value(util.CtxRole)
 
-			if role != 1 {
+			if role != helper.Admin {
 				util.SendNoData(w, http.StatusForbidden, "Forbidden Access")
 				return
 			}
