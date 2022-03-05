@@ -31,6 +31,8 @@ type (
 		Amount          int       `json:"amount"`
 		TransactionAt   time.Time `json:"transaction_at"`
 		CreatedAt       time.Time `json:"created_at"`
+		UpdatedAt       time.Time `json:"updated_at"`
+		DeletedAt       time.Time `json:"deleted_at"`
 	}
 
 	TransactionListResponse struct {
@@ -51,6 +53,8 @@ func formatSliceResponse(transactions []entities.Transaction) []ResponseBody {
 			Amount:          t.Amount,
 			TransactionAt:   t.TransactionAt,
 			CreatedAt:       t.CreatedAt,
+			UpdatedAt:       t.UpdatedAt,
+			DeletedAt:       t.DeletedAt,
 		}
 	}
 

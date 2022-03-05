@@ -33,6 +33,8 @@ func (r Repository) GetTransactions(ctx context.Context) ([]entities.Transaction
 			&t.Amount,
 			&t.TransactionAt,
 			&t.CreatedAt,
+			&t.UpdatedAt,
+			&t.DeletedAt,
 		)
 
 		if err != nil {

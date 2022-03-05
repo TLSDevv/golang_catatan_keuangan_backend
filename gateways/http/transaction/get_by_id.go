@@ -22,6 +22,8 @@ func (th TransactionHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 		Amount:          t.Amount,
 		TransactionAt:   t.TransactionAt,
 		CreatedAt:       t.CreatedAt,
+		UpdatedAt:       t.UpdatedAt,
+		DeletedAt:       t.DeletedAt,
 	})
 	return
 }

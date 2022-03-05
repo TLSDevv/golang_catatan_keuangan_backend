@@ -25,6 +25,8 @@ func (r Repository) GetByID(ctx context.Context, transactionID int) (entities.Tr
 		&t.Amount,
 		&t.TransactionAt,
 		&t.CreatedAt,
+		&t.UpdatedAt,
+		&t.DeletedAt,
 	)
 
 	if err != nil {
