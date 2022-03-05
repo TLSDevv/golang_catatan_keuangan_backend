@@ -12,12 +12,10 @@ func (th TransactionHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	// call delete service
 	err := th.service.Delete(r.Context(), tID)
 	if err != nil {
-		// _ = util.SendError(w, err.Error(), http.StatusInternalServerError, nil)
 		util.SendNoData(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	// _ = util.SendSuccess(w, "transaction deleted successfully!", http.StatusOK, nil)
 	util.SendNoData(w, http.StatusOK, "Transaction deleted successfully!")
 	return
 }
