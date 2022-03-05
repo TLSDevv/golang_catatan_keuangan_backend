@@ -8,8 +8,8 @@ CREATE TABLE users(
     fullname VARCHAR(50),
     role INT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL,
-    deleted_at DATETIME,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at DATETIME NULL,
 
     PRIMARY KEY(id)
 );
@@ -27,13 +27,13 @@ CREATE TABLE auths(
 CREATE TABLE transactions(
     id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
-    transaction_name VARCHAR(255) NULL,
-    category VARCHAR(100) NULL,
-    transaction_type TINYINT(1) NULL,
-    amount BIGINT NULL,
+    transaction_name VARCHAR(255) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    transaction_type TINYINT(1) NOT NULL,
+    amount BIGINT NOT NULL,
     transaction_at DATETIME NULL,
-    created_at DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at DATETIME NULL,
 
     PRIMARY KEY(id),
