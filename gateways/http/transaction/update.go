@@ -37,6 +37,6 @@ func (th TransactionHandler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	util.SendNoData(w, http.StatusOK, "transaction updated successfully!")
+	util.SendNoData(w, http.StatusOK, "Transaction updated successfully!")
 	return
 }
