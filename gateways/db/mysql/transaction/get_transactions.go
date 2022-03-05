@@ -9,7 +9,7 @@ import (
 func (r Repository) GetTransactions(ctx context.Context) ([]entities.Transaction, error) {
 	sql := `
 		SELECT
-			id, transaction_name, category, transaction_type, amount, transaction_at, created_at
+			id, transaction_name, category, transaction_type, amount, transaction_at, created_at, updated_at, deleted_at
 		FROM
 			transactions`
 

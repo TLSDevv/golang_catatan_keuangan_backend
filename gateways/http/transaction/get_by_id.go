@@ -8,6 +8,7 @@ import (
 
 func (th TransactionHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	tID := util.GetParams(r, "id")
+
 	t, err := th.service.GetByID(r.Context(), tID)
 	if err != nil {
 		util.SendNoData(w, http.StatusNotFound, "No transaction found")

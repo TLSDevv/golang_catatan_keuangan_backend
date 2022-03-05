@@ -24,15 +24,15 @@ type (
 	}
 
 	ResponseBody struct {
-		ID              int       `json:"id"`
-		TransactionName string    `json:"transaction_name"`
-		Category        string    `json:"category"`
-		TransactionType int       `json:"transaction_type"`
-		Amount          int       `json:"amount"`
-		TransactionAt   time.Time `json:"transaction_at"`
-		CreatedAt       time.Time `json:"created_at"`
-		UpdatedAt       time.Time `json:"updated_at"`
-		DeletedAt       time.Time `json:"deleted_at"`
+		ID              int               `json:"id"`
+		TransactionName string            `json:"transaction_name"`
+		Category        string            `json:"category"`
+		TransactionType int               `json:"transaction_type"`
+		Amount          int               `json:"amount"`
+		TransactionAt   time.Time         `json:"transaction_at"`
+		CreatedAt       time.Time         `json:"created_at"`
+		UpdatedAt       time.Time         `json:"updated_at"`
+		DeletedAt       entities.NullTime `json:"deleted_at"`
 	}
 
 	TransactionListResponse struct {

@@ -1,10 +1,14 @@
 package entities
 
 import (
+	"database/sql"
 	"errors"
+	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
+	"github.com/go-sql-driver/mysql"
 )
 
 var (
@@ -50,9 +54,45 @@ type (
 		TransactionAt   time.Time `json:"transaction_at"`
 		CreatedAt       time.Time `json:"created_at"`
 		UpdatedAt       time.Time `json:"updated_at"`
-		DeletedAt       time.Time `json:"deleted_at"`
+		DeletedAt       NullTime  `json:"deleted_at"`
 	}
 )
+
+// handle nul possible values from db
+// src: https://medium.com/aubergine-solutions/how-i-handled-null-possible-values-from-database-rows-in-golang-521fb0ee267
+type (
+	NullInt64   sql.NullInt64
+	NullInt32   sql.NullInt32
+	NullInt16   sql.NullInt16
+	NullBool    sql.NullBool
+	NullTime    sql.NullTime
+	NullString  sql.NullString
+	NullByte    sql.NullByte
+	NullFloat64 sql.NullFloat64
+)
+
+func (nt *NullTime) Scan(value interface{}) error {
+	var t mysql.NullTime
+	if err := t.Scan(value); err != nil {
+		return err
+	}
+
+	if reflect.TypeOf(value) == nil {
+		*nt = NullTime{t.Time, false}
+	} else {
+		*nt = NullTime{t.Time, true}
+	}
+
+	return nil
+}
+
+func (nt *NullTime) MarshalJSON() ([]byte, error) {
+	if !nt.Valid {
+		return []byte("null"), nil
+	}
+	val := fmt.Sprintf("\"%s\"", nt.Time.Format(time.RFC3339))
+	return []byte(val), nil
+}
 
 func NewTransaction(userID int, transactionName string, category string, transactionType int, amount int, transactionAt time.Time) (Transaction, error) {
 	transaction := Transaction{
@@ -139,6 +179,6 @@ func (t Transaction) Validate() error {
 	return nil
 }
 
-func (t Transaction) Delete() {
-	t.DeletedAt = time.Now()
-}
+// func (t Transaction) Delete() {
+// 	t.DeletedAt = time.Now()
+// }
