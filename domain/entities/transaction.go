@@ -53,7 +53,7 @@ type (
 	}
 )
 
-func NewTransaction(userID int, transactionName string, category string, transactionType int, amount int, transactionAt time.Time) (*Transaction, error) {
+func NewTransaction(userID int, transactionName string, category string, transactionType int, amount int, transactionAt time.Time) (Transaction, error) {
 	transaction := Transaction{
 		TransactionName: transactionName,
 		Category:        category,
@@ -63,10 +63,10 @@ func NewTransaction(userID int, transactionName string, category string, transac
 	}
 	err := transaction.Validate()
 	if err != nil {
-		return nil, err
+		return Transaction{}, err
 	}
 
-	return &transaction, nil
+	return transaction, nil
 }
 
 func (t *Transaction) Update(ti TransactionInput) error {

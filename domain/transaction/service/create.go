@@ -22,7 +22,7 @@ func (t Transaction) Create(ctx context.Context, input entities.TransactionInput
 		*transactionAt,
 	)
 
-	err = t.tr.Create(ctx, *transaction)
+	err = t.tr.Create(ctx, transaction)
 	if err != nil {
 		return err
 	}
