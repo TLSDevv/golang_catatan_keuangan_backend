@@ -19,6 +19,7 @@ func (th TransactionHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 		TransactionName: t.TransactionName,
 		Category:        t.Category,
 		TransactionType: t.TransactionType,
+		Amount:          t.Amount,
 		TransactionAt:   t.TransactionAt,
 		CreatedAt:       t.CreatedAt,
 	})
