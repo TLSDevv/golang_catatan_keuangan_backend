@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/pkg"
 	"github.com/sirupsen/logrus"
