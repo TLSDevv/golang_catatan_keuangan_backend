@@ -1,7 +1,7 @@
 # KeuanganKu Backend
 
 ## To Do
-- [*] Refactor handler and repository to be inside a folder called gateways
+- [ * ] Refactor handler and repository to be inside a folder called gateways
 - [*] Use validator to validate body request from user
 - [*] Create mysql helper
 - [*] Use https://github.com/cosmtrek/air to have live reloading
