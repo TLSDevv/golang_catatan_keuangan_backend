@@ -7,7 +7,7 @@ import (
 )
 
 func (t Transaction) GetByID(ctx context.Context, transactionID int) (entities.Transaction, error) {
-	transaction, err := t.tr.GetByID(ctx, transactionID)
+	transaction, err := t.tr.GetActiveByID(ctx, transactionID)
 	if err != nil {
 		return entities.Transaction{}, err
 	}

@@ -7,7 +7,8 @@ import (
 )
 
 func (t Transaction) GetTransactions(ctx context.Context) ([]entities.Transaction, error) {
-	transactions, err := t.tr.GetTransactions(ctx)
+	uID := ctx.Value("user_id").(int)
+	transactions, err := t.tr.GetActiveTransactionsByUserID(ctx, uID)
 	if err != nil {
 		return nil, err
 	}
