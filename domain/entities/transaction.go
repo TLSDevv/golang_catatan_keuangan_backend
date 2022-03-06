@@ -61,13 +61,13 @@ type (
 // handle nul possible values from db
 // src: https://medium.com/aubergine-solutions/how-i-handled-null-possible-values-from-database-rows-in-golang-521fb0ee267
 type (
-	NullInt64   sql.NullInt64
-	NullInt32   sql.NullInt32
-	NullInt16   sql.NullInt16
-	NullBool    sql.NullBool
-	NullTime    sql.NullTime
-	NullString  sql.NullString
-	NullByte    sql.NullByte
+	NullInt64 sql.NullInt64
+	NullInt32 sql.NullInt32
+	// NullInt16   sql.NullInt16
+	NullBool   sql.NullBool
+	NullTime   sql.NullTime
+	NullString sql.NullString
+	// NullByte    sql.NullByte
 	NullFloat64 sql.NullFloat64
 )
 
