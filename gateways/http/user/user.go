@@ -32,7 +32,7 @@ func NewUserHandler(r *mux.Router, usService user.Service) UserHandler {
 	adminRoute := authRoute.PathPrefix("/").Subrouter()
 	adminRoute.Use(middleware.Admin)
 	adminRoute.HandleFunc("/users", userHandler.List).Methods("GET")
-	adminRoute.HandleFunc("/user", userHandler.Create).Methods("POST")
+	adminRoute.HandleFunc("/users", userHandler.Create).Methods("POST")
 
 	return userHandler
 }

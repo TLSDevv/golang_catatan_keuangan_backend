@@ -9,67 +9,63 @@ import (
 )
 
 func (th TransactionHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var reqBody entities.TransactionInput
-
+	// decode request
+	var reqBody TransactionRequest
 	err := util.Decode(r, &reqBody)
 	if err != nil {
-		_ = util.SendError(w, err.Error(), http.StatusBadRequest, nil)
+		util.SendNoData(w, http.StatusBadRequest, err.Error())
+
 		logrus.WithFields(logrus.Fields{
 			"domain":  "Transaction",
 			"handler": "Create",
 			"err":     err.Error(),
 		}).Error("Decode")
+
 		return
 	}
 
-	errs := reqBody.Validate()
-	if errs != nil {
-		_ = util.SendError(w, util.ErrValidation, http.StatusUnprocessableEntity, errs)
+	// validate request
+	var reqValidation TransactionRequestValidationError
+	err = th.validator.Validate(reqBody, reqValidation)
+	if err != nil {
+		util.SendWithData(w, http.StatusUnprocessableEntity, util.ErrValidation, reqValidation)
+
 		logrus.WithFields(logrus.Fields{
 			"domain":  "Transaction",
 			"handler": "Create",
 			"err":     err.Error(),
 		}).Error("Validate")
+
 		return
 	}
 
-	// check user_id exist or not
-	userExist, err := th.service.CheckUser(r.Context(), r.Context().Value(util.CtxUserId).(int))
+	// call create service
+	err = th.service.Create(r.Context(), entities.TransactionInput{
+		TransactionName: reqBody.TransactionName,
+		Category:        reqBody.Category,
+		TransactionType: reqBody.TransactionType,
+		Amount:          reqBody.Amount,
+		TransactionAt:   reqBody.TransactionAt,
+	})
 	if err != nil {
-		_ = util.SendError(w, err.Error(), http.StatusInternalServerError, nil)
-		logrus.WithFields(logrus.Fields{
-			"domain":  "Transaction",
-			"handler": "Create",
-			"err":     err.Error(),
-		}).Error("Check User")
-		return
-	}
-	if !userExist {
-		_ = util.SendError(w, util.ErrUserNotFound, http.StatusNotFound, nil)
-		logrus.WithFields(logrus.Fields{
-			"domain":  "Transaction",
-			"handler": "Create",
-			"err":     err.Error(),
-		}).Error("Decode")
-		return
-	}
+		util.SendNoData(w, http.StatusInternalServerError, err.Error())
 
-	err = th.service.Create(r.Context(), reqBody)
-	if err != nil {
-		_ = util.SendError(w, err.Error(), http.StatusInternalServerError, nil)
 		logrus.WithFields(logrus.Fields{
 			"domain":  "Transaction",
 			"handler": "Create",
 			"err":     err.Error(),
 		}).Error("Create")
+
 		return
 	}
 
-	_ = util.SendSuccess(w, "Transaction created successfully!", http.StatusOK, nil)
+	util.SendNoData(w, http.StatusOK, "Transaction created successfully!")
+
 	logrus.WithFields(logrus.Fields{
 		"domain":      "Transaction",
 		"handler":     "Create",
 		"transaction": reqBody.TransactionName,
 	}).Info("Success")
+
 	return
 }

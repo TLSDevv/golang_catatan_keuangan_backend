@@ -3,16 +3,19 @@ package transaction
 import (
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/domain/transaction"
 	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/middleware"
+	"github.com/TLSDevv/golang_catatan_keuangan_backend/gateways/http/util"
 	"github.com/gorilla/mux"
 )
 
 type TransactionHandler struct {
-	service transaction.Service
+	service   transaction.Service
+	validator *util.StructValidator
 }
 
 func NewTransactionHandler(r *mux.Router, s transaction.Service) *TransactionHandler {
 	th := &TransactionHandler{
-		service: s,
+		service:   s,
+		validator: util.NewValidate(),
 	}
 
 	pr := r.PathPrefix("/").Subrouter()
