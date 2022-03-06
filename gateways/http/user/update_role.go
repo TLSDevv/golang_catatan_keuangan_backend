@@ -50,7 +50,7 @@ func (h UserHandler) UpdateRole(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	util.SendNoData(w, http.StatusOK, "Success Update User Role")
+	util.SendNoData(w, http.StatusOK, "User role updated successfully!")
 	logrus.Error("Success Update User Role")
 	logrus.WithFields(logrus.Fields{
 		"domain":  "User",

@@ -56,7 +56,7 @@ func (h UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	util.SendNoData(w, http.StatusOK, "Success Create User")
+	util.SendNoData(w, http.StatusOK, "User created successfully!")
 	logrus.WithFields(logrus.Fields{
 		"domain":   "User",
 		"handler":  "Create User",
@@ -123,7 +123,7 @@ func (h UserHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	util.SendNoData(w, http.StatusOK, "Success Create User")
+	util.SendNoData(w, http.StatusOK, "User registered successfully!")
 	logrus.WithFields(logrus.Fields{
 		"domain":   "User",
 		"handler":  "Register User",

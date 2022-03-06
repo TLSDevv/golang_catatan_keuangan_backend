@@ -50,7 +50,7 @@ func (h UserHandler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	util.SendNoData(w, http.StatusOK, "Success Update User")
+	util.SendNoData(w, http.StatusOK, "User updated successfully!")
 	logrus.WithFields(logrus.Fields{
 		"domain":  "User",
 		"handler": "Update Password",

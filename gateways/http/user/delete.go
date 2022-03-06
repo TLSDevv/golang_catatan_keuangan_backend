@@ -23,7 +23,7 @@ func (h UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	util.SendNoData(w, http.StatusOK, "Success Delete User")
+	util.SendNoData(w, http.StatusOK, "User deleted successfully!")
 	logrus.WithFields(logrus.Fields{
 		"domain":  "User",
 		"service": "Delete",
