@@ -27,9 +27,9 @@ func (th TransactionHandler) Restore(w http.ResponseWriter, r *http.Request) {
 	util.SendNoData(w, http.StatusOK, "Transaction restored successfully!")
 
 	logrus.WithFields(logrus.Fields{
-		"domain":  "Transaction",
-		"handler": "Restore",
-		"err":     err.Error(),
+		"domain":         "Transaction",
+		"handler":        "Restore",
+		"transaction_id": tID,
 	}).Info("Success")
 
 	return
