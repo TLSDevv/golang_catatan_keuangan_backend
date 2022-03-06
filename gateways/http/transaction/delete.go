@@ -10,44 +10,27 @@ import (
 func (th TransactionHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	tID := util.GetParams(r, "id")
 
-	// validate transaction_id
-	te, err := th.service.CheckTransactionByID(r.Context(), tID)
-	if err != nil {
-		_ = util.SendError(w, err.Error(), http.StatusNotFound, nil)
-		logrus.WithFields(logrus.Fields{
-			"domain":  "Transaction",
-			"handler": "Delete",
-			"err":     err.Error(),
-		}).Error("Check Transaction By Id")
-		return
-	}
-	if !te {
-		_ = util.SendError(w, "transaction not found", http.StatusNotFound, nil)
-		logrus.WithFields(logrus.Fields{
-			"domain":  "Transaction",
-			"handler": "Delete",
-			"err":     err.Error(),
-		}).Error("Transaction Not Found")
-		return
-	}
-
 	// call delete service
-	err = th.service.Delete(r.Context(), tID)
+	err := th.service.Delete(r.Context(), tID)
 	if err != nil {
-		_ = util.SendError(w, err.Error(), http.StatusInternalServerError, nil)
+		util.SendNoData(w, http.StatusInternalServerError, err.Error())
+
 		logrus.WithFields(logrus.Fields{
 			"domain":  "Transaction",
 			"handler": "Delete",
 			"err":     err.Error(),
 		}).Error("Delete")
+
 		return
 	}
 
-	_ = util.SendSuccess(w, "transaction deleted successfully!", http.StatusOK, nil)
+	util.SendNoData(w, http.StatusOK, "Transaction deleted successfully!")
+
 	logrus.WithFields(logrus.Fields{
 		"domain":         "Transaction",
 		"handler":        "Delete",
 		"transaction_id": tID,
 	}).Info("Success")
+
 	return
 }

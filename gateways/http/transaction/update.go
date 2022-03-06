@@ -10,89 +10,65 @@ import (
 
 func (th TransactionHandler) Update(w http.ResponseWriter, r *http.Request) {
 	tID := util.GetParams(r, "id")
-	var reqBody entities.TransactionInput
 
+	// decode request
+	var reqBody TransactionRequest
 	err := util.Decode(r, &reqBody)
 	if err != nil {
-		_ = util.SendError(w, err.Error(), http.StatusBadRequest, nil)
+		util.SendNoData(w, http.StatusBadRequest, err.Error())
+
 		logrus.WithFields(logrus.Fields{
 			"domain":  "Transaction",
 			"handler": "Update",
 			"err":     err.Error(),
 		}).Error("Decode")
+
 		return
 	}
 
-	errs := reqBody.Validate()
-	if errs != nil {
-		_ = util.SendError(w, util.ErrValidation, http.StatusUnprocessableEntity, errs)
+	// validate request
+	var reqValidation TransactionRequestValidationError
+	err = th.validator.Validate(reqBody, reqValidation)
+	if err != nil {
+		util.SendWithData(w, http.StatusUnprocessableEntity, util.ErrValidation, reqValidation)
+
 		logrus.WithFields(logrus.Fields{
 			"domain":  "Transaction",
 			"handler": "Update",
 			"err":     err.Error(),
 		}).Error("Validate")
-		return
-	}
 
-	// validate user_id
-	ue, err := th.service.CheckUser(r.Context(), r.Context().Value(util.CtxUserId).(int))
-	if err != nil {
-		_ = util.SendError(w, err.Error(), http.StatusInternalServerError, nil)
-		logrus.WithFields(logrus.Fields{
-			"domain":  "Transaction",
-			"handler": "Update",
-			"err":     err.Error(),
-		}).Error("Check User")
-		return
-	}
-	if !ue {
-		_ = util.SendError(w, util.ErrUserNotFound, http.StatusNotFound, nil)
-		logrus.WithFields(logrus.Fields{
-			"domain":  "Transaction",
-			"handler": "Update",
-			"err":     err.Error(),
-		}).Error("User Not Found")
-		return
-	}
-
-	// validate transaction_id
-	te, err := th.service.CheckTransactionByID(r.Context(), tID)
-	if err != nil {
-		_ = util.SendError(w, err.Error(), http.StatusNotFound, nil)
-		logrus.WithFields(logrus.Fields{
-			"domain":  "Transaction",
-			"handler": "Update",
-			"err":     err.Error(),
-		}).Error("Check Transaction By Id")
-		return
-	}
-	if !te {
-		_ = util.SendError(w, "transaction not found", http.StatusNotFound, nil)
-		logrus.WithFields(logrus.Fields{
-			"domain":  "Transaction",
-			"handler": "Update",
-			"err":     err.Error(),
-		}).Error("Transaction Not Found")
 		return
 	}
 
 	// call update service
-	err = th.service.Update(r.Context(), reqBody, tID)
+	err = th.service.Update(r.Context(), entities.TransactionInput{
+		TransactionName: reqBody.TransactionName,
+		Category:        reqBody.Category,
+		TransactionType: reqBody.TransactionType,
+		Amount:          reqBody.Amount,
+		TransactionAt:   reqBody.TransactionAt,
+	}, tID)
 	if err != nil {
-		_ = util.SendError(w, err.Error(), http.StatusInternalServerError, nil)
+		util.SendNoData(w, http.StatusInternalServerError, err.Error())
+
 		logrus.WithFields(logrus.Fields{
 			"domain":  "Transaction",
 			"handler": "Update",
 			"err":     err.Error(),
 		}).Error("Update")
+
 		return
 	}
 
-	_ = util.SendSuccess(w, "transaction updated successfully!", http.StatusOK, nil)
+	util.SendNoData(w, http.StatusOK, "Transaction updated successfully!")
+
 	logrus.WithFields(logrus.Fields{
 		"domain":         "Transaction",
 		"handler":        "Update",
 		"user_id":        r.Context().Value(util.CtxUserId),
 		"transaction_id": tID,
 	}).Info("Success")
+
+	return
 }

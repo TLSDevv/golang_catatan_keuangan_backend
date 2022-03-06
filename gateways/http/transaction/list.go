@@ -8,23 +8,28 @@ import (
 )
 
 func (th TransactionHandler) List(w http.ResponseWriter, r *http.Request) {
+	// call get transactions service
 	transactions, err := th.service.GetTransactions(r.Context())
 	if err != nil {
-		_ = util.SendError(w, err.Error(), http.StatusInternalServerError, nil)
+		util.SendNoData(w, http.StatusInternalServerError, err.Error())
+
 		logrus.WithFields(logrus.Fields{
 			"domain":  "Transaction",
 			"handler": "List",
 			"err":     err.Error(),
 		}).Error("Get Transactions")
+
 		return
 	}
 
 	transactionsResponse := formatSliceResponse(transactions)
-	_ = util.Send(w, TransactionListResponse{Success: true, Data: transactionsResponse}, http.StatusOK)
+	util.SendWithData(w, http.StatusOK, "", transactionsResponse)
+
 	logrus.WithFields(logrus.Fields{
 		"domain":            "Transaction",
 		"handler":           "List",
 		"total_transaction": len(transactionsResponse),
 	}).Info("Success")
+
 	return
 }

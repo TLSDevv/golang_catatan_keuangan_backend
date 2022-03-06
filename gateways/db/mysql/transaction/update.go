@@ -16,7 +16,8 @@ func (r Repository) Update(ctx context.Context, trc entities.Transaction, tID in
 				category=?,
 				transaction_type=?,
 				amount=?,
-				transaction_at=?
+				transaction_at=?,
+				updated_at=?
 			WHERE
 				id=?`
 
@@ -26,6 +27,7 @@ func (r Repository) Update(ctx context.Context, trc entities.Transaction, tID in
 		trc.TransactionType,
 		trc.Amount,
 		trc.TransactionAt.Local(),
+		trc.UpdatedAt,
 		tID)
 
 	rows, err := result.RowsAffected()

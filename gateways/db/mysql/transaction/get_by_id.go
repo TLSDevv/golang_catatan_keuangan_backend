@@ -9,7 +9,7 @@ import (
 func (r Repository) GetByID(ctx context.Context, transactionID int) (entities.Transaction, error) {
 	sql := `
 		SELECT
-			id, transaction_name, category, transaction_type, amount, transaction_at, created_at
+			id, transaction_name, category, transaction_type, amount, transaction_at, created_at, updated_at, deleted_at
 		FROM
 			transactions
 		WHERE
@@ -25,6 +25,8 @@ func (r Repository) GetByID(ctx context.Context, transactionID int) (entities.Tr
 		&t.Amount,
 		&t.TransactionAt,
 		&t.CreatedAt,
+		&t.UpdatedAt,
+		&t.DeletedAt,
 	)
 
 	if err != nil {
