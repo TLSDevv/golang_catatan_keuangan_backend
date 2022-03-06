@@ -26,7 +26,7 @@ func (cron CronJobAuth) DeletedAuthNotValid(ctx context.Context) {
 	}
 
 	logrus.WithFields(logrus.Fields{
-		"msg":           "Cronjob Success",
+		"msg":           "Done",
 		"total deleted": totalDeletedAuth,
-	})
+	}).Info("Cronjob Success")
 }

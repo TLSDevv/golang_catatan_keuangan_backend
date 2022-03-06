@@ -1,13 +1,13 @@
 # KeuanganKu Backend
 
 ## To Do
-- [ ] Refactor handler and repository to be inside a folder called gateways
-- [ ] Use validator to validate body request from user
-- [ ] Create mysql helper
-- [ ] Use https://github.com/cosmtrek/air to have live reloading
-- [ ] Implement user role
-- [ ] Remove user_id from transaction payload, we could get it from authorization header
-- [ ] Protect transactions endpoint with authorization
+- [x] Refactor handler and repository to be inside a folder called gateways
+- [x] Use validator to validate body request from user
+- [x] Create mysql helper
+- [x] Use https://github.com/cosmtrek/air to have live reloading
+- [x] Implement user role
+- [x] Remove user_id from transaction payload, we could get it from authorization header
+- [x] Protect transactions endpoint with authorization
 
 ## Structure Rules
 These coding rules below is inspired by simple-bank structure.
