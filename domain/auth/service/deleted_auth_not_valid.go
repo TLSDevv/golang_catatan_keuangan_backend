@@ -17,6 +17,10 @@ func (service AuthService) DeletedAuthNotValid(ctx context.Context) (int, error)
 
 	var count int
 
+	if len(users) == 0 {
+		return 0, err
+	}
+
 	for i, _ := range users {
 		valid := pkg.RefreshTokenIsValid(users[i].RefreshToken)
 
